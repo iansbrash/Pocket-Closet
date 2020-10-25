@@ -5,7 +5,9 @@ import { StyleSheet, View, TouchableOpacity,
     Text, } from 'react-native'
 import { TopNav } from '../GlobalComponents/TopNav'
 import { ScreenHeader } from '../GlobalComponents/ScreenHeader'
-
+import GlobalStyles from '../GlobalComponents/GlobalStyles'
+import { Entypo } from '@expo/vector-icons'; 
+import { PlusIcon } from '../GlobalComponents/GlobalIcons'
 
 
 const OutfitFromButton = ({title, navpath, iconName}) => {
@@ -17,9 +19,9 @@ const OutfitFromButton = ({title, navpath, iconName}) => {
             height: 75,
             width: '100%',
             marginTop: 5,
-            marginBottom: 5
+            marginBottom: 5,
         }}>
-            <View style={{
+            <View style={[{
                 width: 'auto',
                 marginLeft: 10,
                 marginRight: 10,
@@ -27,9 +29,8 @@ const OutfitFromButton = ({title, navpath, iconName}) => {
                 marginBottom: 5,
                 height: 'auto',
                 backgroundColor: 'white',
-                elevation: 10,
                 borderRadius: 10
-            }}>
+            }, GlobalStyles.shadowLight]}>
                 <TouchableOpacity style={{
                     height: '100%',
                     width: '100%',
@@ -53,9 +54,8 @@ const OutfitFromButton = ({title, navpath, iconName}) => {
                         flexDirection: 'row',
                         marginTop: 8
                     }}>
-                        <Text category='h4' style={{fontWeight: 'bold', marginLeft: 15}}>{title}</Text>
-                        {/* <Icon style={{marginRight: 15, marginLeft: 5}} width='30' height='30' fill='black' name={iconName}/> */}
-                        <Ionicons name="md-checkmark-circle" size={32} color="green" />
+                        <Text category='h4' style={[{fontWeight: 'bold', marginLeft: 15}, GlobalStyles.h4]}>{title}</Text>
+                        <PlusIcon size={30} style={[GlobalStyles.colorMain, {marginRight: 10}]}/>
                     </View>
                 </TouchableOpacity>
             </View>
@@ -69,7 +69,10 @@ export const OutfitFrom = ({ navigationXD }) => {
 
 
     return (
-        <View style={{flex: 1}}>
+        <View style={{
+            flex: 1, 
+            backgroundColor: 'white',
+            }}>
             <TopNav title={'New Outfit'} exitDestination={'HOMESCREEN'}/>
             <ScreenHeader title={'New Outfrom From...'}/>
             <View style={{

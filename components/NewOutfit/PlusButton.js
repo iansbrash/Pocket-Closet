@@ -2,6 +2,7 @@ import React from 'react'
 import { View, TouchableOpacity, StyleSheet } from 'react-native'
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native'
+import { PlusIcon } from '../GlobalComponents/GlobalIcons'
 
 
 export const PlusButton = ({disabledHook, onPressFunc}) => {
@@ -17,7 +18,7 @@ export const PlusButton = ({disabledHook, onPressFunc}) => {
                 style={styles.TOSuccess}
                 onPress={onPressFunc}>
                     {/* <Icon style={{marginRight: 5, marginLeft: 5}} width='50' height='50' fill='white' name='plus'/> */}
-                    <Ionicons name="md-checkmark-circle" size={32} color="green" />
+                    <PlusIcon style={[{marginRight: 5, marginLeft: 5, color: 'white'}]} size={50}/>
                  </TouchableOpacity>
                  )
             }

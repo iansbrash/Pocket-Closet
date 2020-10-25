@@ -12,7 +12,7 @@ import { OutfitSelection } from './NewOutfit/OutfitSelection'
 import { NewClosetScreen } from './NewClosetScreen'
 import { FinalizeOutfit } from './NewOutfit/FinalizeOutfit'
 import { ViewIndividualPiece } from './ViewIndividualPiece'
-import { FinalizeSuccess } from './FinalizeSuccess'
+import { FinalizeSuccess } from './NewOutfit/FinalizeSuccess'
 import { HistoryScreen } from './HistoryScreen'
 import { UploadImage } from './NewClothing/UploadImage'
 import { TypeOfClothing } from './NewClothing/TypeOfClothing'
@@ -22,7 +22,8 @@ import { ItemDescription } from './NewClothing/ItemDescription'
 import { FinalizeClothing } from './NewClothing/FinalizeClothing'
 // import KeyboardListener from 'react-native-keyboard-listener';
 import { OutfitFrom } from './NewOutfit/OutfitFrom'
-import { Ionicons } from '@expo/vector-icons';
+import { HangerIcon, HomeIcon, CalendarIcon } from './GlobalComponents/GlobalIcons'
+import GlobalStyles from './GlobalComponents/GlobalStyles'
 // Destructuring React Navigator import
 const BottomTab = createBottomTabNavigator();
 const { Navigator, Screen } = createBottomTabNavigator();
@@ -139,6 +140,7 @@ const TabNavTwoProp = ({ state, descriptors, navigation }) => {
   
     const [keyboardOpen, setKeyboardOpen] = useState(false);
    
+   
 
     if (focusedOptions.tabBarVisible === false) {
       return null;
@@ -148,10 +150,6 @@ const TabNavTwoProp = ({ state, descriptors, navigation }) => {
       <View style={{ flexDirection: 'row' }}>
 
 
-{/* <KeyboardListener
-        onWillShow={() => { setKeyboardOpen(true); }}
-        onWillHide={() => { setKeyboardOpen(false); }}
-    /> */}
     {keyboardOpen ? <View></View> : (state.routes.map((route, index) => {
           const { options } = descriptors[route.key];
           const label =
@@ -161,7 +159,23 @@ const TabNavTwoProp = ({ state, descriptors, navigation }) => {
               ? options.title
               : route.name;
   
-          const isFocused = state.index === index;
+
+              const isFocused = state.index === index;
+            let icon;
+              
+            switch (label) {
+                case 'HISTORY':
+                    icon = <CalendarIcon size={25} style={isFocused ? GlobalStyles.colorMain : GlobalStyles.hint} />
+                    break;
+                case 'HOME':
+                    icon = <HomeIcon size={25} style={isFocused ? GlobalStyles.colorMain : GlobalStyles.hint}/>
+                    break;    
+                case 'CLOSET':
+                    icon = <HangerIcon size={25} style={isFocused ? GlobalStyles.colorMain : GlobalStyles.hint}/>
+                    break;
+            }
+
+          
   
           const onPress = () => {
             const event = navigation.emit({
@@ -197,11 +211,13 @@ const TabNavTwoProp = ({ state, descriptors, navigation }) => {
                 backgroundColor: 'white'
                  }}
             >
-                <View style={{height: 5, width: '100%', backgroundColor: isFocused ? '#3366ff' : 'white'}}></View>
+                <View style={{height: 5, width: '100%', backgroundColor: isFocused ? '#09122b' : 'white'}}></View>
               
-                <Text style={{ color: isFocused ? '#3366ff' : '#d3d7e0', fontWeight: 'bold', margin: 5,  backgroundColor: 'white'}}>
+                {/* <Text style={{ color: isFocused ? '#09122b' : '#d3d7e0', fontWeight: 'bold', margin: 5,  backgroundColor: 'white'}}>
                     {label}
-                </Text>
+                </Text> */}
+                <View style={{height: 5}}></View>
+                {icon}
             </TouchableOpacity>
           );
         }))

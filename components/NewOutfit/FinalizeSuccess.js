@@ -2,7 +2,7 @@ import React from 'react'
 import { useSelector } from 'react-redux'
 
 import { useNavigation } from '@react-navigation/native'
-import { View, Text, } from 'react-native'
+import { View, Text, TouchableOpacity } from 'react-native'
 
 
 
@@ -19,14 +19,14 @@ export const FinalizeSuccess = ({ finalizedOutfit }) => {
     const outfitsArray = useSelector(state => state.outfits.outfitsArray)
     const navigation = useNavigation();
 
-    if (true) return null;
+    
 
     return (
         <View style={{
-            flex: 1
+            flex: 1,
+            backgroundColor: 'white'
         }}>
-            <TopNavigation alignment='center' title='Success!' 
-                accessoryRight={ExitAction}/>
+            
             <View style={{
                 margin: 10,
                 flex: 1
@@ -50,17 +50,19 @@ export const FinalizeSuccess = ({ finalizedOutfit }) => {
                             justifyContent: 'center',
                             alignItems: 'center'
                         }}>
-                            <Button
+                            <Text style={{fontSize: 50, fontWeight: 'bold'}}>Fuck u</Text>
+                            {/* <TouchableOpacity
                                 style={{
                                     borderRadius: 125,
                                     width: 250,
                                     aspectRatio: 1,
+
                                 }}
                                 appearance='outline'
                                 onPress={() => navigation.navigate("HOMESCREEN")}
                                 status='success'
                                 accessoryLeft={CheckIcon}
-                            ></Button>
+                            ></TouchableOpacity> */}
                         </View>
                     </View>
                 </View>

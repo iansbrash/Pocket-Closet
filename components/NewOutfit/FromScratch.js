@@ -12,6 +12,8 @@ import { ScreenHeader } from '../GlobalComponents/ScreenHeader'
 import { useSelector } from 'react-redux'
 import { NextButton } from '../NewClothing/NextButton'
 import { Ionicons } from '@expo/vector-icons';
+import { CheckIcon, PlusIcon } from '../GlobalComponents/GlobalIcons'
+import GlobalStyles from '../GlobalComponents/GlobalStyles'
 
 
 
@@ -38,7 +40,7 @@ const SelectClothingButton = ({title, navpath, iconName, defaultChecked, navprop
             marginTop: 5,
             marginBottom: 5
         }}>
-            <View style={{
+            <View style={[{
                 width: 'auto',
                 marginLeft: 10,
                 marginRight: 10,
@@ -46,9 +48,8 @@ const SelectClothingButton = ({title, navpath, iconName, defaultChecked, navprop
                 marginBottom: 5,
                 height: 'auto',
                 backgroundColor: 'white',
-                elevation: 10,
                 borderRadius: 10
-            }}>
+            }, GlobalStyles.shadowLight]}>
                 <TouchableOpacity style={{
                     height: '100%',
                     width: '100%',
@@ -78,16 +79,16 @@ const SelectClothingButton = ({title, navpath, iconName, defaultChecked, navprop
                             style={checked ? styles.checkboxActive : styles.checkbox}
                             onPress={() => setChecked(!checked)}>
                                 {/* <Icon width='25' height='25' fill='white' name={'checkmark-outline'}/> */}
-                                <Ionicons name="md-checkmark-circle" size={32} color="green" />
+                                <CheckIcon size={25} style={{color: 'white'}}/>
                             </TouchableOpacity>
-                            <Text category='h4' style={checked ? styles.textActive : styles.textInactive}>{title}</Text>
-                            <Text appearace='hint' category='h6' style={{fontWeight: 'bold', marginLeft: 10}}>
+                            <Text category='h4' style={[checked ? styles.textActive : styles.textInactive, GlobalStyles.h4]}>{title}</Text>
+                            <Text appearace='hint' style={[{fontWeight: 'bold', marginLeft: 10, marginTop: 2}, GlobalStyles.h6, GlobalStyles.hint]}>
                                 {(checked && numOfItems !== 0) ? `(${numOfItems} item${numOfItems === 1 ? '' : 's'})` : ''}
                             </Text>
                         </View>
                         
                         {/* <Icon style={{marginRight: 15, marginLeft: 5}} width='30' height='30' fill={checked ? 'black' : '#6c7280'} name={iconName}/> */}
-                        <Ionicons name="md-checkmark-circle" size={32} color="green" />
+                        <PlusIcon size={30} style={{marginRight: 15, marginLeft: 5, color: checked ? '#09122b' : '#6c7280'}}/>
                     </View>
                 </TouchableOpacity>
             </View>
@@ -165,7 +166,7 @@ export const FromScratch = () => {
 
     return (
         <View 
-        style={{flex: 1}}>
+        style={{flex: 1, backgroundColor: 'white'}}>
             <TopNav title={'From Scratch!'} exitDestination={'HOMESCREEN'}/>
             <ScreenHeader title={'Select Clothing'}/>
             <View style={{
@@ -259,5 +260,5 @@ const styles = StyleSheet.create({
     }, textInactive: {
         fontWeight: 'bold',
         color: '#b7bcc7'
-    }
+    },
 })

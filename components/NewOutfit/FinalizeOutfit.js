@@ -4,7 +4,8 @@ import  {
     View,
     TouchableOpacity,
     FlatList,
-    Text, } from 'react-native'
+    Text,
+    ScrollView } from 'react-native'
 import { Ionicons } from '@expo/vector-icons';
 import { useDispatch, useSelector } from 'react-redux'
 import { outfitCreatedFromHome } from '../../redux/reducers/outfitsSlice'
@@ -13,6 +14,8 @@ import { useNavigation } from '@react-navigation/native'
 import { TopNav } from '../GlobalComponents/TopNav'
 import { ScreenHeader, MiniScreenHeader } from '../GlobalComponents/ScreenHeader'
 import { FinalizeButton } from '../NewClothing/NextButton'
+import GlobalStyles from '../GlobalComponents/GlobalStyles'
+import { XIcon } from '../GlobalComponents/GlobalIcons'
 
 
 
@@ -141,7 +144,8 @@ export const FinalizeOutfit = () => {
     return (
 
         <View style={{
-            flex: 1
+            flex: 1,
+            backgroundColor: 'white'
         }}>
            <TopNav title={'Finalize Outfit'} exitDestination={'HOMESCREEN'}/>
            <ScreenHeader title={'Finalize Outfit'}/>
@@ -149,17 +153,20 @@ export const FinalizeOutfit = () => {
                 margin: 10,
                 flex: 1
             }}>
-                {Object.keys(outfitInProgress).map(key => ( 
-                    outfitInProgress[key].length !== 0 ?
-                    <View>
-                        <MiniScreenHeader 
-                        title={outfitInProgress[key][0].clothingType.charAt(0).toUpperCase() 
-                            + outfitInProgress[key][0].clothingType.slice(1)}/>
-                        <FlatList 
-                        data={outfitInProgress[key]}
-                        renderItem={FinalizeClothingContainer}/>
-                    </View> : null
-                ))}
+                <ScrollView>
+                    {Object.keys(outfitInProgress).map(key => ( 
+                        outfitInProgress[key].length !== 0 ?
+                        <View>
+                            <MiniScreenHeader 
+                            title={outfitInProgress[key][0].clothingType.charAt(0).toUpperCase() 
+                                + outfitInProgress[key][0].clothingType.slice(1)}/>
+                            <FlatList 
+                            data={outfitInProgress[key]}
+                            renderItem={FinalizeClothingContainer}/>
+                        </View> : null
+                    ))}
+                </ScrollView>
+                
 
                 <FinalizeButton 
                 disabledHook={false}
@@ -180,7 +187,7 @@ const FinalizeClothingContainer = ({item}) => {
         }}>
             <TouchableOpacity style={{width: 'auto', height: 'auto'}}
                         onPress={() => addToArray(item)}>
-            <View style={{
+            <View style={[{
                 width: 'auto',
                 marginLeft: 10,
                 marginRight: 10,
@@ -188,9 +195,8 @@ const FinalizeClothingContainer = ({item}) => {
                 marginBottom: 5,
                 height: 'auto',
                 backgroundColor: 'white',
-                elevation: 10,
                 borderRadius: 10
-            }}>
+            }, GlobalStyles.shadowLight]}>
                 <View style={{
                     height: '100%',
                     width: '100%',
@@ -214,10 +220,10 @@ const FinalizeClothingContainer = ({item}) => {
                         flexDirection: 'row',
                         marginTop: 8
                     }}>
-                        <Text category='h4' style={{fontWeight: 'bold', marginLeft: 15}}>{item.clothingName}</Text>
+                        <Text category='h4' style={[{fontWeight: 'bold', marginLeft: 15}, GlobalStyles.h4]}>{item.clothingName}</Text>
                         
                             {/* <Icon  width='30' height='30' fill='black' name={'plus'}/> */}
-                            <Ionicons name="md-checkmark-circle" size={32} color="green" />
+                            <XIcon size={30} style={[{marginRight: 10}, GlobalStyles.colorMain]}/> 
                         
                     </View>
                 </View>

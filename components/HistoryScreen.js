@@ -18,7 +18,7 @@ export const HistoryScreen = () => {
     var applicableDates = [];
     const yesterday = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 1);
     const tomorrow = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
-    //testing
+    //testing 
     applicableDates.push(yesterday.toDateString())
     applicableDates.push(tomorrow.toDateString());
     outfitsArray.forEach(outfitObj => {

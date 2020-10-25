@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, SafeAreaView } from 'react-native';
 import { Provider } from 'react-redux'
 import store  from './redux/store'
 import { persistStore } from 'redux-persist/lib/storage'
@@ -12,13 +12,14 @@ import { PersistGate } from 'redux-persist/integration/react'
 
 export default function App() {
   return (
-    <Provider store={store}>
-        {/* <PersistGate persistor={persistor}> */}
-            
-              <AppNavigator/>
-            
-          {/* </PersistGate>` */}
-      </Provider>
+    <SafeAreaView style={{flex: 1, backgroundColor: 'white'}}>
+      <Provider store={store}>
+          {/* <PersistGate persistor={persistor}> */}
+                <AppNavigator/>
+            {/* </PersistGate>` */}
+        </Provider>
+    </SafeAreaView>
+    
   );
 }
 

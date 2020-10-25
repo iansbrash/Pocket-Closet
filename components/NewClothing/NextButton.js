@@ -2,6 +2,7 @@ import React from 'react'
 import { View, TouchableOpacity, StyleSheet } from 'react-native'
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native'
+import { RightIcon, CheckIcon } from '../GlobalComponents/GlobalIcons'
 
 
 export const FinalizeButton = ({disabledHook, onPressFunc}) => {
@@ -21,7 +22,7 @@ export const FinalizeButton = ({disabledHook, onPressFunc}) => {
                 style={styles.TOSuccess}
                 onPress={onPressFunc}>
                     {/* <Icon style={{marginRight: 5, marginLeft: 5}} width='50' height='50' fill='white' name='checkmark-outline'/> */}
-                    <Ionicons name="md-checkmark-circle" size={32} color="green" />
+                    <CheckIcon size={50} style={{marginRight: 5, marginLeft: 5, color: 'white'}}/>
                  </TouchableOpacity>
                  )
             }
@@ -57,7 +58,7 @@ export const NextButton = ({disabledHook, navpath, extraFunc}) => {
                 style={styles.TOBasic}
                 onPress={() => onClickFunc()}>
                     {/* <Icon style={{marginRight: 5, marginLeft: 5}} width='50' height='50' fill='white' name='arrow-forward-outline'/> */}
-                    <Ionicons name="md-checkmark-circle" size={32} color="green" />
+                    <RightIcon size={50} style={{marginRight: 5, marginLeft: 5, color: 'white'}}/>
                  </TouchableOpacity>
                  )
             }

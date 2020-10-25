@@ -4,10 +4,13 @@ import {
     Image,
     TouchableOpacity,
     Text,
+    StyleSheet
 } from 'react-native'
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native'
 import { ScreenHeader, MiniScreenHeader } from './GlobalComponents/ScreenHeader'
+import { Entypo } from '@expo/vector-icons';
+import GlobalStyles from './GlobalComponents/GlobalStyles'
 
 const NewOutfitButton = () => {
 
@@ -20,7 +23,7 @@ const NewOutfitButton = () => {
             marginTop: 5,
             marginBottom: 5
         }}>
-            <View style={{
+            <View style={[{
                 width: 'auto',
                 marginLeft: 10,
                 marginRight: 10,
@@ -29,8 +32,8 @@ const NewOutfitButton = () => {
                 height: 'auto',
                 backgroundColor: 'white',
                 elevation: 10,
-                borderRadius: 10
-            }}>
+                borderRadius: 10,
+            }, GlobalStyles.shadowHeavy]}>
                 <TouchableOpacity style={{
                     height: '100%',
                     width: '100%',
@@ -40,7 +43,7 @@ const NewOutfitButton = () => {
                 }}
                 onPress={() => navigation.navigate('RECORD')}>
                     <View 
-                    style={{
+                    style={{ //block at the top of the button. cosmetic
                         height: 10, 
                         borderTopLeftRadius: 10, 
                         borderTopRightRadius: 10, 
@@ -52,11 +55,22 @@ const NewOutfitButton = () => {
                         justifyContent: 'space-between',
                         alignItems: 'center',
                         flexDirection: 'row',
-                        marginTop: 8
                     }}>
-                        <Text category='h4' style={{fontWeight: 'bold', marginLeft: 15}}>{'New Outfit'}</Text>
+                        <View style={{height: '100%', justifyContent: 'center', alignItems: 'center'}}>
+                            <Text category='h4' 
+                                style={[{fontWeight: 'bold', marginLeft: 15, height: 'auto'}
+                                , GlobalStyles.h5]}>
+                                    {'New Outfit'}
+                            </Text>
+                        </View>
+                        <View style={{height: '100%', justifyContent: 'center', alignItems: 'center'}}>
                             {/* <Ionicons style={{marginRight: 15, marginLeft: 5}} width='30' height='30' fill='#09122b' name={'plus'}/> */}
-                            <Ionicons name="md-checkmark-circle" size={32} color="green" />
+                            <Entypo style={{marginRight: 15, marginLeft: 5}} name="plus" size={30} color="black" />
+                        </View>
+                            
+                                
+                        
+                        
                     </View>
                 </TouchableOpacity>
             </View>
@@ -72,7 +86,7 @@ const StatContainer = (props) => {
             height: 'auto',
             flexDirection: 'column'
         }}>
-            <View style={{
+            <View style={[{
                 width: 'auto',
                 height: 'auto',
                 margin: 10,
@@ -82,7 +96,7 @@ const StatContainer = (props) => {
                 justifyContent: 'flex-start',
                 alignItems: 'center',
                 flexDirection: 'column'
-            }}>
+            }, GlobalStyles.shadowLight]}>
                 <View style={{
                 borderTopLeftRadius: 10, 
                 borderTopRightRadius: 10, 
@@ -105,7 +119,7 @@ export const HomeScreenNew = () => {
     let src = { uri: 'https://randomuser.me/api/portraits/men/1.jpg' }
 
     return (
-        <View style={{
+        <View  style={{
             flex: 1,
             backgroundColor: 'white'
         }}>
@@ -145,10 +159,11 @@ export const HomeScreenNew = () => {
                                 justifyContent: 'flex-start',
                                 alignItems: 'flex-start'
                             }}>
-                                <Text style={{
+                                <Text style={[{
                                     fontWeight: 'bold',
-                                    marginBottom: -15}} category='h2'>Welcome back,</Text>
-                                <Text category='h1' status='primary'>Ian</Text>
+                                    marginBottom: -10,
+                                    }, GlobalStyles.h2]} category='h2'>Welcome back,</Text>
+                                <Text style={[{ color: 'blue'}, GlobalStyles.h1]} category='h1' status='primary'>Ian</Text>
                                 {/* <Text category='h5'>@iansbrash</Text> */}
                             </View>
                         </View >
@@ -162,12 +177,12 @@ export const HomeScreenNew = () => {
                                 margin: 10,
                                 aspectRatio: 1
                             }}>
-                                <View style={{
+                                <View style={[{
                                     width: 110, 
                                     height: 110,
                                     borderRadius: 55,
-                                    elevation: 10,
-                                    backgroundColor: 'white'}}>
+                                    backgroundColor: 'white'},
+                                    GlobalStyles.shadowLight]}>
                                         <Image style={{
                                             width: 110, 
                                             height: 110,
@@ -207,6 +222,7 @@ export const HomeScreenNew = () => {
                     <StatContainer title={'Stat 2'}/>
                 </View>
             </View>
-        </View>
+        </View >
     )
 }
+

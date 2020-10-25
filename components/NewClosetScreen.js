@@ -632,9 +632,9 @@ export const NewClosetScreen = () => {
     const wornSelectData = ['Recently', 'Not Recently', 'Never']
     const typeSelectData = ['Bottoms', 'Tops', 'Footwear', 'Other']
     const colorSelectData= ['Red', 'Green', 'Blue', 'Multi']
-    const wornDisplayValue = wornSelectData[wornSelectedIndex.row];
-    const typeDisplayValue = typeSelectData[typeSelectedIndex.row];
-    const colorDisplayValue = colorSelectData[colorSelectedIndex.row];
+    // const wornDisplayValue = wornSelectData[wornSelectedIndex.row];
+    // const typeDisplayValue = typeSelectData[typeSelectedIndex.row];
+    // const colorDisplayValue = colorSelectData[colorSelectedIndex.row];
 
     const navigation = useNavigation();
 
@@ -645,14 +645,14 @@ export const NewClosetScreen = () => {
         // Reset favorites
         setHeartToggleChecked(false);
 
-        //Reset worn params
-        setWornSelectedIndex(0);
+        // //Reset worn params
+        // setWornSelectedIndex(0);
 
-        //Reset type params
-        setTypeSelectedIndex(0);
+        // //Reset type params
+        // setTypeSelectedIndex(0);
 
-        //Reset colors params
-        setColorSelectedIndex(0)
+        // //Reset colors params
+        // setColorSelectedIndex(0)
     }
 
     const heartClicked = () => {

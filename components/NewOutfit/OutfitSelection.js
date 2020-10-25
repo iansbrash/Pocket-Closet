@@ -11,18 +11,15 @@ import {
     Text, } from 'react-native'
 import { NavigationContainer, useNavigation } from '@react-navigation/native'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
-import { Ionicons } from '@expo/vector-icons';
 import { useSelector, useDispatch } from 'react-redux'
 import { outfitInProgressItemAdded } from '../../redux/reducers/outfitsSlice'
 import { TopNav } from '../GlobalComponents/TopNav'
 import { ScreenHeader } from '../GlobalComponents/ScreenHeader'
 import { PlusButton } from './PlusButton'
+import GlobalStyles from '../GlobalComponents/GlobalStyles'
+import { PlusIcon, XIcon } from '../GlobalComponents/GlobalIcons'
 
 var TopsArray = [];
-
-
-
-
 
 
 
@@ -72,7 +69,7 @@ const AddClothingButton = ({title, hookFunc}) => {
                     }}>
                         <Text category='h4' style={{fontWeight: 'bold', marginLeft: 15}}>{title}</Text>
                         {/* <Icon style={{marginRight: 15, marginLeft: 5}} width='30' height='30' fill='black' name={'plus'}/> */}
-                        <Ionicons name="md-checkmark-circle" size={32} color="green" />
+                        <XIcon style={[{marginRight: 15, marginLeft: 5}, GlobalStyles.colorMain]} size={30} />
                     </View>
                 </TouchableOpacity>
             </View>
@@ -93,7 +90,7 @@ const ClothingAddedIcon = ({item}) => {
             marginTop: 5,
             marginBottom: 5
         }}>
-            <View style={{
+            <View style={[{
                 width: 'auto',
                 marginLeft: 10,
                 marginRight: 10,
@@ -101,9 +98,8 @@ const ClothingAddedIcon = ({item}) => {
                 marginBottom: 5,
                 height: 'auto',
                 backgroundColor: 'white',
-                elevation: 10,
                 borderRadius: 10
-            }}>
+            }, GlobalStyles.shadowLight]}>
                 <View style={{
                     height: '100%',
                     width: '100%',
@@ -133,15 +129,14 @@ const ClothingAddedIcon = ({item}) => {
                             width: '85%'
 
                         }}>
-                            <View style={{
+                            <View style={[{
                                     height: 110, //why the fuck does this happen. why does this shit not align. fuck this
                                     aspectRatio: 1,
                                     borderRadius: 10,
                                     marginLeft: 10,
                                     marginBottom: 10,
                                     borderRadius: 10,
-                                    elevation: 10
-                                }}> 
+                                }, GlobalStyles.shadowLight]}> 
                                 <Image source={src} style={{height: '100%', aspectRatio: 1, borderRadius: 10}} />
                             </View>
                             <View style={{
@@ -157,13 +152,18 @@ const ClothingAddedIcon = ({item}) => {
                                     flexDirection: 'row',
                                     flexShrink: 1
                                 }}>
-                                    <Text category='h4' style={{fontWeight: 'bold', marginLeft: 15, flexShrink: 1}}>{item.clothingName}</Text>
+                                    <Text category='h4' 
+                                    style={[{fontWeight: 'bold', marginLeft: 15, flexShrink: 1}, GlobalStyles.h4]}
+                                    >{item.clothingName}</Text>
                                 </View>
                                 <View style={{
                                     flexDirection: 'row',
                                     flexShrink: 1
                                 }}>
-                                    <Text category='h5' appearance='hint' style={{fontWeight: 'bold', marginLeft: 15, marginTop: -10, flexShrink: 1}}>{item.brandName[0]}</Text>
+                                    <Text category='h5' appearance='hint' 
+                                    style={[{fontWeight: 'bold', marginLeft: 15, marginTop: -5, flexShrink: 1}, 
+                                    GlobalStyles.h5, GlobalStyles.hint]}
+                                    >{item.brandName[0]}</Text>
                                 </View>
                                 
                             </View>
@@ -171,7 +171,7 @@ const ClothingAddedIcon = ({item}) => {
                         </View>
                         <View style={{width: '15%', justifyContent: 'center', alignItems: 'center'}}>
                             {/* <Icon style={{marginRight: 15, marginLeft: 5}} width='30' height='30' fill='black' name={'plus'}/> */}
-                            <Ionicons name="md-checkmark-circle" size={32} color="green" />
+                            <XIcon style={[{marginRight: 15, marginLeft: 5}, GlobalStyles.colorMain]} size={30} />
                         </View>
                     </View>
                 </View>
@@ -183,57 +183,6 @@ const ClothingAddedIcon = ({item}) => {
 
 
 
-const FadeInView = (props) => {
-    const fadeAnim = useRef(new Animated.Value(0)).current
-
-    React.useEffect(() => {
-        
-        Animated.timing(
-            fadeAnim, {
-                toValue: props.hookFunc ? 0 : 1,
-                duration: 300
-            }
-        ).start();
-
-    },[props.hookFunc]) 
-
-    return (
-        <Animated.View                 // Special animatable View
-          style={{
-            ...props.style,
-            opacity: fadeAnim,         // Bind opacity to animated value
-          }}
-        >
-          {props.children}
-        </Animated.View>
-    );
-}
-
-const DropDownView = (props) => {
-    const [dropAnim] = useState(useRef(new Animated.Value(props.hookValue ? 0: 100)).current)
-
-
-    useEffect(() => {
-        console.log(`New hook value: ${props.hookValue}`)
-        Animated.timing(dropAnim, {
-                toValue: props.hookValue ? 0: 100,
-                duration: 500,
-                useNativeDriver: true
-            }
-        )
-    }, [props.hookValue])
-    return (
-        <Animated.View                 
-          style={{
-            ...props.style,
-            position: 'absolute',
-            top: dropAnim,         
-          }}
-        >
-          {props.children}
-        </Animated.View>
-    )
-}
 
 const DropDownViewTest = (props) => {
     const [fadeAnim] = useState(useRef(new Animated.Value(props.hookValue ? 1 : 0)).current)
@@ -256,7 +205,7 @@ const DropDownViewTest = (props) => {
             transform: [{
                 translateY: fadeAnim.interpolate({
                   inputRange: [0, 1],
-                  outputRange: [60, 0]  // 0 : 150, 0.5 : 75, 1 : 0
+                  outputRange: [60, -10]  // 0 : 150, 0.5 : 75, 1 : 0
                 }),
               }]      // Bind opacity to animated value
           }}
@@ -365,11 +314,11 @@ export const OutfitSelection = ({ route, navigation }) => {
                 width: '100%',
                 marginTop: 5,
                 marginBottom: 5,
-                position: 'relative'
+                position: 'relative',
             }}>
                 <TouchableOpacity style={{width: 'auto', height: 'auto'}}
                             onPress={() => addToArray(item)}>
-                <View style={{
+                <View style={[{
                     width: 'auto',
                     marginLeft: 10,
                     marginRight: 10,
@@ -377,9 +326,8 @@ export const OutfitSelection = ({ route, navigation }) => {
                     marginBottom: 5,
                     height: 'auto',
                     backgroundColor: 'white',
-                    elevation: 10,
                     borderRadius: 10
-                }}>
+                }, GlobalStyles.shadowLight]}>
                     <View style={{
                         height: '100%',
                         width: '100%',
@@ -403,10 +351,11 @@ export const OutfitSelection = ({ route, navigation }) => {
                             flexDirection: 'row',
                             marginTop: 8
                         }}>
-                            <Text category='h4' style={{fontWeight: 'bold', marginLeft: 15}}>{item.clothingName}</Text>
+                            <Text category='h4' 
+                            style={[{fontWeight: 'bold', marginLeft: 15}, GlobalStyles.h4]}>{item.clothingName}</Text>
                             
                                 {/* <Icon  width='30' height='30' fill='black' name={'plus'}/> */}
-                                <Ionicons name="md-checkmark-circle" size={32} color="green" />
+                                <PlusIcon size={30} style={GlobalStyles.colorMain} style={{marginRight: 10}}/>
                             
                         </View>
                     </View>
@@ -419,9 +368,10 @@ export const OutfitSelection = ({ route, navigation }) => {
 
     return (
         <View 
-        style={{flex: 1}}>
+        style={{flex: 1, 
+            backgroundColor: 'white'}}>
             <TopNav title={topNavTitle} exitDestination={'HOMESCREEN'}/>
-            <View style={{position: 'relative', }}>
+            <View style={{position: 'relative',}}>
                 <ScreenHeader title={topNavTitle}/>
                 <DropDownViewTest 
                 style={{
@@ -483,9 +433,10 @@ export const OutfitSelection = ({ route, navigation }) => {
             <View style={{
                 height: 'auto',
                 position: 'absolute',
-                top: 115,
+                top: 90, //originally 115
                 bottom: 0
-            }}>
+            }} //the below solves issue on IOS where the added clothing blocks touches
+            pointerEvents={modalVisible ? 'none' : 'auto'}> 
                 <FadeInViewTest 
                 style={{
                     flex: 1,
@@ -498,7 +449,6 @@ export const OutfitSelection = ({ route, navigation }) => {
                             renderItem={ClothingAddedIcon}/>
                 </FadeInViewTest>
             </View>
-            
             <PlusButton disabledHook={false} onPressFunc={() => setModalVisible(!modalVisible)}/>
         </View>
     )
