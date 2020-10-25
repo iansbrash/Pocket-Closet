@@ -1,0 +1,12 @@
+{
+  "name": "pocket-closet",
+  "displayName": "pocket-closet",
+  "expo": {
+    "name": "pocket-closet",
+    "slug": "pocket-closet",
+    "version": "1.0.0",
+    "assetBundlePatterns": [
+      "**/*"
+    ]
+  }
+}
