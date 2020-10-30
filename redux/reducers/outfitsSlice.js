@@ -71,10 +71,19 @@ const outfitsSlice = createSlice({
                     }
                 }
             }
+        },
+        outfitInProgressItemDeleted: {
+            reducer (state, action) {
+                state.outfitInProgress[action.payload.clothingType + "Array"] = 
+                state.outfitInProgress[action.payload.clothingType + "Array"].filter(obj => obj._id !== action.payload._id)   //.splice(delIndex, 1);
+            }
         }
     }
 
 })
 
 export default outfitsSlice.reducer
-export const { outfitCreatedFromHome, outfitInProgressItemAdded } = outfitsSlice.actions
+export const { 
+    outfitCreatedFromHome, 
+    outfitInProgressItemAdded,
+    outfitInProgressItemDeleted } = outfitsSlice.actions

@@ -10,6 +10,7 @@ import {
     TextInput,
     Animated,
     Text,
+    Modal
   } from 'react-native'
 import { useSelector, useDispatch as dispatchRedux } from 'react-redux' 
 import { TabRouter, useNavigation } from '@react-navigation/native';
@@ -17,16 +18,18 @@ import { configureStore } from '@reduxjs/toolkit';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { PlusButton } from './NewOutfit/PlusButton'
 import { Ionicons } from '@expo/vector-icons';
+import GlobalStyles from './GlobalComponents/GlobalStyles'
 
 
 
 
 
 // used as render method for FlatList in ClosetListOneCol
-const RenderSingleLineClosetItem = ({item, index}) => {
+function RenderSingleLineClosetItem ({item})  {
 
     let src = { uri: 'https://randomuser.me/api/portraits/men/1.jpg' }
-    
+
+    const navigation = useNavigation();
 
 
     return (
@@ -34,7 +37,7 @@ const RenderSingleLineClosetItem = ({item, index}) => {
             height: 120,
             width: '100%',
         }}>
-            <View style={{
+            <TouchableOpacity style={[{
                 width: 'auto',
                 marginLeft: 10,
                 marginRight: 10,
@@ -42,9 +45,10 @@ const RenderSingleLineClosetItem = ({item, index}) => {
                 marginBottom: 5,
                 height: 'auto',
                 backgroundColor: 'white',
-                elevation: 10,
                 borderRadius: 10
-            }}>
+            }, GlobalStyles.shadowLight]}
+            activeOpacity={0.5}
+            onPress={() => navigation.navigate('VIEWINDIVIDUALPIECE', {item: item})}> 
                 <View style={{
                     height: 'auto',
                     width: '100%',
@@ -74,7 +78,7 @@ const RenderSingleLineClosetItem = ({item, index}) => {
                             width: '85%'
 
                         }}>
-                            <View style={{
+                            <View style={[{
                                     height: 'auto', 
                                     aspectRatio: 1,
                                     borderRadius: 10,
@@ -82,8 +86,7 @@ const RenderSingleLineClosetItem = ({item, index}) => {
                                     marginTop: 10,
                                     marginBottom: 10,
                                     borderRadius: 10,
-                                    elevation: 10
-                                }}> 
+                                }, GlobalStyles.shadowLight]}> 
                                 <Image source={src} style={{height: '100%', aspectRatio: 1, borderRadius: 10}} />
                             </View>
                             <View style={{
@@ -98,13 +101,18 @@ const RenderSingleLineClosetItem = ({item, index}) => {
                                     flexDirection: 'row',
                                     flexShrink: 1
                                 }}>
-                                    <Text category='h4' style={{fontWeight: 'bold', marginLeft: 15, flexShrink: 1}}>{item.clothingName}</Text>
+                                    <Text category='h4' 
+                                    style={[{fontWeight: 'bold', marginLeft: 15, flexShrink: 1}, GlobalStyles.h4]}
+                                    >{item.clothingName}</Text>
                                 </View>
                                 <View style={{
                                     flexDirection: 'row',
                                     flexShrink: 1
                                 }}>
-                                    <Text category='h5' appearance='hint' style={{fontWeight: 'bold', marginLeft: 15, marginTop: -10, flexShrink: 1}}>{item.brandName[0]}</Text>
+                                    <Text category='h5' appearance='hint' 
+                                    style={[{fontWeight: 'bold', marginLeft: 15, marginTop: -5, flexShrink: 1}, 
+                                    GlobalStyles.h5, GlobalStyles.hint]}
+                                    >{item.brandName[0]}</Text>
                                 </View>
                                 
                             </View>
@@ -112,12 +120,12 @@ const RenderSingleLineClosetItem = ({item, index}) => {
                         </View>
                         <View style={{width: '15%', justifyContent: 'center', alignItems: 'center'}}>
                             {/* <Icon style={{marginRight: 15, marginLeft: 5}} width='30' height='30' fill='black' name={'plus'}/> */}
-                            <Ionicons name="md-checkmark-circle" size={32} color="green" />
+                            {/* <Ionicons name="md-checkmark-circle" size={32} color="green" /> */}
     
                         </View>
                     </View>
-                </View>
-            </View>
+                </View> 
+            </TouchableOpacity>
         </View>
     )
 }
@@ -235,15 +243,16 @@ const ClosetListOneCol = ({searchInput, filtersEnabled, heartToggleChecked}) => 
             <FlatList
             data={combinedArrays.filter((item, index) => 
                 (
-                    item.clothingName.includes(searchInput) ||
-                    item.brandName.find(name => name.includes(searchInput))
+                    item.clothingName.toLowerCase().includes(searchInput.toLowerCase()) ||
+                    item.brandName.find(name => name.toLowerCase().includes(searchInput.toLowerCase()))
                 ) && (!filtersEnabled ? true : (
                         (heartToggleChecked ? item.favorite : true)
                         && (true) //you can chain filters after this true.
                     )  //this might be a little innefficent.\ xdddd
                 )
             )}
-            renderItem={RenderSingleLineClosetItem}
+            renderItem={object => <RenderSingleLineClosetItem {...object}/>
+            /** HOW THE FUCK DOES THE ABOVE WORK... WTF */}
             />
             
         </View>
@@ -280,8 +289,8 @@ const ClosetListTwoCol = ({searchInput, filtersEnabled, heartToggleChecked}) => 
             numColumns={2}
             data={combinedArrays.filter((item, index) => 
                 (
-                    item.clothingName.includes(searchInput) ||
-                    item.brandName.find(name => name.includes(searchInput))
+                    item.clothingName.toLowerCase().includes(searchInput.toLowerCase()) ||
+                    item.brandName.find(name => name.toLowerCase().includes(searchInput.toLowerCase()))
                 ) && (!filtersEnabled ? true : (
                         (heartToggleChecked ? item.favorite : true)
                         && (true) //you can chain filters after this true.
@@ -494,7 +503,7 @@ const ClosetSearch = ({searchInput, setSearchInput}) => {
                     style={{
                         width: inputLength.interpolate({
                             inputRange: [0, 1],
-                            outputRange: ['85%', '100%']
+                            outputRange: ['84%', '100%']
                     }),
                         flexDirection: 'row',
                         alignItems: 'center'}}>
@@ -686,10 +695,12 @@ export const NewClosetScreen = () => {
                     {/** This is going to be the clothing/outfits toggle */}
                     <View style={{height: 10}}></View>
                     <ClosetOutfitsToggle closetIsActive={closetIsActive} setClosetIsActive={setClosetIsActive} />
-                    <View style={{height: 10}}></View>
+                    
                     <View 
                         style={{
-                            height: '81%', //this right here... this is some FUCKY ass code
+                            height: '85.5%', //this right here... this is some FUCKY ass code
+                            //could potentially fix by putting a view under the list with the same height
+                            //as the bottomtabnav
                             }}>
                         {closetIsActive ? <ClosetListOneCol  //can change between ClosetListOneCol and TwoCol
                                     searchInput={searchInput}

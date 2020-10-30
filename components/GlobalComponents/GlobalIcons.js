@@ -3,6 +3,7 @@ import { View } from 'react-native'
 import { Feather } from '@expo/vector-icons'; 
 import { Entypo } from '@expo/vector-icons'; 
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { MaterialIcons } from '@expo/vector-icons';
 
 
 export const LeftIcon = (props) => {
@@ -56,5 +57,29 @@ export const CalendarIcon = (props) => {
 export const HangerIcon = (props) => {
     return (
         <MaterialCommunityIcons style={props.style} name="hanger" size={props.size}/>
+    )
+}
+
+export const HeartIcon = (props) => {
+    return (
+        <Entypo style={props.style} name="heart" size={props.size}/>
+    )
+}
+
+export const EditIcon = (props) => {
+    return (
+        <Feather style={props.style} name="edit" size={props.size} />
+    )
+}
+
+export const DeleteIcon = (props) => {
+    return (
+        <MaterialIcons style={props.style} name="delete" size={props.size} />
+    )
+}
+
+export const ShareIcon = (props) => {
+    return (
+        <Feather style={props.style} name="share" size={props.size} />
     )
 }

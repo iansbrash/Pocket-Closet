@@ -8,7 +8,7 @@ const closetSlice = createSlice({
         closetObject: {
             topsArray: [
                 {
-                    _id: 2,
+                    _id: 69,
                     clothingType: 'tops',
                     clothingName: 'shirt',
                     brandName: ['Comme Des Garcons', 'CDG'],
@@ -16,9 +16,10 @@ const closetSlice = createSlice({
                     favorite: false,
                     price: '$98',
                     color: 'black',
-                    tags: ['hype', 'casual'],
+                    tags: ['hype', 'casual', 'stolen', 'retail', 'ugly'],
                     pieceType: 'T-Shirt'
                 },{
+                    _id: 70,
                     clothingType: 'tops',
                     clothingName: 'white shirt',
                     brandName: ['Supreme'],
@@ -29,6 +30,7 @@ const closetSlice = createSlice({
                     tags: ['hype', 'casual'],
                     pieceType: 'T-Shirt'
                 },{
+                    _id: 71,
                     clothingType: 'tops',
                     clothingName: 'tan coat',
                     brandName: ['UNDFTD', 'Undefeated'],
@@ -41,6 +43,7 @@ const closetSlice = createSlice({
                     pieceType: 'coat'
                     
                 },{
+                    _id: 72,
                     clothingType: 'tops',
                     clothingName: 'baby milo shirt',
                     brandName: ['Bape', 'A Bathing Ape'],
@@ -70,7 +73,7 @@ const closetSlice = createSlice({
         ],
             footwearArray: [
                 {
-                    _id: 333,
+                    _id: 21,
                     clothingType: 'footwear',
                     clothingName: 'Air Jordan 1',
                     brandName: ['Jordan', 'Nike'],
@@ -138,6 +141,16 @@ const closetSlice = createSlice({
                 [...state.closetObject[action.payload.clothingType + 'Array'], action.payload]
             }
         },
+        itemFavoriteToggled: {
+            reducer(state, action) {
+                console.log(action.payload);
+
+                let itemToEdit = state.closetObject[action.payload.clothingType + 'Array']
+                .find(clothingObj => clothingObj._id === action.payload._id);
+                console.log(itemToEdit); //SHIT WORKS
+                itemToEdit.favorite = !itemToEdit.favorite;
+            }
+        },
         
         topAddedToCloset: {
             reducer(state, action) {
@@ -171,5 +184,6 @@ export const {
     accessoryAddedToCloset,
     outfitCreated,
     clothingInProgressAttributeAdded ,
-    clothingAddedToCloset
+    clothingAddedToCloset,
+    itemFavoriteToggled
 } = closetSlice.actions;

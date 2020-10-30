@@ -7,7 +7,7 @@ import {
     StyleSheet,
     Pressable,
     Text, } from 'react-native'
-import { TopNav } from '../GlobalComponents/TopNav'
+import { TopNav, TopNavScreenHeader } from '../GlobalComponents/TopNav'
 import { ScreenHeader } from '../GlobalComponents/ScreenHeader'
 import { useSelector } from 'react-redux'
 import { NextButton } from '../NewClothing/NextButton'
@@ -167,8 +167,9 @@ export const FromScratch = () => {
     return (
         <View 
         style={{flex: 1, backgroundColor: 'white'}}>
-            <TopNav title={'From Scratch!'} exitDestination={'HOMESCREEN'}/>
-            <ScreenHeader title={'Select Clothing'}/>
+            {/* <TopNav title={'From Scratch!'} exitDestination={'HOMESCREEN'}/> */}
+            {/* <ScreenHeader title={'Select Clothing'}/> */}
+            <TopNavScreenHeader title={'Select Clothing'} exitDestination={'HOMESCREEN'}/>
             <View style={{
                 height: 'auto',
                 width: '100%',

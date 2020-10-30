@@ -3,7 +3,7 @@ import { useNavigation } from '@react-navigation/native'
 import { Ionicons } from '@expo/vector-icons';
 import { StyleSheet, View, TouchableOpacity,
     Text, } from 'react-native'
-import { TopNav } from '../GlobalComponents/TopNav'
+import { TopNav, TopNavScreenHeader } from '../GlobalComponents/TopNav'
 import { ScreenHeader } from '../GlobalComponents/ScreenHeader'
 import GlobalStyles from '../GlobalComponents/GlobalStyles'
 import { Entypo } from '@expo/vector-icons'; 
@@ -73,8 +73,9 @@ export const OutfitFrom = ({ navigationXD }) => {
             flex: 1, 
             backgroundColor: 'white',
             }}>
-            <TopNav title={'New Outfit'} exitDestination={'HOMESCREEN'}/>
-            <ScreenHeader title={'New Outfrom From...'}/>
+            {/* <TopNav title={'New Outfit'} exitDestination={'HOMESCREEN'}/> */}
+            {/* <ScreenHeader  title={'New Outfrom From...'}/> */}
+            <TopNavScreenHeader title={'New Outfit From...'} exitDestination={'HOMESCREEN'} />
             <View style={{
                 height: 'auto',
                 width: '100%',

@@ -11,7 +11,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { outfitCreatedFromHome } from '../../redux/reducers/outfitsSlice'
 
 import { useNavigation } from '@react-navigation/native'
-import { TopNav } from '../GlobalComponents/TopNav'
+import { TopNavScreenHeader } from '../GlobalComponents/TopNav'
 import { ScreenHeader, MiniScreenHeader } from '../GlobalComponents/ScreenHeader'
 import { FinalizeButton } from '../NewClothing/NextButton'
 import GlobalStyles from '../GlobalComponents/GlobalStyles'
@@ -147,8 +147,8 @@ export const FinalizeOutfit = () => {
             flex: 1,
             backgroundColor: 'white'
         }}>
-           <TopNav title={'Finalize Outfit'} exitDestination={'HOMESCREEN'}/>
-           <ScreenHeader title={'Finalize Outfit'}/>
+           <TopNavScreenHeader title={'Finalize Outfit'} exitDestination={'HOMESCREEN'}/>
+           {/* <ScreenHeader title={'Finalize Outfit'}/> */}
             <View style={{
                 margin: 10,
                 flex: 1

@@ -12,8 +12,11 @@ import {
 import { NavigationContainer, useNavigation } from '@react-navigation/native'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import { useSelector, useDispatch } from 'react-redux'
-import { outfitInProgressItemAdded } from '../../redux/reducers/outfitsSlice'
-import { TopNav } from '../GlobalComponents/TopNav'
+import { 
+    outfitInProgressItemAdded,
+    outfitInProgressItemDeleted
+ } from '../../redux/reducers/outfitsSlice'
+import { TopNavScreenHeader } from '../GlobalComponents/TopNav'
 import { ScreenHeader } from '../GlobalComponents/ScreenHeader'
 import { PlusButton } from './PlusButton'
 import GlobalStyles from '../GlobalComponents/GlobalStyles'
@@ -77,11 +80,19 @@ const AddClothingButton = ({title, hookFunc}) => {
     )
 }
 
-const ClothingAddedIcon = ({item}) => {
+const ClothingAddedIcon = (props) => {
+
+    const item = props.item;
+
+   
 
     let src = { uri: 'https://randomuser.me/api/portraits/men/1.jpg' }
     
 
+    const dispatch = useDispatch();
+    const deleteSelf = () => {
+        dispatch(outfitInProgressItemDeleted({...item}));
+    }
 
     return (
         <View style={{
@@ -170,8 +181,11 @@ const ClothingAddedIcon = ({item}) => {
                             
                         </View>
                         <View style={{width: '15%', justifyContent: 'center', alignItems: 'center'}}>
-                            {/* <Icon style={{marginRight: 15, marginLeft: 5}} width='30' height='30' fill='black' name={'plus'}/> */}
-                            <XIcon style={[{marginRight: 15, marginLeft: 5}, GlobalStyles.colorMain]} size={30} />
+                            <TouchableOpacity
+                            onPress={() => deleteSelf()}
+                            >
+                                <XIcon style={[{marginRight: 15, marginLeft: 5}, GlobalStyles.colorMain]} size={30} />
+                            </TouchableOpacity>
                         </View>
                     </View>
                 </View>
@@ -205,7 +219,7 @@ const DropDownViewTest = (props) => {
             transform: [{
                 translateY: fadeAnim.interpolate({
                   inputRange: [0, 1],
-                  outputRange: [60, -10]  // 0 : 150, 0.5 : 75, 1 : 0
+                  outputRange: [5, -60]  // Edit this to change absolute position of textinput
                 }),
               }]      // Bind opacity to animated value
           }}
@@ -370,54 +384,19 @@ export const OutfitSelection = ({ route, navigation }) => {
         <View 
         style={{flex: 1, 
             backgroundColor: 'white'}}>
-            <TopNav title={topNavTitle} exitDestination={'HOMESCREEN'}/>
-            <View style={{position: 'relative',}}>
-                <ScreenHeader title={topNavTitle}/>
+            <TopNavScreenHeader title={topNavTitle} exitDestination={'HOMESCREEN'}/>
+            <View style={{position: 'relative'}}>
+                {/* <ScreenHeader title={topNavTitle}/> */}
                 <DropDownViewTest 
                 style={{
                     width: '100%', 
                     height: 'auto', 
                     position: 'absolute', 
+                    
                     zIndex: 0,
                 }} 
                 hookValue={modalVisible}>
-                    <View style={{
-                        margin: 10,
-                        width: 'auto',
-                        height: 45,
-                        borderRadius: 5,
-                        elevation: 10,
-                        backgroundColor: 'white'
-                    }}>
-                        <View style={{
-                            width: '100%',
-                            backgroundColor: '#09122b',
-                            height: 5,
-                            borderTopRightRadius: 5,
-                            borderTopLeftRadius: 5,
-                        }}></View>
-                        <TextInput 
-                            placeholder={`Search clothing!`}
-                            style={{ 
-                                justifyContent: 'center',
-                                alignItems: 'center',
-                                height: 40, 
-                                width: '100%',
-                                borderColor: '#09122b', 
-                                borderBottomRightRadius: 5,
-                                borderBottomLeftRadius: 5,
-                                borderWidth: 1,
-                                fontWeight: 'bold',
-                                fontSize: 15,
-                            }}
-                            // inlineImageLeft='search40x40'
-                            //inlineImagePadding={5} // might have to be in curly braces?
-                            selectTextOnFocus={true}
-                            placeholderTextColor='#192442' //random ass color
-                            onChangeText={text => setSearchInput(text)}
-                            value={searchInput}
-                        />
-                    </View>
+                    <TestSearchInput searchInput={searchInput} setSearchInput={setSearchInput}/>
                 </DropDownViewTest>
                 <FadeInViewTestTwo 
                 style={{
@@ -425,7 +404,7 @@ export const OutfitSelection = ({ route, navigation }) => {
                     marginTop: 55
                     }} hookValue={modalVisible}>
                     <FlatList 
-                        data={ClosetArray.filter(item => item.clothingName.includes(searchInput))}
+                        data={ClosetArray.filter(item => item.clothingName.toLowerCase().includes(searchInput.toLowerCase()))}
                         renderItem={renderItem}
                         />
                 </FadeInViewTestTwo>
@@ -433,7 +412,7 @@ export const OutfitSelection = ({ route, navigation }) => {
             <View style={{
                 height: 'auto',
                 position: 'absolute',
-                top: 90, //originally 115
+                top: 60, //originally 115 // originally 90 (TopNavScreenHeader edit)
                 bottom: 0
             }} //the below solves issue on IOS where the added clothing blocks touches
             pointerEvents={modalVisible ? 'none' : 'auto'}> 
@@ -446,11 +425,95 @@ export const OutfitSelection = ({ route, navigation }) => {
                 hookValue={modalVisible}>
                         <FlatList style={{maxHeight: '100%'}}
                             data={OutfitArray}
-                            renderItem={ClothingAddedIcon}/>
+                            renderItem={(item) => (<ClothingAddedIcon {...item}/>)}/>
                 </FadeInViewTest>
             </View>
             <PlusButton disabledHook={false} onPressFunc={() => setModalVisible(!modalVisible)}/>
         </View>
+    )
+}
+
+const TestSearchInput = ({searchInput, setSearchInput}) => {
+    
+    const [inputLength] = useState(new Animated.Value(1))
+    const searchInputRef = useRef(null);
+
+    const onBlur = () => {
+        Animated.timing(inputLength, {
+            toValue: 1,
+            duration: 250
+        }).start();
+    }
+
+    const onFocus = () => {
+        Animated.timing(inputLength, {
+            toValue: 0,
+            duration: 250
+        }).start();
+    }
+    
+    return (
+        <View style={{
+            marginLeft: 10,
+            marginRight: 10,
+            marginTop: 5
+        }}>
+            <Animated.View 
+            style={{
+                width: inputLength.interpolate({
+                    inputRange: [0, 1],
+                    outputRange: ['84%', '100%']
+                }),
+                flexDirection: 'row',
+                alignItems: 'center'}}>
+                <TextInput 
+                    style={{ 
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        height: 40, 
+                        width: '100%',
+                        borderRadius: 5,
+                        //fontWeight: 'bold',
+                        fontSize: 15,
+                        paddingLeft: 25,
+                        backgroundColor: '#f2f2f2',
+                        elevation: 10,
+                        zIndex: 2
+                    }}
+                    ref={searchInputRef}
+                    placeholder={`Search clothing!`}
+                    onFocus={() => onFocus()}
+                    onBlur={() => onBlur()}
+                    // inlineImageLeft='search40x40'
+                    //inlineImagePadding={5} // might have to be in curly braces?
+                    selectTextOnFocus={true}
+                    placeholderTextColor="#9e9e9e"  //random ass color
+                    onChangeText={text => setSearchInput(text)}
+                    value={searchInput}
+                />
+                    <Animated.View 
+                    style={{
+                        opacity: inputLength.interpolate({
+                            inputRange: [0, 1],
+                            outputRange: [1, 0]
+                        }),
+                        zIndex: 1,
+                        margin: 10,
+                        
+                    }}>
+                        <TouchableOpacity style={{
+                            height: 'auto',
+                            width: 'auto',
+                            alignItems: 'center'
+                        }}
+                        onPress={() => searchInputRef.current.blur()}>
+                            
+                            <Text style={{ fontWeight: 'bold'}}>Cancel</Text>
+                        </TouchableOpacity>
+                </Animated.View>
+            </Animated.View>
+        </View>
+        
     )
 }
 
