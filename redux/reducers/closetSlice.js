@@ -1,5 +1,6 @@
 import { DrawerActions } from '@react-navigation/native'
 import { createSlice } from '@reduxjs/toolkit'
+import { ActivityIndicatorComponent } from 'react-native';
  
 
 const closetSlice = createSlice({
@@ -151,6 +152,14 @@ const closetSlice = createSlice({
                 itemToEdit.favorite = !itemToEdit.favorite;
             }
         },
+        clothingDeletedFromCloset: {
+            reducer (state, action) {
+                state.closetObject[action.payload.clothingType + 'Array'] = 
+                state.closetObject[action.payload.clothingType + 'Array'].filter(
+                    obj => obj._id !== action.payload._id
+                )
+            }
+        },
         
         topAddedToCloset: {
             reducer(state, action) {
@@ -185,5 +194,6 @@ export const {
     outfitCreated,
     clothingInProgressAttributeAdded ,
     clothingAddedToCloset,
-    itemFavoriteToggled
+    itemFavoriteToggled,
+    clothingDeletedFromCloset
 } = closetSlice.actions;
