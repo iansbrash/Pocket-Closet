@@ -4,15 +4,18 @@ import {
     ScrollView, 
     StyleSheet,
     TextInput,
-    Text, } from 'react-native'
+    Text,
+    Pressable  } from 'react-native'
 import { View, Image } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
-import { TopNav } from '../GlobalComponents/TopNav'
+import { TopNavScreenHeader } from '../GlobalComponents/TopNav'
 import { useSelector } from 'react-redux'
 import { NextButton } from './NextButton'
 import { ScreenHeader } from '../GlobalComponents/ScreenHeader'
 import { useDispatch } from 'react-redux' 
 import { clothingInProgressAttributeAdded } from '../../redux/reducers/closetSlice'
+import GlobalStyles from '../GlobalComponents/GlobalStyles'
+import { XIcon } from '../GlobalComponents/GlobalIcons'
 
 const IndividualTag = ({title, deleteFunc}) => {
     return (
@@ -27,18 +30,18 @@ const IndividualTag = ({title, deleteFunc}) => {
             flexDirection: 'row',
             elevation: 5
         }}>
-            <Text category='h5' status='control' style={{
-                margin: 10
-            }}>
+            <Text category='h5' style={[{
+                color: 'white',
+                fontWeight: 'bold',
+                marginLeft: 10,
+                marginBottom: 0
+            }, GlobalStyles.h5]}>
                 {title}
             </Text>
             <TouchableOpacity
             onPress={() => deleteFunc(title)}
             style={{height: 25, width: 25, justifyContent: 'center', alignItems: 'center'}}>
-            {/* <Icon 
-                style={{marginRight: 5, marginLeft: -10}} 
-                width='20' height='20' fill='white' name='close-outline'/> */}
-                 <Ionicons name="md-checkmark-circle" size={32} color="green" />
+                <XIcon size={20} style={{color: 'white'}}/>
             </TouchableOpacity>
         </View>
     )
@@ -54,14 +57,13 @@ const DescriptionComponent = ({title, placeholder, hookValue, hookFunc}) => {
             height: 30
 
         }}>
-            <Text category='h5'   style={{
+            <Text style={[{
                 width: 'auto',
-                marginRight: -7,
                 fontWeight: 'bold'
 
-            }}>{title}: </Text>
+            }, GlobalStyles.h5]}>{title}: </Text>
             <View style={{
-                width: 'auto',
+                width: '100%',
                 marginTop: -4,
                 justifyContent: 'center',
                 justifyContent: 'center'
@@ -71,13 +73,21 @@ const DescriptionComponent = ({title, placeholder, hookValue, hookFunc}) => {
                     backgroundColor: 'white',
                     width: '100%',
                     height: '100%',
+                    marginTop:10
                 }}
+                
                 value={hookValue}
                 onChangeText={nextValue => hookFunc(nextValue)}
                 textStyle={{marginLeft: -7}}
                 placeholder={placeholder} />
             </View>
         </View>
+    )
+}
+
+const Divider = (props) => {
+    return (
+        <View style={[{height: 1, backgroundColor: 'lightgray', width: '100%'}, props.style]}></View>
     )
 }
 
@@ -117,11 +127,10 @@ export const ItemDescription = () => {
     }
 
     return (
-        <View style={{flex: 1}}>
-            <TopNav title={'Enter Description'} exitDestination={'CLOSETSCREEN'}/>
+        <View style={{flex: 1, backgroundColor: 'white'}}>
+            <TopNavScreenHeader title={'Enter Description'} exitDestination={'CLOSETSCREEN'}/>
             <ScrollView style={{marginBottom: 10}}>
-                <ScreenHeader title={'Enter Description'}/>
-                {/* <Divider /> */}
+                
                 <View style={{
                     flex: 1,
                     margin: 10,
@@ -131,7 +140,7 @@ export const ItemDescription = () => {
                         placeholder={'SS17 Tie-Dye Shirt'}
                         hookFunc={setNameInput}
                         hookVaue={nameInput}/>
-                    {/* <Divider style={{margin: 5}}/> */}
+                        <Divider style={{width: 'auto', margin: 5}}/>
 
 
 
@@ -139,28 +148,30 @@ export const ItemDescription = () => {
                         flexDirection: 'column',
                         justifyContent: 'flex-start',
                         alignItems: 'flex-start',
-                        height: 60
+                        height: 75
 
                     }}>
-                        <Text category='h5'   style={{
+                        <Text style={[{
                             width: 'auto',
                             marginRight: -7,
                             fontWeight: 'bold'
-
-                        }}>
+                        }, GlobalStyles.h5]}>
                             {'Description'}: 
                         </Text>
                         <View style={{
-                            width: 'auto',
+                            width: '100%',
+                            height: 60,
                             marginTop: -4,
                             justifyContent: 'center',
                         }}>
                             <TextInput style={{
                                 borderColor: 'white',
                                 backgroundColor: 'white',
-                                width: '100%',
                                 height: '100%',
+                                width: '100%',
+                                marginTop: 3
                             }}
+                            multiline={true}
                             value={descriptionInput}
                             onChangeText={nextValue => setDescriptionInput(nextValue)}
                             textStyle={{marginLeft: -12}}
@@ -170,21 +181,21 @@ export const ItemDescription = () => {
 
 
 
-                    {/* <Divider style={{margin: 5}}/> */}
+                    <Divider style={{width: 'auto', margin: 5}}/>
 
                     <DescriptionComponent 
                         title={'Color'} 
                         placeholder={'Multi (make this a selection)'}
                         hookFunc={setColorInput}
                         hookVaue={colorInput}/>
-                    {/* <Divider style={{margin: 5}}/> */}
+                    <Divider style={{width: 'auto', margin: 5}}/>
                     <DescriptionComponent 
                         title={'Price'} 
                         placeholder={'$79'}
                         hookFunc={setPriceInput}
                         hookVaue={priceInput}/>
 
-                    {/* <Divider style={{margin: 5}}/> */}
+                    <Divider style={{width: 'auto', margin: 5}}/>
 
                     <View style={{
                         flexDirection: 'row',
@@ -193,18 +204,17 @@ export const ItemDescription = () => {
                         height: 30
 
                     }}>
-                        <Text category='h5'   style={{
+                        <Text category='h5'   style={[{
                             width: 'auto',
-                            marginRight: -7,
                             fontWeight: 'bold'
 
-                        }}>Tags: </Text>
+                        }, GlobalStyles.h5]}>Tags: </Text>
                         <View style={{
-                            width: 'auto',
-                            marginTop: -4,
+                            width: '100%',
                             justifyContent: 'center',
                             justifyContent: 'center'
-                        }}>
+                        }}
+                        onPress={() => console.log('XD')}>
                             <TextInput style={{
                                 borderColor: 'white',
                                 backgroundColor: 'white',
@@ -218,7 +228,6 @@ export const ItemDescription = () => {
                         </View>
                     </View>
 
-                    {/* <Divider style={{margin: 5}}/> */}
 
                     {/** Tags */}
                     <View style={{

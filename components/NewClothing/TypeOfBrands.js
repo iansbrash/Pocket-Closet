@@ -1,13 +1,23 @@
-import React, {useState, useEffect} from 'react'
-import { TouchableOpacity, ScrollView, StyleSheet, View, Image, Text, TextInput } from 'react-native'
+import React, {useState, useRef} from 'react'
+import { 
+    TouchableOpacity, 
+    ScrollView, 
+    StyleSheet, 
+    View, 
+    Image, 
+    Text, 
+    TextInput,
+    Animated,
+    FlatList } from 'react-native'
 import ImagePicker from 'react-native-image-picker';
 import { useNavigation } from '@react-navigation/native'
-import { TopNav } from '../GlobalComponents/TopNav'
+import { TopNavScreenHeader } from '../GlobalComponents/TopNav'
 import { useSelector, useDispatch } from 'react-redux'
 import { NextButton } from './NextButton'
 import { ScreenHeader } from '../GlobalComponents/ScreenHeader'
 import { clothingInProgressAttributeAdded } from '../../redux/reducers/closetSlice'
-import { Ionicons } from '@expo/vector-icons';
+import { CheckIcon } from '../GlobalComponents/GlobalIcons'
+import GlobalStyles from '../GlobalComponents/GlobalStyles'
 
 
 
@@ -22,7 +32,89 @@ const testBrandArray = [
 'XDDD']
 
 
+const TestSearchInput = ({searchInput, setSearchInput}) => {
+    
+    const [inputLength] = useState(new Animated.Value(1))
+    const searchInputRef = useRef(null);
 
+    const onBlur = () => {
+        Animated.timing(inputLength, {
+            toValue: 1,
+            duration: 250
+        }).start();
+    }
+
+    const onFocus = () => {
+        Animated.timing(inputLength, {
+            toValue: 0,
+            duration: 250
+        }).start();
+    }
+    
+    return (
+        <View style={{
+            marginLeft: 10,
+            marginRight: 10,
+            marginTop: 5
+        }}>
+            <Animated.View 
+            style={{
+                width: inputLength.interpolate({
+                    inputRange: [0, 1],
+                    outputRange: ['84%', '100%']
+                }),
+                flexDirection: 'row',
+                alignItems: 'center'}}>
+                <TextInput 
+                    style={{ 
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        height: 40, 
+                        width: '100%',
+                        borderRadius: 5,
+                        //fontWeight: 'bold',
+                        fontSize: 15,
+                        paddingLeft: 25,
+                        backgroundColor: '#f2f2f2',
+                        elevation: 10,
+                        zIndex: 2
+                    }}
+                    ref={searchInputRef}
+                    placeholder={`Search clothing!`}
+                    onFocus={() => onFocus()}
+                    onBlur={() => onBlur()}
+                    // inlineImageLeft='search40x40'
+                    //inlineImagePadding={5} // might have to be in curly braces?
+                    selectTextOnFocus={true}
+                    placeholderTextColor="#9e9e9e"  //random ass color
+                    onChangeText={text => setSearchInput(text)}
+                    value={searchInput}
+                />
+                    <Animated.View 
+                    style={{
+                        opacity: inputLength.interpolate({
+                            inputRange: [0, 1],
+                            outputRange: [1, 0]
+                        }),
+                        zIndex: 1,
+                        margin: 10,
+                        
+                    }}>
+                        <TouchableOpacity style={{
+                            height: 'auto',
+                            width: 'auto',
+                            alignItems: 'center'
+                        }}
+                        onPress={() => searchInputRef.current.blur()}>
+                            
+                            <Text style={{ fontWeight: 'bold'}}>Cancel</Text>
+                        </TouchableOpacity>
+                </Animated.View>
+            </Animated.View>
+        </View>
+        
+    )
+}
 
 export const TypeOfBrands = () => {
 
@@ -42,29 +134,49 @@ export const TypeOfBrands = () => {
     // this is an array of arrays. Keep that in mind.
     const brandsArray = useSelector(state => state.closet.brandsArray)
 
-
+    
     const renderBrandStrip = ({item}) => {
         console.log(item);
         console.log('selectedBrandsArray: ');
         console.log(selectedBrandsArray);
 
+        
+
+
         //we use the first nickname in the brand array
         item = item[0];
 
+        let inSelectedBrands = selectedBrandsArray.find(searchItem => searchItem.toLowerCase() === item.toLowerCase())
+
         if (!item.toLowerCase().includes(searchInput)){
-            return <View></View>
+            return null
         }
         return (
+            
             <TouchableOpacity 
             onPress={() =>  !selectedBrandsArray.find(searchItem => searchItem.toLowerCase() === item.toLowerCase()) ? setSelectedBrandsArray([...selectedBrandsArray, item]) 
                 : setSelectedBrandsArray(selectedBrandsArray.filter(searchItem => searchItem.toLowerCase() !== item.toLowerCase()))}
-            style={selectedBrandsArray.find(searchItem => searchItem.toLowerCase() === item.toLowerCase()) ? [styles.TOBasic, styles.TOSelected] : styles.TOBasic}>
-                    <Text category='h5' status='basic' 
-                    style={selectedBrandsArray.find(searchItem => searchItem.toLowerCase() === item.toLowerCase()) ? 
-                        styles.TextSelected : styles.TextUnselected}>
-                        {item}
-                    </Text>
-                    <Ionicons name="md-checkmark-circle" size={32} color="green" />
+            style={inSelectedBrands ? 
+                [styles.TOBasic, styles.TOSelected, GlobalStyles.shadowLight] : 
+                [styles.TOBasic, GlobalStyles.shadowLight]}>
+                    <View style={[{
+                        borderTopLeftRadius: 5, borderTopRightRadius: 5, height: 5, width: '100%'
+                    }, inSelectedBrands ? {backgroundColor: 'white'} :GlobalStyles.bgColorMain]}></View>
+                    <View style={{
+                        height: 45, 
+                        justifyContent: 'space-between', 
+                        alignItems: 'center', 
+                        flexDirection: 'row', 
+                        width: '100%'}}>
+                        <Text category='h5' status='basic' 
+                        style={inSelectedBrands ? 
+                            [styles.TextSelected, GlobalStyles.h5] : [styles.TextUnselected, GlobalStyles.h5]}>
+                            {item}
+                        </Text>
+                        <CheckIcon size={32} style={{color: 'white', marginRight: 10}} />
+                    </View>
+                    
+                    
                     {/* <Icon style={{marginRight: 5, marginLeft: 5}} width='30' height='30' fill='white' name='checkmark-outline'/> */}
             </TouchableOpacity>
         )
@@ -73,30 +185,17 @@ export const TypeOfBrands = () => {
     
 
     return (
-        <View style={{flex: 1}}>
-            <TopNav title={'Select Brands'} exitDestination={'CLOSETSCREEN'}/>
-            <View>
-                <ScreenHeader title={'Select Brands'}/>
-                {/* <Divider /> */}
-                <TextInput
-                    style={{
-                        borderRadius: 5,
-                        margin: 15,
-                        width: 'auto'
-                    }}
-                    value={searchInput}
-                    placeholder='Search brands'
-                    onChangeText={nextValue => setSearchInput(nextValue.toLowerCase())}
-                    status='basic'
-                    textStyle={{fontWeight: 'bold'}}
-                    >
-                </TextInput>
+        <View style={{flex: 1, backgroundColor: 'white'}}>
+            <TopNavScreenHeader title={'Select Brands'} exitDestination={'CLOSETSCREEN'}/>
+            
+            <View style={{marginTop: 10, marginBottom: 10}}>
+                <TestSearchInput searchInput={searchInput} setSearchInput={setSearchInput}/>
             </View>
-            <Text>RIP BRAND STRIP</Text>
-            {/* <List 
+            
+            <FlatList 
                     style={{maxHeight: '100%', width: '100%'}}
                     data={brandsArray}
-                    renderItem={renderBrandStrip} />  */}
+                    renderItem={renderBrandStrip} /> 
             
             <NextButton 
             navpath={"ITEMDESCRIPTION"} 
@@ -132,13 +231,13 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         alignItems:'center',
         backgroundColor: 'white',
-        flexDirection: 'row',
+        flexDirection: 'column',
         width: 'auto', 
-        height: 40, 
+        height: 50, 
         marginLeft: 10,
         marginRight: 10,
-        marginTop: 2,
-        marginBottom: 2, 
+        marginTop: 5,
+        marginBottom: 5, 
         borderRadius: 5
     },
     TextUnselected: {

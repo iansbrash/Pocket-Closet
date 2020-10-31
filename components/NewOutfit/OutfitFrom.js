@@ -8,65 +8,12 @@ import { ScreenHeader } from '../GlobalComponents/ScreenHeader'
 import GlobalStyles from '../GlobalComponents/GlobalStyles'
 import { Entypo } from '@expo/vector-icons'; 
 import { PlusIcon } from '../GlobalComponents/GlobalIcons'
+import { MediumButton } from '../GlobalComponents/GlobalButtons'
 
 
-const OutfitFromButton = ({title, navpath, iconName}) => {
+export const OutfitFrom = () => {
 
     const navigation = useNavigation();
-
-    return (
-        <View style={{
-            height: 75,
-            width: '100%',
-            marginTop: 5,
-            marginBottom: 5,
-        }}>
-            <View style={[{
-                width: 'auto',
-                marginLeft: 10,
-                marginRight: 10,
-                marginTop: 5,
-                marginBottom: 5,
-                height: 'auto',
-                backgroundColor: 'white',
-                borderRadius: 10
-            }, GlobalStyles.shadowLight]}>
-                <TouchableOpacity style={{
-                    height: '100%',
-                    width: '100%',
-                    justifyContent: 'flex-start',
-                    alignItems: 'center',
-                    flexDirection: 'column',
-                }}
-                onPress={() => navigation.navigate(navpath)}>
-                    <View 
-                    style={{
-                        height: 10, 
-                        borderTopLeftRadius: 10, 
-                        borderTopRightRadius: 10, 
-                        backgroundColor: '#09122b',
-                        width: '100%'}}></View>
-                    <View style={{
-                        height: 'auto',
-                        width: '100%',
-                        justifyContent: 'space-between',
-                        alignItems: 'center',
-                        flexDirection: 'row',
-                        marginTop: 8
-                    }}>
-                        <Text category='h4' style={[{fontWeight: 'bold', marginLeft: 15}, GlobalStyles.h4]}>{title}</Text>
-                        <PlusIcon size={30} style={[GlobalStyles.colorMain, {marginRight: 10}]}/>
-                    </View>
-                </TouchableOpacity>
-            </View>
-            
-        </View>
-        
-    )
-}
-
-export const OutfitFrom = ({ navigationXD }) => {
-
 
     return (
         <View style={{
@@ -83,17 +30,20 @@ export const OutfitFrom = ({ navigationXD }) => {
                 justifyContent: 'center',
                 alignItems: 'center',
             }}>
-                <OutfitFromButton title={'Scratch'} iconName={'plus'} navpath={'FROMSCRATCH'}/>
-                <OutfitFromButton title={'Saved'} iconName={'heart'}/>
-                <OutfitFromButton title={'History'} iconName={'calendar'}/>
-                <OutfitFromButton title={'Random'} iconName={'question-mark'}/>
+                <MediumButton title={'Scratch'} icon={
+                    <PlusIcon size={30} style={[GlobalStyles.colorMain, {marginRight: 10}]}/>
+                } onPressFunc={() => navigation.navigate('FROMSCRATCH')}/>
+                <MediumButton title={'Saved'} icon={
+                    <PlusIcon size={30} style={[GlobalStyles.colorMain, {marginRight: 10}]}/>
+                } onPressFunc={() => navigation.navigate('FROMSCRATCH')}/>
+                <MediumButton title={'History'} icon={
+                    <PlusIcon size={30} style={[GlobalStyles.colorMain, {marginRight: 10}]}/>
+                } onPressFunc={() => navigation.navigate('FROMSCRATCH')}/>
+                <MediumButton title={'History'} icon={
+                    <PlusIcon size={30} style={[GlobalStyles.colorMain, {marginRight: 10}]}/>
+                } onPressFunc={() => navigation.navigate('FROMSCRATCH')}/>
             </View>
             
         </View>
     )
 }
-
-
-const styles = StyleSheet.create({
-    
-})

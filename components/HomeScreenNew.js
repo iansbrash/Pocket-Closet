@@ -6,77 +6,12 @@ import {
     Text,
     StyleSheet
 } from 'react-native'
-import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native'
 import { ScreenHeader, MiniScreenHeader } from './GlobalComponents/ScreenHeader'
 import { Entypo } from '@expo/vector-icons';
 import GlobalStyles from './GlobalComponents/GlobalStyles'
+import { MediumButton } from './GlobalComponents/GlobalButtons'
 
-const NewOutfitButton = () => {
-
-    const navigation = useNavigation();
-
-    return (
-        <View style={{
-            height: 75,
-            width: '100%',
-            marginTop: 5,
-            marginBottom: 5
-        }}>
-            <View style={[{
-                width: 'auto',
-                marginLeft: 10,
-                marginRight: 10,
-                marginTop: 5,
-                marginBottom: 5,
-                height: 'auto',
-                backgroundColor: 'white',
-                elevation: 10,
-                borderRadius: 10,
-            }, GlobalStyles.shadowHeavy]}>
-                <TouchableOpacity style={{
-                    height: '100%',
-                    width: '100%',
-                    justifyContent: 'flex-start',
-                    alignItems: 'center',
-                    flexDirection: 'column',
-                }}
-                onPress={() => navigation.navigate('RECORD')}>
-                    <View 
-                    style={{ //block at the top of the button. cosmetic
-                        height: 10, 
-                        borderTopLeftRadius: 10, 
-                        borderTopRightRadius: 10, 
-                        backgroundColor: '#09122b',
-                        width: '100%'}}></View>
-                    <View style={{
-                        height: 'auto',
-                        width: '100%',
-                        justifyContent: 'space-between',
-                        alignItems: 'center',
-                        flexDirection: 'row',
-                    }}>
-                        <View style={{height: '100%', justifyContent: 'center', alignItems: 'center'}}>
-                            <Text category='h4' 
-                                style={[{fontWeight: 'bold', marginLeft: 15, height: 'auto'}
-                                , GlobalStyles.h5]}>
-                                    {'New Outfit'}
-                            </Text>
-                        </View>
-                        <View style={{height: '100%', justifyContent: 'center', alignItems: 'center'}}>
-                            {/* <Ionicons style={{marginRight: 15, marginLeft: 5}} width='30' height='30' fill='#09122b' name={'plus'}/> */}
-                            <Entypo style={{marginRight: 15, marginLeft: 5}} name="plus" size={30} color="black" />
-                        </View>
-                            
-                                
-                        
-                        
-                    </View>
-                </TouchableOpacity>
-            </View>
-        </View>
-    )
-}
 
 
 const StatContainer = (props) => {
@@ -117,6 +52,7 @@ const StatContainer = (props) => {
 export const HomeScreenNew = () => {
 
     let src = { uri: 'https://randomuser.me/api/portraits/men/1.jpg' }
+    const navigation = useNavigation();
 
     return (
         <View  style={{
@@ -202,7 +138,10 @@ export const HomeScreenNew = () => {
                 // borderBottomWidth: 1,
                 // borderColor: '#c4c8cc'
             }}>
-                <NewOutfitButton />
+                <MediumButton 
+                title={'New Outfit'} 
+                icon={<Entypo style={{marginRight: 15, marginLeft: 5}} name="plus" size={30} color="black" />}
+                onPressFunc={() => navigation.navigate('RECORD')}/>
             </View>
             <View style={{height: 10 /** Spacer */ }}></View> 
             <MiniScreenHeader title={'Recent Stats'}/>

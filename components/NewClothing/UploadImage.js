@@ -1,11 +1,13 @@
 import React, {useState, useEffect} from 'react'
 import { TouchableOpacity, StyleSheet, ScrollView, View, Image, Text, } from 'react-native'
-import {ImagePicker} from 'react-native-image-picker';
+import { ImagePicker } from 'react-native-image-picker';
 import axios from 'axios'
 import { useNavigation } from '@react-navigation/native'
-import { TopNav } from '../GlobalComponents/TopNav'
+import { TopNavScreenHeader } from '../GlobalComponents/TopNav'
 import { NextButton } from './NextButton'
 import { ScreenHeader } from '../GlobalComponents/ScreenHeader'
+import { MediumButton } from '../GlobalComponents/GlobalButtons'
+import { PlusIcon } from '../GlobalComponents/GlobalIcons'
 
 import { Dimensions } from 'react-native';
 const windowWidth = Dimensions.get('window').width;
@@ -71,8 +73,7 @@ export const UploadImage = () => {
     const [imageWidth, setImageWidth] = useState(1);
     var scaledWidth, scaledHeight;
 
-    if (true) return null; //TEMPPERM
-
+    
     useEffect(() => {
         scaledWidth = ((imageWidth * (windowWidth/imageWidth) * 0.9));
         scaledHeight = (imageWidth * (windowWidth/imageWidth) * 0.9) * (windowHeight/windowWidth);
@@ -120,32 +121,20 @@ export const UploadImage = () => {
     
     return (
         <View style={{
-            flex: 1
+            flex: 1,
+            backgroundColor: 'white'
         }}>
-            <TopNav title={'Upload Image'} exitDestination={'CLOSETSCREEN'} />
-            <ScreenHeader title={'Upload Image'}/>
-            {/* <Divider /> */}
+            <TopNavScreenHeader title={'Upload Image'} exitDestination={'CLOSETSCREEN'} />
+            
             <View style={{
                 margin: 10,
                 flex: 1
             }}>
-                <TouchableOpacity 
-                style={{
-                    elevation: 5,
-                    justifyContent: 'center',
-                    alignItems:'center',
-                    backgroundColor: 'white',
-                    width: 'auto', 
-                    height: 40, 
-                    margin: 5,
-                    borderRadius: 5
-                }}
-                onPress={chooseImage}>
-                    
-                    <Text category='h6' style={{fontWeight: 'bold'}}>
-                        {'Choose File'}
-                    </Text>
-                </TouchableOpacity>
+                <MediumButton 
+                    title={'Choose File'}
+                    onPressFunc={chooseImage}
+                    icon={<PlusIcon style={{marginRight: 15, marginLeft: 5}} name="plus" size={30} color="black" />}/>
+                
                 {/* <TouchableOpacity style={{
                     //backgroundColor: 'powderblue',
                     width: '100%',

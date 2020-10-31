@@ -75,7 +75,9 @@ export const SizeOfClothing = () => {
                     marginTop: 20,
                     marginBottom: -10
                 }}>
-                    <Text category='h6' style={{fontWeight: 'bold', color: '#404040'}}>Letter Sizing</Text>
+                    <Text category='h6' 
+                    style={[{fontWeight: 'bold'}, GlobalStyles.colorMain, GlobalStyles.h6]}
+                    >Letter Sizing</Text>
                 </View>
                 
                 <View style={{
@@ -96,11 +98,16 @@ export const SizeOfClothing = () => {
                     height: 'auto',
                     marginLeft: 20,
                 }}>
-                    <Text category='h6' style={{fontWeight: 'bold', color: '#404040', marginBottom: -10}}>Number Sizing</Text>
+                    <Text category='h6' 
+                    style={[{fontWeight: 'bold'}, GlobalStyles.colorMain, GlobalStyles.h6]}
+                    >Number Sizing</Text>
                 </View>
                 <View style={{
                     width: 'auto',
-                    margin: 10,
+                    
+                    marginLeft: 10,
+                    marginRight: 10,
+                    marginBottom: 10,
                     height: 'auto',
                     justifyContent: 'flex-start',
                     alignItems: 'center',
@@ -116,11 +123,12 @@ export const SizeOfClothing = () => {
                     height: 'auto',
                     marginLeft: 20,
                 }}>
-                    <Text category='h6' style={{fontWeight: 'bold', color: '#404040'}}>Custom Sizing</Text>
+                    <Text category='h6' 
+                    style={[{fontWeight: 'bold'}, GlobalStyles.colorMain, GlobalStyles.h6]}
+                    >Custom Sizing</Text>
                 </View>
                 <View style={{
                     width: 'auto',
-                    margin: 10,
                     height: 'auto',
                     justifyContent: 'flex-start',
                     alignItems: 'center',

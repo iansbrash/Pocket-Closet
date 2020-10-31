@@ -25,61 +25,6 @@ import { PlusIcon, XIcon } from '../GlobalComponents/GlobalIcons'
 var TopsArray = [];
 
 
-
-const AddClothingButton = ({title, hookFunc}) => {
-
-    return (
-        <View style={{
-            height: 150,
-            width: '100%',
-            marginTop: 5,
-            marginBottom: 5
-        }}>
-            <View style={{
-                width: 'auto',
-                marginLeft: 10,
-                marginRight: 10,
-                marginTop: 5,
-                marginBottom: 5,
-                height: 'auto',
-                backgroundColor: 'white',
-                elevation: 10,
-                borderRadius: 10
-            }}>
-                <TouchableOpacity style={{
-                    height: '100%',
-                    width: '100%',
-                    justifyContent: 'flex-start',
-                    alignItems: 'center',
-                    flexDirection: 'column',
-                }}
-                onPress={() => hookFunc(true)}
-                >
-                    <View 
-                    style={{
-                        height: 10, 
-                        borderTopLeftRadius: 10, 
-                        borderTopRightRadius: 10, 
-                        backgroundColor: '#09122b',
-                        width: '100%'}}></View>
-                    <View style={{
-                        height: 'auto',
-                        width: '100%',
-                        justifyContent: 'space-between',
-                        alignItems: 'center',
-                        flexDirection: 'row',
-                        marginTop: 8
-                    }}>
-                        <Text category='h4' style={{fontWeight: 'bold', marginLeft: 15}}>{title}</Text>
-                        {/* <Icon style={{marginRight: 15, marginLeft: 5}} width='30' height='30' fill='black' name={'plus'}/> */}
-                        <XIcon style={[{marginRight: 15, marginLeft: 5}, GlobalStyles.colorMain]} size={30} />
-                    </View>
-                </TouchableOpacity>
-            </View>
-        </View>
-    )
-}
-
 const ClothingAddedIcon = (props) => {
 
     const item = props.item;

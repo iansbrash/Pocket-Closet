@@ -16,9 +16,7 @@ import { ScreenHeader, MiniScreenHeader } from '../GlobalComponents/ScreenHeader
 import { FinalizeButton } from '../NewClothing/NextButton'
 import GlobalStyles from '../GlobalComponents/GlobalStyles'
 import { XIcon } from '../GlobalComponents/GlobalIcons'
-
-
-
+import { MediumButton } from '../GlobalComponents/GlobalButtons'
 
 
 
@@ -163,7 +161,13 @@ export const FinalizeOutfit = () => {
                                 + outfitInProgress[key][0].clothingType.slice(1)}/>
                             <FlatList 
                             data={outfitInProgress[key]}
-                            renderItem={item => (<FinalizeClothingContainer {...item}/>)}/>
+                            renderItem={item => (
+                                
+                            <MediumButton 
+                                title={item.item.clothingName}
+                                onPressFunc={null}
+                                buttonFunc={() => dispatch(outfitInProgressItemDeleted(item.item))}
+                                icon={<XIcon size={30} style={[{marginRight: 10}, GlobalStyles.colorMain]}/>}/>)}/>
                         </View> : null
                     ))}
                 </ScrollView>
