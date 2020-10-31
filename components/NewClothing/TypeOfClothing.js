@@ -1,13 +1,19 @@
 import React, {useState, useEffect} from 'react'
-import { TouchableOpacity, ScrollView, StyleSheet, View, Text } from 'react-native'
+import { 
+    TouchableOpacity, 
+    ScrollView, 
+    StyleSheet, 
+    View, 
+    Text } from 'react-native'
 import ImagePicker from 'react-native-image-picker';
 
 import { useNavigation } from '@react-navigation/native'
-import { TopNav } from '../GlobalComponents/TopNav'
+import { TopNavScreenHeader } from '../GlobalComponents/TopNav'
 import { useSelector, useDispatch } from 'react-redux'
 import { NextButton } from './NextButton'
 import { ScreenHeader } from '../GlobalComponents/ScreenHeader'
 import { clothingInProgressAttributeAdded } from '../../redux/reducers/closetSlice'
+import GlobalStyles from '../GlobalComponents/GlobalStyles';
 
 
 
@@ -43,30 +49,30 @@ export const TypeOfClothing = () => {
 
     const SpecificTypeOfButton = ({title, key}) => {
 
-        
-
-
         return (
             <View style={{
-                height: 50,
-                width: '50%'
+                height: 'auto',
+                width: '50%',
             }} key={key}>
-                <TouchableOpacity style={{
+                <TouchableOpacity style={[{
                     width: 'auto',
-                    height: 'auto',
+                    height: 50,
                     margin: 5,
-                    borderRadius: 5,
-                    elevation: 5
-                }}>
-                    {/* <Button style={specificSelected === title ? 
-                        [styles.button, styles.buttonActive] : [styles.button]}
-                    onPress={() => SpecificTypeFunction(title)}
-                    status='control'>
-                        <Text category='h5' style={specificSelected === title ?
-                        [styles.activeText] : [styles.boldText]}>
+                    borderRadius: 10,
+                    elevation: 5,
+                }, GlobalStyles.shadowLight]}
+                onPress={() => SpecificTypeFunction(title)}>
+
+                    <View style={[specificSelected === title ? {backgroundColor: 'white'} : GlobalStyles.bgColorMain, 
+                        {borderTopLeftRadius: 5, borderTopRightRadius: 5, height: 5, width: '100%'}]}></View>
+
+                    <View style={specificSelected === title ?
+                        [styles.button, styles.buttonActive] : [styles.button]}>
+                        <Text style={specificSelected === title ?
+                        [styles.activeText, GlobalStyles.h4] : [styles.boldText, GlobalStyles.h4]}>
                             {title}
                         </Text>
-                    </Button> */}
+                    </View>
                 </TouchableOpacity>
             </View>
         )
@@ -75,26 +81,28 @@ export const TypeOfClothing = () => {
     const TypeOfButton = ({title, key}) => {
         return (
             <View style={{
-                height: 50,
-                width: '50%'
+                height: 'auto',
+                width: '50%',
             }} key={key}>
-                <TouchableOpacity style={{
+                <TouchableOpacity style={[{
                     width: 'auto',
-                    height: 'auto',
+                    height: 50,
                     margin: 5,
-                    borderRadius: 5,
-                    elevation: 5
-                }}>
-                    {/* <Button style={typeSelected === title ?
-                        [styles.button, styles.buttonActive] : [styles.button]}
-                    onPress={() => TypeOfButtonFunction(title)}
-                    accessoryLeft={ExitIcon}
-                    status='control'>
-                        <Text category='h5' style={typeSelected === title ?
-                        [styles.activeText] : [styles.boldText]}>
+                    borderRadius: 10,
+                    elevation: 5,
+                }, GlobalStyles.shadowLight]}
+                onPress={() => TypeOfButtonFunction(title)}>
+
+                    <View style={[typeSelected === title ? {backgroundColor: 'white'} : GlobalStyles.bgColorMain, 
+                        {borderTopLeftRadius: 5, borderTopRightRadius: 5, height: 5, width: '100%'}]}></View>
+
+                    <View style={typeSelected === title ?
+                        [styles.button, styles.buttonActive] : [styles.button]}>
+                        <Text style={typeSelected === title ?
+                        [styles.activeText, GlobalStyles.h4] : [styles.boldText, GlobalStyles.h4]}>
                             {title}
                         </Text>
-                    </Button> */}
+                    </View>
                 </TouchableOpacity>
             </View>
         )
@@ -102,11 +110,12 @@ export const TypeOfClothing = () => {
 
     return (
         <View style={{
-            flex: 1
+            flex: 1,
+            backgroundColor: 'white'
         }}>
-            <TopNav exitDestination={'CLOSETSCREEN'} title={'New Clothing Piece'} /> 
+            <TopNavScreenHeader exitDestination={'CLOSETSCREEN'} title={'New Clothing Piece'} /> 
             <ScrollView style={{marginBottom: 10}}>
-            <ScreenHeader title={'Type of Clothing'}/>
+            {/* <ScreenHeader title={'Type of Clothing'}/> */}
             {/* <Divider /> */}
                 <View style={{
                     margin: 5,
@@ -117,13 +126,13 @@ export const TypeOfClothing = () => {
                     justifyContent: 'flex-start',
                     alignItems: 'center',
                 }}>
+                    
                     {typesOfClothingArray.map(item => (
                         <TypeOfButton title={item.charAt(0).toUpperCase() + item.slice(1)}/>
                     ))}
                 </View>
                 <View style={{height: 30}}></View> 
-                <ScreenHeader title={typeSelected.toUpperCase()}/>
-                {/* <Divider /> */}
+                {typeSelected !== '' ? <ScreenHeader title={typeSelected.toUpperCase()}/> : null}
                 <View style={{
                     margin: 5,
                     paddingBottom: 20,
@@ -141,29 +150,6 @@ export const TypeOfClothing = () => {
                 
                 
             </ScrollView>
-            {/* <View style={{
-                width: '100%',
-                height: 'auto'
-            }}>
-                <Divider />
-                <Button style={{
-                    width: 'auto',
-                    height: 50,
-                    borderRadius: 5,
-                    marginRight: 30,
-                    marginLeft: 30,
-                    marginBottom: 10,
-                    marginTop: 10,
-                    justifyContent: 'center',
-                    alignItems: 'center'
-                }}
-                onPress={() => navigation.navigate("SIZEOFCLOTHING", {
-                    typeSelected, specificSelected
-                })}
-                disabled={nextDisabled}>
-                    <Text category='h3' status='control' style={{fontWeight: 'bold'}}>NEXT</Text>
-                </Button>
-            </View> */}
             <NextButton 
             navpath={'SIZEOFCLOTHING'} 
             disabledHook={nextDisabled} 
@@ -186,9 +172,11 @@ const styles = StyleSheet.create({
     button: {
         height: '100%',
         width: '100%',
-        borderRadius: 5,
-        justifyContent:'flex-start',
-        alignItems:'center'
+        borderBottomLeftRadius: 5,
+        borderBottomRightRadius: 5,
+        justifyContent:'center',
+        alignItems:'center',
+        backgroundColor: 'white'
     },
     buttonActive: {
         backgroundColor: 'black',

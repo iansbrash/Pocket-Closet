@@ -3,11 +3,12 @@ import { TouchableOpacity, ScrollView, StyleSheet } from 'react-native'
 import ImagePicker from 'react-native-image-picker';
 import { View, Image, Text, } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
-import { TopNav } from '../GlobalComponents/TopNav'
+import { TopNavScreenHeader } from '../GlobalComponents/TopNav'
 import { useDispatch } from 'react-redux'
 import { NextButton } from './NextButton'
 import { ScreenHeader } from '../GlobalComponents/ScreenHeader'
 import { clothingInProgressAttributeAdded } from '../../redux/reducers/closetSlice'
+import GlobalStyles from '../GlobalComponents/GlobalStyles'
 
 
 const letterSizeArray = ['XXS', 'XS', 'S', 'M', 'L', 'XL', 'XXL'];
@@ -49,9 +50,12 @@ export const SizeOfClothing = () => {
     const SizeButton = ({size}) => {
         return (
             <TouchableOpacity 
-                style={size === selectedSize ? [styles.sizeButton, styles.activeButton] : styles.sizeButton}
+                style={size === selectedSize ? [styles.sizeButton, styles.activeButton, GlobalStyles.shadowLight] : 
+                    [styles.sizeButton, GlobalStyles.shadowLight]}
                     onPress={() => selectFunction(size)}>
-                    <Text category='h6' style={size === selectedSize ? [styles.boldText, styles.activeText] : styles.boldText}>
+                    <Text category='h6' style={size === selectedSize ? 
+                        [styles.boldText, styles.activeText, GlobalStyles.shadowLight] : 
+                        [styles.boldText]}>
                         {size}
                     </Text>
             </TouchableOpacity>
@@ -59,10 +63,10 @@ export const SizeOfClothing = () => {
     }
 
     return (
-        <View style={{flex: 1}}>
-            <TopNav title={'Selected Size'} exitDestination={"CLOSETSCREEN"}/>
+        <View style={{flex: 1, backgroundColor:'white'}}>
+            <TopNavScreenHeader title={'Selected Size'} exitDestination={"CLOSETSCREEN"}/>
             <ScrollView>
-                <ScreenHeader title={'Select Size'}/>
+                {/* <ScreenHeader title={'Select Size'}/> */}
                 
                 <View style={{
                     width: 'auto',

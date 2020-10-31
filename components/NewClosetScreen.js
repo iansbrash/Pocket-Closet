@@ -17,8 +17,8 @@ import { TabRouter, useNavigation } from '@react-navigation/native';
 import { configureStore } from '@reduxjs/toolkit';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { PlusButton } from './NewOutfit/PlusButton'
-import { Ionicons } from '@expo/vector-icons';
 import GlobalStyles from './GlobalComponents/GlobalStyles'
+import { PlusIcon } from './GlobalComponents/GlobalIcons'
 
 
 
@@ -553,10 +553,8 @@ const ClosetSearch = ({searchInput, setSearchInput}) => {
                                 </TouchableOpacity>
                         </Animated.View>
                     </Animated.View>
-                    
-                
-                
                 </View>
+                
                 {/* <View style={{
                 width: '100%',
                 height: 'auto',
@@ -694,6 +692,25 @@ export const NewClosetScreen = () => {
                     <ClosetSearch searchInput={searchInput} setSearchInput={setSearchInput}/>
                     {/** This is going to be the clothing/outfits toggle */}
                     <View style={{height: 10}}></View>
+                    <View style={{
+                        height: 20,
+                        justifyContent: 'flex-end',
+                        alignItems: 'center',
+                        flexDirection: 'row',
+                        }}>
+                        <TouchableOpacity style={{
+                            height: 35,
+                            aspectRatio: 1,
+                            borderRadius: 5,
+                            backgroundColor: '#f2f2f2',
+                            marginRight: 10,
+                            justifyContent: 'center',
+                            alignItems: 'center'
+                        }}
+                        onPress={() => navigation.navigate('NEWCLOTHING')}>
+                            <PlusIcon size={25} style={GlobalStyles.colorMain}/>
+                        </TouchableOpacity>
+                    </View>
                     <ClosetOutfitsToggle closetIsActive={closetIsActive} setClosetIsActive={setClosetIsActive} />
                     
                     <View 

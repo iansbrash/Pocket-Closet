@@ -8,7 +8,7 @@ import  {
     ScrollView } from 'react-native'
 import { Ionicons } from '@expo/vector-icons';
 import { useDispatch, useSelector } from 'react-redux'
-import { outfitCreatedFromHome } from '../../redux/reducers/outfitsSlice'
+import { outfitCreatedFromHome, outfitInProgressItemDeleted } from '../../redux/reducers/outfitsSlice'
 
 import { useNavigation } from '@react-navigation/native'
 import { TopNavScreenHeader } from '../GlobalComponents/TopNav'
@@ -16,6 +16,7 @@ import { ScreenHeader, MiniScreenHeader } from '../GlobalComponents/ScreenHeader
 import { FinalizeButton } from '../NewClothing/NextButton'
 import GlobalStyles from '../GlobalComponents/GlobalStyles'
 import { XIcon } from '../GlobalComponents/GlobalIcons'
+
 
 
 
@@ -150,10 +151,10 @@ export const FinalizeOutfit = () => {
            <TopNavScreenHeader title={'Finalize Outfit'} exitDestination={'HOMESCREEN'}/>
            {/* <ScreenHeader title={'Finalize Outfit'}/> */}
             <View style={{
-                margin: 10,
                 flex: 1
             }}>
-                <ScrollView>
+                <ScrollView style={{padding: 10}}>
+
                     {Object.keys(outfitInProgress).map(key => ( 
                         outfitInProgress[key].length !== 0 ?
                         <View>
@@ -162,7 +163,7 @@ export const FinalizeOutfit = () => {
                                 + outfitInProgress[key][0].clothingType.slice(1)}/>
                             <FlatList 
                             data={outfitInProgress[key]}
-                            renderItem={FinalizeClothingContainer}/>
+                            renderItem={item => (<FinalizeClothingContainer {...item}/>)}/>
                         </View> : null
                     ))}
                 </ScrollView>
@@ -176,7 +177,16 @@ export const FinalizeOutfit = () => {
     )
 }
 
-const FinalizeClothingContainer = ({item}) => {
+const FinalizeClothingContainer = (props) => {
+
+    const item = props.item;
+
+    const dispatch = useDispatch();
+
+    const removeFromOutfit = () => {
+        dispatch(outfitInProgressItemDeleted({...item}))
+    }
+
     return (
         <View style={{
             height: 75,
@@ -186,7 +196,7 @@ const FinalizeClothingContainer = ({item}) => {
             position: 'relative'
         }}>
             <TouchableOpacity style={{width: 'auto', height: 'auto'}}
-                        onPress={() => addToArray(item)}>
+                        onPress={() => removeFromOutfit(item)}>
             <View style={[{
                 width: 'auto',
                 marginLeft: 10,
