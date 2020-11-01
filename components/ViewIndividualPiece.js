@@ -428,8 +428,14 @@ export const ViewIndividualPiece = ({ route, navigation }) => {
     // we pass in the item we clicked on so we can display stats XDDDD
     const { item } = route.params;
 
+    let src
+
     //temp image
-    let src = { uri: 'https://randomuser.me/api/portraits/men/1.jpg' }
+    if (item.images.length !== 0){
+        src = {uri: item.images[0]}
+    } else {
+        let src = { uri: 'https://randomuser.me/api/portraits/men/1.jpg' }
+    }
 
     const image = useRef(null)
 

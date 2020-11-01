@@ -27,7 +27,14 @@ import { PlusIcon } from './GlobalComponents/GlobalIcons'
 // used as render method for FlatList in ClosetListOneCol
 function RenderSingleLineClosetItem ({item})  {
 
-    let src = { uri: 'https://randomuser.me/api/portraits/men/1.jpg' }
+    let src;
+
+    if (!item.images || item.images.length === 0){
+        src = { uri: 'https://randomuser.me/api/portraits/men/1.jpg' }
+    } else {
+        src = {uri: item.images[0]}
+    }
+    
 
     const navigation = useNavigation();
 
@@ -231,7 +238,7 @@ const ClosetListOneCol = ({searchInput, filtersEnabled, heartToggleChecked}) => 
         ...closetObject.topsArray, 
         ...closetObject.bottomsArray, 
         ...closetObject.footwearArray, 
-        ...closetObject.accessoriesArray
+        ...closetObject.otherArray //was accessories
     ]
     return (
 
@@ -274,7 +281,7 @@ const ClosetListTwoCol = ({searchInput, filtersEnabled, heartToggleChecked}) => 
         ...closetObject.topsArray, 
         ...closetObject.bottomsArray, 
         ...closetObject.footwearArray, 
-        ...closetObject.accessoriesArray
+        ...closetObject.otherArray //was accessories
     ]
 
     return (

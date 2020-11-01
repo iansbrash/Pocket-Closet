@@ -4,11 +4,13 @@ import ImagePicker from 'react-native-image-picker';
 
 import { View, Image } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
-import { TopNav } from '../GlobalComponents/TopNav'
+import { TopNavScreenHeader } from '../GlobalComponents/TopNav'
 import { useSelector, useDispatch } from 'react-redux'
 import { FinalizeButton } from './NextButton'
 import { ScreenHeader } from '../GlobalComponents/ScreenHeader'
 import { clothingAddedToCloset } from '../../redux/reducers/closetSlice'
+import GlobalStyles from '../GlobalComponents/GlobalStyles'
+import { XIcon } from '../GlobalComponents/GlobalIcons'
 
 const FinalizeDescription = ({title, value}) => {
     return (
@@ -19,14 +21,13 @@ const FinalizeDescription = ({title, value}) => {
             height: 30
 
         }}>
-            <Text category='h5'   style={{
+            <Text style={[{
                 width: 'auto',
                 fontWeight: 'bold'
-
-            }}>
+            }, GlobalStyles.h5, ]}>
                 {title}: 
             </Text>
-            <Text category='h5' style={value ? {width: 'auto'} : {width: 'auto', color: 'gray'}}>
+            <Text style={value ? [GlobalStyles.h5, {width: 'auto'}] : [GlobalStyles.h5, {width: 'auto', color: 'gray'}]}>
                 {value ? value : 'N/A'} 
             </Text>
         </View>
@@ -47,9 +48,13 @@ const IndividualTag = ({title}) => {
             flexDirection: 'row',
             elevation: 5
         }}>
-            <Text category='h5' status='control' style={{
-                margin: 10
-            }}>
+            <Text category='h5' style={[{
+                color: 'white',
+                fontWeight: 'bold',
+                marginLeft: 10,
+                marginBottom: 0,
+                marginRight: 10
+            }, GlobalStyles.h5]}>
                 {title}
             </Text>
         </View>
@@ -59,11 +64,22 @@ const IndividualTag = ({title}) => {
 
 export const FinalizeClothing = () => {
 
-    let src = { uri: 'https://randomuser.me/api/portraits/men/1.jpg' }
-    const navigation = useNavigation();
+
+
+    let src = [{ uri: 'https://randomuser.me/api/portraits/men/1.jpg' }]
 
     // this fucking works bby
     const clothingPieceInProgress = useSelector(state => state.closet.clothingPieceInProgress)
+    console.log(clothingPieceInProgress)
+
+    if (clothingPieceInProgress.images.length !== 0){
+        src = clothingPieceInProgress.images
+    }
+    console.log(clothingPieceInProgress.images[0])
+
+    const navigation = useNavigation();
+
+    
 
     const dispatch = useDispatch();
 
@@ -80,19 +96,15 @@ export const FinalizeClothing = () => {
         
     }
     
-    if (true) return null;
 
     return (
-        <View style={{flex: 1}}>
-            <TopNav title={'Finalize'} exitDestination={"CLOSETSCREEN"}/>
+        <View style={{flex: 1, backgroundColor: 'white'}}>
+            <TopNavScreenHeader title={'Finalize'} exitDestination={"CLOSETSCREEN"}/>
             <ScrollView>
-                <ScreenHeader title={'Finalize Clothing'}/>
-                
                 <View style={{
                     flex: 1,
                     margin: 10
                 }}>
-                    
                     <FinalizeDescription title={'Type'} 
                     value={`${clothingPieceInProgress.clothingType} (${clothingPieceInProgress.pieceType})`}/>
                     {/* <Divider style={{margin: 5}} /> */}
@@ -127,12 +139,40 @@ export const FinalizeClothing = () => {
                         ))}
                     </View>
                     {/* <Divider style={{margin: 5}}/> */}
-                    <View style={{justifyContent: 'center', alignItems: 'center', marginTop: 10}}>
-                        <Image source={src} style={{
-                            width: '80%',
-                            aspectRatio: 1,
-                            borderRadius: 5
-                        }}/>
+                    <View style={{
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        width: '100%',
+                        aspectRatio: 1
+                    }}>
+                        <ScrollView
+                        horizontal={true}
+                        style={{margin: -10}}
+                        contentContainerStyle={{
+                            width: '100%',//`${fileUri.length * 100}%`,
+                            height: 'auto'
+                        }}
+                        >
+                            {src.map((uri, index) => (
+                                <View style={[{
+                                    height: '100%', 
+                                    aspectRatio: 1, 
+                                    borderRadius: 5,
+                                    width: '100%', //`${100/fileUri.length}%`,
+                                    justifyContent: 'center',
+                                    alignItems: 'center',}, 
+                                    GlobalStyles.shadowLight]}>
+                                    
+                                    <Image style={{
+                                    width: '90%',
+                                    aspectRatio: 1,
+                                    borderRadius: 5,
+                                    // height: imageHeight * (windowHeight / imageHeight),
+                                    // width: imageWidth * (windowWidth / imageWidth)
+                                    }} source={src}/> 
+                                </View>
+                            ))}
+                        </ScrollView>
                     </View>
                     
                     

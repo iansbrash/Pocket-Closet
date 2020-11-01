@@ -1,4 +1,4 @@
-import React, {useState, useRef} from 'react'
+import React, {useState, useRef, useEffect} from 'react'
 import { 
     TouchableOpacity, 
     ScrollView, 
@@ -126,7 +126,7 @@ export const TypeOfBrands = () => {
     const [selectedBrandsArray, setSelectedBrandsArray] = useState([]);
     const navigation = useNavigation();
 
-    console.log(brandsArray)
+    // console.log(brandsArray)
 
     const dispatch = useDispatch();
 
@@ -135,30 +135,39 @@ export const TypeOfBrands = () => {
     const brandsArray = useSelector(state => state.closet.brandsArray)
 
     
-    const renderBrandStrip = ({item}) => {
-        console.log(item);
-        console.log('selectedBrandsArray: ');
-        console.log(selectedBrandsArray);
+    const IndividualBrand = ({item}) => {
+        // console.log(item);
+        // console.log('selectedBrandsArray: ');
+        // console.log(selectedBrandsArray);
 
-        
 
+        const [brandSelected, setSelected] = useState(false);
+        const [toggle, setToggle] = useState(true);
 
         //we use the first nickname in the brand array
         item = item[0];
 
-        let inSelectedBrands = selectedBrandsArray.find(searchItem => searchItem.toLowerCase() === item.toLowerCase())
-
         if (!item.toLowerCase().includes(searchInput)){
             return null
         }
-        return (
-            
-            <TouchableOpacity 
+        let inSelectedBrands = selectedBrandsArray.find(searchItem => searchItem.toLowerCase() === item.toLowerCase())
+        
+
+
+        
+            return (
+
+                // This is so fucking inefficient. What I should instead do is just have a
+                //selected/notselected state for each button, which toggles the color
+                //and when clicked, it either adds/removes itself from the selectedbrandsarray
+                
+                <TouchableOpacity 
             onPress={() =>  !selectedBrandsArray.find(searchItem => searchItem.toLowerCase() === item.toLowerCase()) ? setSelectedBrandsArray([...selectedBrandsArray, item]) 
                 : setSelectedBrandsArray(selectedBrandsArray.filter(searchItem => searchItem.toLowerCase() !== item.toLowerCase()))}
             style={inSelectedBrands ? 
                 [styles.TOBasic, styles.TOSelected, GlobalStyles.shadowLight] : 
-                [styles.TOBasic, GlobalStyles.shadowLight]}>
+                [styles.TOBasic, GlobalStyles.shadowLight]}
+                >
                     <View style={[{
                         borderTopLeftRadius: 5, borderTopRightRadius: 5, height: 5, width: '100%'
                     }, inSelectedBrands ? {backgroundColor: 'white'} :GlobalStyles.bgColorMain]}></View>
@@ -179,8 +188,10 @@ export const TypeOfBrands = () => {
                     
                     {/* <Icon style={{marginRight: 5, marginLeft: 5}} width='30' height='30' fill='white' name='checkmark-outline'/> */}
             </TouchableOpacity>
-        )
+            )
     }
+        
+        
 
     
 
@@ -195,7 +206,8 @@ export const TypeOfBrands = () => {
             <FlatList 
                     style={{maxHeight: '100%', width: '100%'}}
                     data={brandsArray}
-                    renderItem={renderBrandStrip} /> 
+                    renderItem={item => <IndividualBrand {...item}/>}
+                     /> 
             
             <NextButton 
             navpath={"ITEMDESCRIPTION"} 

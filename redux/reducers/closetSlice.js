@@ -18,6 +18,7 @@ const closetSlice = createSlice({
                     price: '$98',
                     color: 'black',
                     tags: ['hype', 'casual', 'stolen', 'retail', 'ugly'],
+                    images: [],
                     pieceType: 'T-Shirt'
                 },{
                     _id: 70,
@@ -28,6 +29,7 @@ const closetSlice = createSlice({
                     favorite: false,
                     price: '$98',
                     color: 'black',
+                    images: [],
                     tags: ['hype', 'casual'],
                     pieceType: 'T-Shirt'
                 },{
@@ -41,6 +43,7 @@ const closetSlice = createSlice({
                     price: '$98',
                     color: 'black',
                     tags: ['hype', 'casual'],
+                    images: [],
                     pieceType: 'coat'
                     
                 },{
@@ -50,10 +53,10 @@ const closetSlice = createSlice({
                     brandName: ['Bape', 'A Bathing Ape'],
                     timesWorn: 0, //defaults to zero, user can't control this
                     favorite: false,
-                    
                     price: '$98',
                     color: 'black',
                     tags: ['hype', 'casual'],
+                    images: [],
                     pieceType: 'T-Shirt'
                     
                 },
@@ -69,22 +72,40 @@ const closetSlice = createSlice({
                 price: '$198',
                 color: 'blue',
                 tags: ['casual'],
+                images: [],
                 pieceType: 'Jeans'
             },
         ],
             footwearArray: [
                 {
-                    _id: 21,
+                    _id: 3123,
                     clothingType: 'footwear',
-                    clothingName: 'Air Jordan 1',
-                    brandName: ['Jordan', 'Nike'],
+                    clothingName: 'Air Jordan 1 Mocha',
+                    brandName: ['Nike', 'Jordan'],
                     timesWorn: 0, //defaults to zero, user can't control this
                     favorite: true,
-                    optionalProps: {
-                    }
+                    price: '$170',
+                    color: 'brown',
+                    tags: ['casual'],
+                    images: [],
+                    pieceType: 'Sneakers'
                 },
             ],
-            accessoriesArray: []
+            otherArray: [
+                {
+                    _id: 44,
+                    clothingType: 'other',
+                    clothingName: 'Gucci Ring',
+                    brandName: ['Gucci'],
+                    timesWorn: 0, //defaults to zero, user can't control this
+                    favorite: true,
+                    price: '$500',
+                    color: 'silver',
+                    tags: ['luxury'],
+                    images: [],
+                    pieceType: 'ring'
+                },
+            ]
         },
         clothingPieceInProgress: {
             _id: 0,
@@ -99,6 +120,7 @@ const closetSlice = createSlice({
             ], // array of names and nicknames
             timesWorn: 0, //defaults to zero, user can't control this
             tags: [],
+            images: [],
             favorite: false,
             
         },
@@ -138,8 +160,8 @@ const closetSlice = createSlice({
         },
         clothingAddedToCloset: {
             reducer(state, action) {
-                state.closetObject[action.payload.clothingType + 'Array'] =
-                [...state.closetObject[action.payload.clothingType + 'Array'], action.payload]
+                state.closetObject[action.payload.clothingType.toLowerCase() + 'Array'] =
+                [...state.closetObject[action.payload.clothingType.toLowerCase() + 'Array'], action.payload]
             }
         },
         itemFavoriteToggled: {

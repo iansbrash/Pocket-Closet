@@ -126,7 +126,7 @@ const TabNavTwo = () => {
         tabBarOptions={{
             keyboardHidesTabBar: true,
         }}
-        tabBar={props => <TabNavTwoProp {...props} />}
+        tabBar={(props, i) => <TabNavTwoProp {...props} key={i}/>}
         >
             <Screen name='HISTORY'  component={HistoryNav}/>
             <Screen name='HOME'  component={HomeNav}/>
@@ -150,7 +150,7 @@ const TabNavTwoProp = ({ state, descriptors, navigation }) => {
       <View style={{ flexDirection: 'row' }}>
 
 
-    {keyboardOpen ? <View></View> : (state.routes.map((route, index) => {
+    {keyboardOpen ? null : (state.routes.map((route, index) => {
           const { options } = descriptors[route.key];
           const label =
             options.tabBarLabel !== undefined
@@ -233,7 +233,7 @@ const TabNavigator = () => {
         <Navigator 
         tabBarOptions={{
             keyboardHidesTabBar: true,
-        }}  tabBar={props => <BottomTabBar {...props} />}>
+        }}  tabBar={(props, i) => <BottomTabBar {...props} key={i}/>}>
             <Screen name='HISTORY'  component={HistoryNav}/>
             <Screen name='HOME'  component={HomeNav}/>
             <Screen name='CLOSET'  component={ClosetNav} />

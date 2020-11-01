@@ -1,15 +1,17 @@
 import React, {useState, useEffect} from 'react'
 import { TouchableOpacity, StyleSheet, ScrollView, View, Image, Text, } from 'react-native'
-import { ImagePicker } from 'react-native-image-picker';
+// import ImagePicker from 'react-native-image-picker';
+import * as ImagePicker from 'expo-image-picker';
 import axios from 'axios'
 import { useNavigation } from '@react-navigation/native'
 import { TopNavScreenHeader } from '../GlobalComponents/TopNav'
 import { NextButton } from './NextButton'
-import { ScreenHeader } from '../GlobalComponents/ScreenHeader'
 import { MediumButton } from '../GlobalComponents/GlobalButtons'
 import { PlusIcon } from '../GlobalComponents/GlobalIcons'
-
+import GlobalStyles from '../GlobalComponents/GlobalStyles'
+import { clothingInProgressAttributeAdded } from '../../redux/reducers/closetSlice'
 import { Dimensions } from 'react-native';
+import { useDispatch } from 'react-redux'
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
@@ -28,47 +30,57 @@ const windowHeight = Dimensions.get('window').height;
     //  name (auto, dont worry)
     //  title
     //  description
-const sendRequest = async ({fileData, setImgurUrl, setImageHeight, setImageWidth}) => {
+const sendRequest = async (fileData, setImgurUrl, setImageHeight, setImageWidth, imgurUrl) => {
 
     let clientId = '4d7a801cbb3f79c';
 
     console.log("About to send request to Imgur API");
 
     // THIS FUCKING WORKS
-    try {
-        const response = await axios.post('https://api.imgur.com/3/upload', 
-            {
-                    //image is in base64 format
-                image: fileData,
-                type: 'base64', 
-                //name: 'API Test',
-                //title: 'Plz',
-                //description: 'Pocket Closet'
-            },
-            {
-                headers: {
-                    Authorization: `Client-ID ${clientId}`
-            }
-        });
-        console.log(response)
-        console.log("HERE's the link (hopefully)");
-        console.log(response.data.data.link) // this works!!!!
-        console.log("height: " + response.data.data.height) // height + width works as well
-        console.log("width: " + response.data.data.width)
-        setImageHeight(response.data.data.height);
-        setImageWidth(response.data.data.width);
-        setImgurUrl(response.data.data.link)
-    } catch {
-        console.error(err);
+    // fileData.forEach((base64data, index) => {
+
+    for (let i = 0; i < fileData.length; i++){
+        try {
+            const response = await axios.post('https://api.imgur.com/3/upload', 
+                {
+                        //image is in base64 format
+                    image: fileData[0],
+                    type: 'base64', 
+                    //name: 'API Test',
+                    //title: 'Plz',
+                    //description: 'Pocket Closet'
+                },
+                {
+                    headers: {
+                        Authorization: `Client-ID ${clientId}`
+                }
+            });
+            // console.log(response)
+            console.log("HERE's the link (hopefully)");
+            console.log(response.data.data.link) // this works!!!!
+            // console.log("height: " + response.data.data.height) // height + width works as well
+            // console.log("width: " + response.data.data.width)
+            // setImageHeight(response.data.data.height);
+            // setImageWidth(response.data.data.width);
+            setImgurUrl([...imgurUrl, response.data.data.link])
+            console.log('jut sent imgur url. here it is')
+            console.log(imgurUrl);
+            //setFileUri([...fileUri, response.data.data.link])
+
+        } catch(err) {
+            console.error(err);
+        }
     }
+    // })
+    
     
 }
 
 
 export const UploadImage = () => {
-    const [fileUri, setFileUri] = useState()
-    const [fileData, setFileData] = useState('');
-    const [imgurUrl, setImgurUrl] = useState('');
+    const [fileUri, setFileUri] = useState([])
+    const [fileData, setFileData] = useState([]);
+    const [imgurUrl, setImgurUrl] = useState([]);
     const [imageHeight, setImageHeight] = useState(1);
     const [imageWidth, setImageWidth] = useState(1);
     var scaledWidth, scaledHeight;
@@ -80,6 +92,7 @@ export const UploadImage = () => {
     }, [imageHeight, imageWidth])
 
     const navigation = useNavigation();
+    const dispatch = useDispatch();
     let src = { uri: imgurUrl }
 
     useEffect(() => {
@@ -87,37 +100,42 @@ export const UploadImage = () => {
         console.log(imgurUrl);
     }, [imgurUrl])
 
-    const chooseImage = () => {
-        let options = {
-            title: 'Select Avatar', 
-            cameraType: 'front',
-            mediaType: 'photo' ,
-            storageOptions: {
-                skipBackup: true,
-                path: 'images',
-            },
-        }
-    
-        ImagePicker.showImagePicker(options, (response) => {
-            console.log('Response = ', response);
-    
-            if (response.didCancel) {
-                console.log('User cancelled image picker');
-            } 
-            else if (response.error) {
-                console.log('ImagePicker Error: ', response.error);
-            } 
-            else if (response.customButton) {
-                console.log('User tapped custom button: ', response.customButton);
-                alert(response.customButton);
-            } 
-            else {
-                setFileUri(response.uri) //update state to update Image
-                setFileData(response.data);
-            }
-        });
-    }
 
+    useEffect(() => {
+        (async () => {
+          if (Platform.OS !== 'web') {
+            const { status } = await ImagePicker.requestCameraRollPermissionsAsync();
+            if (status !== 'granted') {
+              alert('Sorry, we need camera roll permissions to make this work!');
+            }
+          }
+        })();
+      }, []);
+
+
+    const pickImage = async () => {
+        let result = await ImagePicker.launchImageLibraryAsync({
+          mediaTypes: ImagePicker.MediaTypeOptions.All,
+          allowsEditing: true,
+          aspect: [4, 3],
+          quality: 1,
+          base64: true
+        });
+    
+        console.log(result);
+    
+        if (!result.cancelled) {
+          setFileUri([...fileUri, result.uri]);
+          setFileData([...fileData, result.base64])
+        //   console.log('fileData:');
+        //   console.log(fileData)
+        }
+      };
+
+    const pushImages = () => {
+        console.log(imgurUrl)
+        dispatch(clothingInProgressAttributeAdded({images: imgurUrl}))
+    }
     
     return (
         <View style={{
@@ -131,95 +149,67 @@ export const UploadImage = () => {
                 flex: 1
             }}>
                 <MediumButton 
-                    title={'Choose File'}
-                    onPressFunc={chooseImage}
-                    icon={<PlusIcon style={{marginRight: 15, marginLeft: 5}} name="plus" size={30} color="black" />}/>
-                
-                {/* <TouchableOpacity style={{
-                    //backgroundColor: 'powderblue',
-                    width: '100%',
-                    height: 50,
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    borderRadius: 5,
-                    elevation: 5
-                }}>
-                    <Button
-                     onPress={chooseImage}
-                     status='control'
-                     style={{height: '100%',
-                            width: '100%',
-                            borderRadius: 5}}>
-                                <Text 
-                                category='h5' 
-                                status='basic'
-                                style={{
-                                    fontWeight: 'bold'
-                                }}>
-                                    Upload Image
-                                </Text>
+                    title={`Choose Images (${3 - fileUri.length} left)`}
+                    onPressFunc={pickImage}
+                    disabled={fileUri.length === 3}
+                    icon={<PlusIcon style={{marginRight: 15, marginLeft: 5, color: fileUri.length === 3 ? 'lightgray' : 'black'}} name="plus" size={30} 
+                    />}/>
 
-                    </Button>
-                    
-                </TouchableOpacity> */}
-                {/* <Divider style={{margin: 20}}/> */}
-                {/* <TouchableOpacity style={{
-                    backgroundColor: 'powderblue',
-                    width: '100%',
-                    height: 50,
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    borderRadius: 5,
-                    elevation: 10
-                    
-                }} onPress={() => (sendRequest({fileData, setImgurUrl, setImageHeight, setImageWidth}))}>
-                    <Text 
-                    category='h2' 
-                    status='control'
-                    style={{
-                        fontWeight: 'bold'
-                    }}>Send Request</Text>
-                </TouchableOpacity> */}
-                <ScrollView style={{height:'auto'}}>
+                
                     <View style={{
                         alignItems: 'center',
                         justifyContent: 'center',
                         width: '100%',
-                        height: 'auto',
+                        aspectRatio: 1
                     }}>
-                        <Image style={{
-                                paddingTop: 20,
-                                paddingBottom: 20,
-                                height: imageHeight * (windowHeight / imageHeight),
-                                width: imageWidth * (windowWidth / imageWidth)
-                            }} source={{ uri: imgurUrl }}/>
-                        <Text category='h3' style={{
-                            fontWeight: 'bold'
-                        }}>{imgurUrl}</Text>
+                        <ScrollView
+                        horizontal={true}
+                        style={{margin: -10}}
+                        contentContainerStyle={{
+                            width: `${fileUri.length * 100}%`,
+                            height: 'auto'
+                        }}
+                        >
+                            {fileUri.map((uri, index) => (
+                                <View style={[{
+                                    height: '100%', 
+                                    aspectRatio: 1, 
+                                    borderRadius: 5,
+                                    width: `${100/fileUri.length}%`,
+                                    justifyContent: 'center',
+                                    alignItems: 'center',}, 
+                                    GlobalStyles.shadowLight]}>
+                                    
+                                    <Image style={{
+                                    width: '90%',
+                                    aspectRatio: 1,
+                                    borderRadius: 5,
+                                    // height: imageHeight * (windowHeight / imageHeight),
+                                    // width: imageWidth * (windowWidth / imageWidth)
+                                    }} source={{ uri: uri }}/> 
+                                </View>
+                            ))}
+                        </ScrollView>
                     </View>
-                </ScrollView>
+                    <MediumButton 
+                        title={`Upload to Imgur`}
+                        onPressFunc={() => sendRequest(fileData, setImgurUrl, setImageHeight, setImageWidth, imgurUrl)}
+                        disabled={fileUri.length === 0}
+                        icon={<PlusIcon style={{marginRight: 15, marginLeft: 5, color: fileUri.length === 3 ? 'lightgray' : 'black'}} name="plus" size={30} 
+                    />}/>
+                    <Text category='h3' style={{
+                        fontWeight: 'bold'
+                    }}>{imgurUrl}</Text>
             </View>
-            <NextButton navpath={'FINALIZECLOTHING'} disabledHook={false}/>
+            <NextButton 
+            navpath={'FINALIZECLOTHING'} 
+            disabledHook={false}
+            extraFunc={() => pushImages()}/>
             <View style={{
                     width: '100%',
                     height: 'auto'
                 }}>
-                    {/* <Button style={{
-                        width: 'auto',
-                        height: 50,
-                        borderRadius: 5,
-                        marginRight: 30,
-                        marginLeft: 30,
-                        marginBottom: 10,
-                        justifyContent: 'center',
-                        alignItems: 'center'
-                    }}
-                onPress={() => imgurUrl ? sendRequest({fileData, setImgurUrl, setImageHeight, setImageWidth}) :  navigation.navigate("FINALIZECLOTHING")}
-                    disabled={fileData === ''}  
-                    >
-                        <Text category='h3' status='control' style={{fontWeight: 'bold'}}>{imgurUrl === '' ? 'Upload Image' : 'NEXT'}</Text>
-                    </Button> */}
-                </View>
+            </View>
         </View>
     )
 

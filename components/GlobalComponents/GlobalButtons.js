@@ -3,10 +3,11 @@ import {
     View,
     Pressable,
     Text,
+    StyleSheet
 } from 'react-native'
 import GlobalStyles from './GlobalStyles'
 
-export const MediumButton = ({title, icon, onPressFunc, buttonFunc}) => {
+export const MediumButton = ({title, icon, onPressFunc, buttonFunc, disabled}) => {
 
     const [pressed, setPressed] = useState(false)
 
@@ -36,16 +37,12 @@ export const MediumButton = ({title, icon, onPressFunc, buttonFunc}) => {
                     flexDirection: 'column',
                     opacity: pressed ? 0.5 : 1.0
                 }}
+                disabled={disabled}
                 onPress={onPressFunc}
                 onPressIn={() => setPressed(true)}
                 onPressOut={() => setPressed(false)}>
                     <View 
-                    style={{ //block at the top of the button. cosmetic
-                        height: 10, 
-                        borderTopLeftRadius: 10, 
-                        borderTopRightRadius: 10, 
-                        backgroundColor: '#09122b',
-                        width: '100%'}}></View>
+                    style={disabled ? styles.barInactive : styles.barActive}></View>
                     <View style={{
                         height: 'auto',
                         width: '100%',
@@ -55,13 +52,14 @@ export const MediumButton = ({title, icon, onPressFunc, buttonFunc}) => {
                     }}>
                         <View style={{height: '100%', justifyContent: 'center', alignItems: 'center'}}>
                             <Text category='h4' 
-                                style={[{fontWeight: 'bold', marginLeft: 15, height: 'auto'}, GlobalStyles.colorMain
-                                , GlobalStyles.h5]}>
+                                style={[{fontWeight: 'bold', marginLeft: 15, height: 'auto'}, 
+                                disabled ? styles.textInactive : GlobalStyles.colorMain, 
+                                GlobalStyles.h5]}>
                                     {title}
                             </Text>
                         </View>
                         <Pressable style={{height: '100%', justifyContent: 'center', alignItems: 'center'}}
-                        onPress={buttonFunc ? buttonFunc : onPressFunc}>
+                        onPress={!disabled ? (buttonFunc ? buttonFunc : onPressFunc) : null}>
                             {icon}
                             {/* <Entypo style={{marginRight: 15, marginLeft: 5}} name="plus" size={30} color="black" /> */}
                         </Pressable>
@@ -71,3 +69,52 @@ export const MediumButton = ({title, icon, onPressFunc, buttonFunc}) => {
         </View>
     )
 }
+
+
+const styles = StyleSheet.create({
+    checkboxActive: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: 30,
+        width: 30,
+        marginLeft: 15,
+        marginRight: 15,
+        borderRadius: 5,
+        backgroundColor: '#09122b',
+        borderWidth: 1,
+        borderColor: '#09122b'
+    },
+    checkbox: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: 30,
+        width: 30,
+        marginLeft: 15,
+        marginRight: 15,
+        borderRadius: 5,
+        backgroundColor: 'white',
+        borderWidth: 1,
+        borderColor: '#6c7280'
+    },
+    barActive: {
+        height: 10, 
+        borderTopLeftRadius: 10, 
+        borderTopRightRadius: 10, 
+        backgroundColor: '#09122b',
+        width: '100%'
+    },
+    barInactive: {
+        backgroundColor: '#6c7280',
+        height: 10, 
+        borderTopLeftRadius: 10, 
+        borderTopRightRadius: 10, 
+        width: '100%'
+    },
+    textActive: {
+        fontWeight: 'bold',
+        color: '#09122b'
+    }, textInactive: {
+        fontWeight: 'bold',
+        color: '#b7bcc7'
+    },
+})
