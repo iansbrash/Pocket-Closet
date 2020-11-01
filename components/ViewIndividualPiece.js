@@ -427,6 +427,8 @@ export const ViewIndividualPiece = ({ route, navigation }) => {
 
     // we pass in the item we clicked on so we can display stats XDDDD
     const { item } = route.params;
+    console.log('item')
+    console.log(item)
 
     let src
 

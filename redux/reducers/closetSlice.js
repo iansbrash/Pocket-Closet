@@ -167,8 +167,10 @@ const closetSlice = createSlice({
         itemFavoriteToggled: {
             reducer(state, action) {
                 console.log(action.payload);
+                console.log('the full array of that type')
+                console.log(state.closetObject[action.payload.clothingType.toLowerCase() + 'Array'])
 
-                let itemToEdit = state.closetObject[action.payload.clothingType + 'Array']
+                let itemToEdit = state.closetObject[action.payload.clothingType.toLowerCase() + 'Array']
                 .find(clothingObj => clothingObj._id === action.payload._id);
                 console.log(itemToEdit); //SHIT WORKS
                 itemToEdit.favorite = !itemToEdit.favorite;
@@ -176,8 +178,8 @@ const closetSlice = createSlice({
         },
         clothingDeletedFromCloset: {
             reducer (state, action) {
-                state.closetObject[action.payload.clothingType + 'Array'] = 
-                state.closetObject[action.payload.clothingType + 'Array'].filter(
+                state.closetObject[action.payload.clothingType.toLowerCase() + 'Array'] = 
+                state.closetObject[action.payload.clothingType.toLowerCase() + 'Array'].filter(
                     obj => obj._id !== action.payload._id
                 )
             }
