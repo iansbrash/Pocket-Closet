@@ -8,15 +8,17 @@ import { AppNavigator } from './components/TabNavigator';
 import 'react-native-gesture-handler';
 import { PersistGate } from 'redux-persist/integration/react'
 
+/** Persist */
 let persistor = persistStore(store);
+/** End Persist */
 
 export default function App() {
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: 'white'}}>
-      <Provider store={store}>
+      <Provider store={store}> 
           <PersistGate persistor={persistor}>
-                <AppNavigator/>
-            </PersistGate>
+              <AppNavigator/>
+          </PersistGate>
         </Provider>
     </SafeAreaView>
     

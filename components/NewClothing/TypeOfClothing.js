@@ -4,7 +4,8 @@ import {
     ScrollView, 
     StyleSheet, 
     View, 
-    Text } from 'react-native'
+    Text,
+    Vibration } from 'react-native'
 import ImagePicker from 'react-native-image-picker';
 
 import { useNavigation } from '@react-navigation/native'
@@ -12,8 +13,13 @@ import { TopNavScreenHeader } from '../GlobalComponents/TopNav'
 import { useSelector, useDispatch } from 'react-redux'
 import { NextButton } from './NextButton'
 import { ScreenHeader } from '../GlobalComponents/ScreenHeader'
-import { clothingInProgressAttributeAdded } from '../../redux/reducers/closetSlice'
+import { 
+    clothingInProgressAttributeAdded,
+    typesOfClothingSpecificTypeAdded,
+    typesOfClothingSpecificTypeDeleted } from '../../redux/reducers/closetSlice'
 import GlobalStyles from '../GlobalComponents/GlobalStyles';
+import { PlusIcon } from '../GlobalComponents/GlobalIcons'
+import { TextInputModal, YesNoModal } from '../GlobalComponents/GlobalModals'
 
 
 
@@ -26,17 +32,18 @@ export const TypeOfClothing = () => {
     const [specificSelected, setSpecificSelected] = useState('');
 
     const typesOfClothingObject = useSelector(state => state.closet.typesOfClothing);
-    const typesOfClothingArray = Object.keys(typesOfClothingObject);
+    const [typesOfClothingArray, setTypesOfClothingArray] = useState(Object.keys(typesOfClothingObject));
     const [nextDisabled, setNextDisabled] = useState(true)
+    const [modalVisible, setModalVisible] = useState(false)
+    const [searchInput,setSearchInput] = useState('')
+
+    const [deleteModal, setDeleteModal] = useState(false)
 
     const navigation = useNavigation();
     const dispatch = useDispatch();
 
-    // why the FUCK do i have to do this
-    const [daArray, setDaArray] = useState([])
 
     const TypeOfButtonFunction = (title) => {
-        setDaArray(typesOfClothingObject[title.toLowerCase()]);
         setTypeSelected(title);
         setNextDisabled(true)
     }
@@ -45,6 +52,30 @@ export const TypeOfClothing = () => {
         setNextDisabled(false)
         setSpecificSelected(title)
 
+    }
+
+    const deleteModalFunction = (title) => {
+        Vibration.vibrate(400)
+        setSpecificSelected(title);
+        setDeleteModal(true)
+    }
+
+    const AddNewCategory = () => {
+        setModalVisible(false)
+        //newSpecificType
+        //clothingType
+        dispatch(typesOfClothingSpecificTypeAdded({
+            clothingType: typeSelected.toLowerCase(),
+            newSpecificType: searchInput
+        }))
+        setSearchInput('')
+    }
+
+    const deleteCategory = (clothingType, categoryToDelete) => {
+        dispatch(typesOfClothingSpecificTypeDeleted(
+            {clothingType: clothingType.toLowerCase(),
+            specificTypeToDelete: categoryToDelete}))
+        setDeleteModal(false)
     }
 
     const SpecificTypeOfButton = ({title, key}) => {
@@ -61,7 +92,10 @@ export const TypeOfClothing = () => {
                     borderRadius: 10,
                     elevation: 5,
                 }, GlobalStyles.shadowLight]}
-                onPress={() => SpecificTypeFunction(title)}>
+                delayLongPress={500}
+                onPress={() => SpecificTypeFunction(title)}
+                onLongPress={() => deleteModalFunction(title)}
+                >
 
                     <View style={[specificSelected === title ? {backgroundColor: 'white'} : GlobalStyles.bgColorMain, 
                         {borderTopLeftRadius: 5, borderTopRightRadius: 5, height: 5, width: '100%'}]}></View>
@@ -108,13 +142,55 @@ export const TypeOfClothing = () => {
         )
     }
 
+    const AddNewCategoryButton = ({arrayName, onPressFunc}) => {
+        return (
+            <View style={{
+                height: 'auto',
+                width: '50%',
+            }}>
+                <TouchableOpacity style={[{
+                    width: 'auto',
+                    height: 50,
+                    margin: 5,
+                    borderRadius: 10,
+                    elevation: 5,
+                }, GlobalStyles.shadowLight]}
+                onPress={() => onPressFunc()}>
+
+                    <View style={[GlobalStyles.bgColorMain, 
+                        {borderTopLeftRadius: 5, borderTopRightRadius: 5, height: 5, width: '100%'}]}></View>
+
+                    <View style={[styles.button, {justifyContent: 'center', alignItems: 'center', flexDirection: 'row'}]}>
+                        <Text style={[styles.boldText, GlobalStyles.h4]}>
+                            {/* {'New Type'} */}
+                        </Text>
+                        <PlusIcon size={30} style={[ GlobalStyles.colorMain]}/>
+                    </View>
+                </TouchableOpacity>
+            </View>
+        )
+    }
+
     return (
         <View style={{
             flex: 1,
             backgroundColor: 'white'
         }}>
             <TopNavScreenHeader exitDestination={'CLOSETSCREEN'} title={'New Clothing Piece'} /> 
-            <ScrollView style={{marginBottom: 10}}>
+            <TextInputModal 
+                title={'Add New Category'}
+                modalVisible={modalVisible} 
+                setModalVisible={setModalVisible} 
+                onPressFunc={() => AddNewCategory()}
+                searchInput={searchInput}
+                setSearchInput={setSearchInput}/>
+
+            <YesNoModal 
+                title={`Delete ${specificSelected}`}
+                modalVisible={deleteModal}
+                setModalVisible={setDeleteModal}
+                onPressFunc={() => deleteCategory(typeSelected, specificSelected)}/>
+                <ScrollView style={{marginBottom: 10}}>
             {/* <ScreenHeader title={'Type of Clothing'}/> */}
             {/* <Divider /> */}
                 <View style={{
@@ -130,6 +206,7 @@ export const TypeOfClothing = () => {
                     {typesOfClothingArray.map(item => (
                         <TypeOfButton title={item.charAt(0).toUpperCase() + item.slice(1)}/>
                     ))}
+                    
                 </View>
                 <View style={{height: 30}}></View> 
                 {typeSelected !== '' ? <ScreenHeader title={typeSelected.toUpperCase()}/> : null}
@@ -143,9 +220,10 @@ export const TypeOfClothing = () => {
                     justifyContent: 'flex-start',
                     alignItems: 'center',
                 }}>
-                    {daArray.map(item => (
-                        <SpecificTypeOfButton title={item} key={item}/>
-                    ))}
+                    {typeSelected !== '' ? typesOfClothingObject[typeSelected.toLowerCase()].map(item => (
+                        <SpecificTypeOfButton title={item}/>
+                    )) : null}
+                    {typeSelected !== '' ? <AddNewCategoryButton arrayName={'type'} onPressFunc={() => setModalVisible(true)}/> : null}
                 </View>
                 
                 

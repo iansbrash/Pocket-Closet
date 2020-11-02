@@ -30,7 +30,7 @@ function RenderSingleLineClosetItem ({item})  {
     let src;
 
     if (!item.images || item.images.length === 0){
-        src = { uri: 'https://randomuser.me/api/portraits/men/1.jpg' }
+        src = { uri: 'https://randomuser.me/api/portraits/men/1.jpg' } //default replacement image
     } else {
         src = {uri: item.images[0]}
     }

@@ -143,6 +143,11 @@ const closetSlice = createSlice({
                 ['Guess', 'Guess Jeans', 'Guess USA']
             ]
         ,
+        sizingObject: {
+            letter: ['XXS', 'XS', 'S', 'M', 'L', 'XL', 'XXL'],
+            number: [4, 4.5, 5, 5.5, 6, 6.5, 7, 7.5, 8, 8.5, 9, 9.5, 10, 10.5, 11, 11.5, 12, 12.5, 13],
+            other: []
+        },
         status: 'idle',
         error: null
     },
@@ -184,7 +189,32 @@ const closetSlice = createSlice({
                 )
             }
         },
-        
+        typesOfClothingSpecificTypeAdded: {
+            reducer (state, action) {
+                console.log(action.payload)
+                state.typesOfClothing[action.payload.clothingType] =
+                [...state.typesOfClothing[action.payload.clothingType], action.payload.newSpecificType]
+            }
+        },
+        typesOfClothingSpecificTypeDeleted: {
+            reducer (state, action) {
+                console.log(action.payload);
+                state.typesOfClothing[action.payload.clothingType] = 
+                state.typesOfClothing[action.payload.clothingType].filter(type => type !== action.payload.specificTypeToDelete)
+            }
+        },
+        sizeAdded: {
+            reducer (state, action) {
+                state.sizingObject[action.payload.sizeType] = 
+                [...state.sizingObject[action.payload.sizeType], action.payload.sizeToAdd]
+            }
+        },
+        sizeDeleted: {
+            reducer (state, action) {
+                state.sizingObject[action.payload.sizeType] =
+                state.sizingObject[action.payload.sizeType].filter(sz => sz !== action.payload.sizeToDelete)
+            }
+        },
         topAddedToCloset: {
             reducer(state, action) {
                 console.log('fuck u')
@@ -219,5 +249,9 @@ export const {
     clothingInProgressAttributeAdded ,
     clothingAddedToCloset,
     itemFavoriteToggled,
-    clothingDeletedFromCloset
+    clothingDeletedFromCloset,
+    typesOfClothingSpecificTypeAdded,
+    typesOfClothingSpecificTypeDeleted,
+    sizeAdded,
+    sizeDeleted
 } = closetSlice.actions;

@@ -5,8 +5,8 @@ import {
     Text, 
     View, 
     Dimensions,
-    Modal  ,
-    Alert
+    Alert,
+    Vibration
 } from 'react-native'
 import { useSelector, useDispatch} from 'react-redux' 
 
@@ -19,6 +19,7 @@ import { HeartIcon, EditIcon, DeleteIcon, ShareIcon, CheckIcon, XIcon } from './
 import { Children } from 'react'
 import { itemFavoriteToggled, clothingDeletedFromCloset } from '../redux/reducers/closetSlice'
 import { useNavigation } from '@react-navigation/native'
+import { YesNoModal } from './GlobalComponents/GlobalModals'
 
 const windowWidth = Dimensions.get('window').width;
 //edit these instead of numbers in handleScroll
@@ -276,6 +277,7 @@ const ButtonsStyleTwo = ({imageHeight, item, setModalVisible}) => {
         }));
     }
     const DeleteFunc = () => {
+        Vibration.vibrate(400)
         setModalVisible(true);
     }
     const EditFunc = () => {
@@ -315,8 +317,28 @@ const ButtonsStyleTwo = ({imageHeight, item, setModalVisible}) => {
     )
 }
 
-const DeleteModal = ({setModalVisible, modalVisible, item}) => {
 
+export const ViewIndividualPiece = ({ route}) => {
+
+    const [modalVisible, setModalVisible] = useState(false);
+
+    // we pass in the item we clicked on so we can display stats XDDDD
+    const { item } = route.params;
+    // console.log('item')
+    // console.log(item)
+
+    let src
+
+    //temp image
+    if (item.images.length !== 0){
+        src = {uri: item.images[0]}
+    } else {
+        src = { uri: 'https://randomuser.me/api/portraits/men/1.jpg' }
+    }
+
+    const image = useRef(null)
+
+    const [imageHeight, setImageHeight] = useState(350);
 
     const navigation = useNavigation();
     const dispatch = useDispatch();
@@ -326,124 +348,6 @@ const DeleteModal = ({setModalVisible, modalVisible, item}) => {
         dispatch(clothingDeletedFromCloset({...item}))
         navigation.navigate('CLOSETSCREEN')
     }
-
-
-    return (
-        <Modal
-        animationType="slide"
-        transparent={true}
-        visible={modalVisible}
-        onRequestClose={() => {
-          Alert.alert("Modal has been closed.");
-        }}
-      >
-          <View style={{
-              top: 300,
-              justifyContent: 'center', alignItems: 'center'}}>
-                  <View style={[{
-                      justifyContent: 'center', 
-                      alignItems: 'center',
-                      flexDirection: 'column',
-                      width: '75%',
-                      height: 'auto',
-                      borderRadius: 10,
-
-                  }, GlobalStyles.shadowLight]}>
-                          <View 
-                          style={[{
-                            height: 10, 
-                            borderTopLeftRadius: 10, 
-                            borderTopRightRadius: 10,
-                            width: '100%'
-                        }, GlobalStyles.bgColorMain]}></View>
-                        <View style={[
-                      {
-                          height: 'auto', 
-                          width: '100%',
-                          backgroundColor: 'white',
-                          borderBottomLeftRadius: 10,
-                          borderBottomRightRadius: 10,
-                          flexDirection: 'column',
-                          justifyContent: 'space-between',
-                          alignItems: 'center'}]}>
-                              <View style={{
-                                  justifyContent: 'center',alignItems: 'flex-start',
-                              }}>
-                                <Text style={[GlobalStyles.h5, GlobalStyles.colorMain,
-                                    {fontWeight: 'bold', margin: 15}]}>
-                                    Are you sure?
-                                </Text>
-                              </View>
-                              
-                              <View style={{
-                                    width: '100%',
-                                    justifyContent: 'space-between',
-                                    alignItems: 'center', 
-                                    flexDirection: 'row',
-                                }}>
-                                    <View style={{width: '50%'}}>
-                                        <TouchableOpacity style={{
-                                        // borderColor: 'lightgray',
-                                        // borderTopWidth: 1,
-                                        // borderRightWidth: 1,
-                                        // borderBottomLeftRadius: 10,
-                                        width: '100%',
-                                        flexDirection: 'row',
-                                        justifyContent: 'center',
-                                        alignItems: 'center'
-                                        }}
-                                        onPress={() => setModalVisible(false)}>
-                                            <XIcon size={40} style={GlobalStyles.colorMain}/>
-                                    </TouchableOpacity>
-                                    </View>
-                                    <View style={{width: '50%'}}>
-                                        <TouchableOpacity style={{
-                                        // borderColor: 'lightgray',
-                                        // borderTopWidth: 1,
-                                        // borderLeftWidth: 1,
-                                        // borderBottomRightRadius: 10,
-                                        width: '100%',
-                                        flexDirection: 'row',
-                                        justifyContent: 'center',
-                                        alignItems: 'center'
-                                        }}
-                                        onPress={() => ConfirmDelete()}>
-                                            {/* <Text style={[GlobalStyles.h3, {fontWeight: 'bold'}]}>Yes</Text> */}
-                                            <CheckIcon size={40} style={GlobalStyles.colorMain}/>
-                                    </TouchableOpacity>
-                                    </View>
-                              </View>
-                        
-                  </View>
-                  </View>
-          </View>
-      </Modal>
-    )
-}
-
-export const ViewIndividualPiece = ({ route, navigation }) => {
-
-    const [modalVisible, setModalVisible] = useState(false);
-
-    // we pass in the item we clicked on so we can display stats XDDDD
-    const { item } = route.params;
-    console.log('item')
-    console.log(item)
-
-    let src
-
-    //temp image
-    if (item.images.length !== 0){
-        src = {uri: item.images[0]}
-    } else {
-        let src = { uri: 'https://randomuser.me/api/portraits/men/1.jpg' }
-    }
-
-    const image = useRef(null)
-
-    const [imageHeight, setImageHeight] = useState(350);
-
-
     
 
     const handleScroll = (event) => {
@@ -516,8 +420,7 @@ export const ViewIndividualPiece = ({ route, navigation }) => {
             
             <View style={{height: minImageHieght + 20}}></View>
             
-            <DeleteModal modalVisible={modalVisible} setModalVisible={setModalVisible} item={item}/>
-            
+            <YesNoModal modalVisible={modalVisible} setModalVisible={setModalVisible} onPressFunc={() => ConfirmDelete()}/>
             
             <ScrollView style={{
                 flex: 1,
