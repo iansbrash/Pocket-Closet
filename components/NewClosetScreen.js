@@ -10,7 +10,8 @@ import {
     TextInput,
     Animated,
     Text,
-    Modal
+    Modal,
+    Pressable
   } from 'react-native'
 import { useSelector, useDispatch as dispatchRedux } from 'react-redux' 
 import { TabRouter, useNavigation } from '@react-navigation/native';
@@ -30,7 +31,8 @@ function RenderSingleLineClosetItem ({item})  {
     let src;
 
     if (!item.images || item.images.length === 0){
-        src = { uri: 'https://randomuser.me/api/portraits/men/1.jpg' } //default replacement image
+        //very important function
+        src = { uri: `https://randomuser.me/api/portraits/men/${Math.floor(Math.random() * 100 % 100 + 1)}.jpg` } //default replacement image
     } else {
         src = {uri: item.images[0]}
     }
@@ -539,6 +541,23 @@ const ClosetSearch = ({searchInput, setSearchInput}) => {
                             onChangeText={text => setSearchInput(text)}
                             value={searchInput}
                         />
+                        <Pressable style={{
+                            height: 30,
+                            aspectRatio: 1,
+                            position: 'absolute',
+                            backgroundColor: '#e8e8e8',
+                            borderRadius: 5,
+                            margin: 5,
+                            top: 0,
+                            right: 0,
+                            zIndex: 3,
+                            justifyContent: 'center',
+                            alignItems: 'center'
+                            }}
+                            onPress={() => navigation.navigate('NEWCLOTHING')}
+                            hitSlop={10}>
+                            <PlusIcon size={25} style={GlobalStyles.colorMain}/>
+                        </Pressable>
                             <Animated.View 
                             style={{
                                 opacity: inputLength.interpolate({
@@ -680,8 +699,8 @@ export const NewClosetScreen = () => {
             flex: 1,
             flexDirection: 'column',
             backgroundColor: 'white'
-        }} 
-        level='1'>
+        }}>
+            
             <View 
             status='primary'
             style={{
@@ -705,18 +724,7 @@ export const NewClosetScreen = () => {
                         alignItems: 'center',
                         flexDirection: 'row',
                         }}>
-                        <TouchableOpacity style={{
-                            height: 35,
-                            aspectRatio: 1,
-                            borderRadius: 5,
-                            backgroundColor: '#f2f2f2',
-                            marginRight: 10,
-                            justifyContent: 'center',
-                            alignItems: 'center'
-                        }}
-                        onPress={() => navigation.navigate('NEWCLOTHING')}>
-                            <PlusIcon size={25} style={GlobalStyles.colorMain}/>
-                        </TouchableOpacity>
+                        
                     </View>
                     <ClosetOutfitsToggle closetIsActive={closetIsActive} setClosetIsActive={setClosetIsActive} />
                     

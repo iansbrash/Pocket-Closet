@@ -11,6 +11,8 @@ import { ScreenHeader } from '../GlobalComponents/ScreenHeader'
 import { clothingAddedToCloset } from '../../redux/reducers/closetSlice'
 import GlobalStyles from '../GlobalComponents/GlobalStyles'
 import { XIcon } from '../GlobalComponents/GlobalIcons'
+import { clothingInProgressCleansed } from '../../redux/reducers/closetSlice'
+
 
 const FinalizeDescription = ({title, value}) => {
     return (
@@ -99,7 +101,8 @@ export const FinalizeClothing = () => {
 
     return (
         <View style={{flex: 1, backgroundColor: 'white'}}>
-            <TopNavScreenHeader title={'Finalize'} exitDestination={"CLOSETSCREEN"}/>
+            <TopNavScreenHeader title={'Finalize'} exitDestination={"CLOSETSCREEN"}
+            extraFunc={() => dispatch(clothingInProgressCleansed())}/>
             <ScrollView>
                 <View style={{
                     flex: 1,

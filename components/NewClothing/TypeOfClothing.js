@@ -20,6 +20,7 @@ import {
 import GlobalStyles from '../GlobalComponents/GlobalStyles';
 import { PlusIcon } from '../GlobalComponents/GlobalIcons'
 import { TextInputModal, YesNoModal } from '../GlobalComponents/GlobalModals'
+import { clothingInProgressCleansed } from '../../redux/reducers/closetSlice'
 
 
 
@@ -176,7 +177,8 @@ export const TypeOfClothing = () => {
             flex: 1,
             backgroundColor: 'white'
         }}>
-            <TopNavScreenHeader exitDestination={'CLOSETSCREEN'} title={'New Clothing Piece'} /> 
+            <TopNavScreenHeader exitDestination={'CLOSETSCREEN'} title={'New Clothing Piece'} 
+            extraFunc={() => dispatch(clothingInProgressCleansed())}/> 
             <TextInputModal 
                 title={'Add New Category'}
                 modalVisible={modalVisible} 

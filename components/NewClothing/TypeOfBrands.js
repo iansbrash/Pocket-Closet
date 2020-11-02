@@ -8,16 +8,26 @@ import {
     Text, 
     TextInput,
     Animated,
-    FlatList } from 'react-native'
+    FlatList,
+    Pressable,
+    Vibration
+} from 'react-native'
 import ImagePicker from 'react-native-image-picker';
 import { useNavigation } from '@react-navigation/native'
 import { TopNavScreenHeader } from '../GlobalComponents/TopNav'
 import { useSelector, useDispatch } from 'react-redux'
 import { NextButton } from './NextButton'
 import { ScreenHeader } from '../GlobalComponents/ScreenHeader'
-import { clothingInProgressAttributeAdded } from '../../redux/reducers/closetSlice'
-import { CheckIcon } from '../GlobalComponents/GlobalIcons'
+import { 
+    clothingInProgressAttributeAdded,
+    brandAdded,
+    brandDeleted } from '../../redux/reducers/closetSlice'
+import { CheckIcon, PlusIcon } from '../GlobalComponents/GlobalIcons'
 import GlobalStyles from '../GlobalComponents/GlobalStyles'
+import { TextInputModal, YesNoModal } from '../GlobalComponents/GlobalModals'
+import { clothingInProgressCleansed } from '../../redux/reducers/closetSlice'
+
+
 
 
 
@@ -32,7 +42,7 @@ const testBrandArray = [
 'XDDD']
 
 
-const TestSearchInput = ({searchInput, setSearchInput}) => {
+const TestSearchInput = ({searchInput, setSearchInput, setNewBrandInputModal}) => {
     
     const [inputLength] = useState(new Animated.Value(1))
     const searchInputRef = useRef(null);
@@ -64,7 +74,8 @@ const TestSearchInput = ({searchInput, setSearchInput}) => {
                     outputRange: ['84%', '100%']
                 }),
                 flexDirection: 'row',
-                alignItems: 'center'}}>
+                alignItems: 'center',
+                position: 'relative'}}>
                 <TextInput 
                     style={{ 
                         justifyContent: 'center',
@@ -90,6 +101,23 @@ const TestSearchInput = ({searchInput, setSearchInput}) => {
                     onChangeText={text => setSearchInput(text)}
                     value={searchInput}
                 />
+                <Pressable style={{
+                    height: 30,
+                    aspectRatio: 1,
+                    position: 'absolute',
+                    backgroundColor: '#e8e8e8',
+                    borderRadius: 5,
+                    margin: 5,
+                    top: 0,
+                    right: 0,
+                    zIndex: 3,
+                    justifyContent: 'center',
+                    alignItems: 'center'
+                }}
+                onPress={() => setNewBrandInputModal(true)}
+                hitSlop={10}>
+                    <PlusIcon size={25} style={GlobalStyles.colorMain}/>
+                </Pressable>
                     <Animated.View 
                     style={{
                         opacity: inputLength.interpolate({
@@ -125,6 +153,10 @@ export const TypeOfBrands = () => {
     // this shoudl be an array of arrays...?
     const [selectedBrandsArray, setSelectedBrandsArray] = useState([]);
     const navigation = useNavigation();
+    const [newBrandInput, setNewBrandInput] = useState('')
+    const [newBrandInputModal, setNewBrandInputModal] = useState(false)
+    const [deleteModal, setDeleteModal] = useState(false)
+    const [toDelete, setToDelete] = useState('')
 
     // console.log(brandsArray)
 
@@ -133,6 +165,27 @@ export const TypeOfBrands = () => {
 
     // this is an array of arrays. Keep that in mind.
     const brandsArray = useSelector(state => state.closet.brandsArray)
+
+    const DispatchAddNewBrand = () => {
+        // TODO: Make a multi-select so we can have brand laternate names
+        dispatch(brandAdded({newBrandArray: [newBrandInput]}));
+        setNewBrandInput('')
+        setNewBrandInputModal(false)
+    }
+
+    const onLongPressDelete = (item) => {
+        Vibration.vibrate(400)
+        setToDelete(item)
+        setDeleteModal(true)
+    }
+
+    const DispatchDeleteBrand = () => {
+        dispatch(brandDeleted({
+            brandArrayToRemove: [toDelete]
+        }))
+        setToDelete('')
+        setDeleteModal(false)
+    }
 
     
     const IndividualBrand = ({item}) => {
@@ -147,7 +200,8 @@ export const TypeOfBrands = () => {
         //we use the first nickname in the brand array
         item = item[0];
 
-        if (!item.toLowerCase().includes(searchInput)){
+        /** There might be a '' brand stuck in limbo.. i had to cleanse it with this */
+        if (item === '' || !item || !item.toLowerCase().includes(searchInput)){
             return null
         }
         let inSelectedBrands = selectedBrandsArray.find(searchItem => searchItem.toLowerCase() === item.toLowerCase())
@@ -167,6 +221,7 @@ export const TypeOfBrands = () => {
             style={inSelectedBrands ? 
                 [styles.TOBasic, styles.TOSelected, GlobalStyles.shadowLight] : 
                 [styles.TOBasic, GlobalStyles.shadowLight]}
+                onLongPress={() => onLongPressDelete(item)}
                 >
                     <View style={[{
                         borderTopLeftRadius: 5, borderTopRightRadius: 5, height: 5, width: '100%'
@@ -194,14 +249,31 @@ export const TypeOfBrands = () => {
         
 
     
+    
 
     return (
         <View style={{flex: 1, backgroundColor: 'white'}}>
-            <TopNavScreenHeader title={'Select Brands'} exitDestination={'CLOSETSCREEN'}/>
+            <TopNavScreenHeader title={'Select Brands'} exitDestination={'CLOSETSCREEN'}
+            extraFunc={() => dispatch(clothingInProgressCleansed())}/>
             
             <View style={{marginTop: 10, marginBottom: 10}}>
-                <TestSearchInput searchInput={searchInput} setSearchInput={setSearchInput}/>
+                <TestSearchInput searchInput={searchInput} setSearchInput={setSearchInput} setNewBrandInputModal={setNewBrandInputModal}/>
             </View>
+            <TextInputModal 
+                setModalVisible={setNewBrandInputModal}
+                modalVisible={newBrandInputModal}
+                onPressFunc={() => DispatchAddNewBrand()}
+                title={'Add new brand'}
+                searchInput={newBrandInput}
+                setSearchInput={setNewBrandInput}
+            />
+            <YesNoModal 
+                setModalVisible={setDeleteModal}
+                modalVisible={deleteModal}
+                onPressFunc={() => DispatchDeleteBrand()}
+                title={`Remove ${toDelete}?`}
+            />
+
             
             <FlatList 
                     style={{maxHeight: '100%', width: '100%'}}

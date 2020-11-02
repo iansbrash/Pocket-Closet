@@ -9,11 +9,14 @@ import GlobalStyles from '../GlobalComponents/GlobalStyles'
 import { Entypo } from '@expo/vector-icons'; 
 import { PlusIcon } from '../GlobalComponents/GlobalIcons'
 import { MediumButton } from '../GlobalComponents/GlobalButtons'
+import { outfitInProgressCleansed } from '../../redux/reducers/outfitsSlice'
+import { useDispatch } from 'react-redux'
 
 
 export const OutfitFrom = () => {
 
     const navigation = useNavigation();
+    const dispatch = useDispatch();
 
     return (
         <View style={{
@@ -22,7 +25,7 @@ export const OutfitFrom = () => {
             }}>
             {/* <TopNav title={'New Outfit'} exitDestination={'HOMESCREEN'}/> */}
             {/* <ScreenHeader  title={'New Outfrom From...'}/> */}
-            <TopNavScreenHeader title={'New Outfit From...'} exitDestination={'HOMESCREEN'} />
+            <TopNavScreenHeader title={'New Outfit From...'} exitDestination={'HOMESCREEN'} extraFunc={() => dispatch(outfitInProgressCleansed())}/>
             <View style={{
                 height: 'auto',
                 width: '100%',

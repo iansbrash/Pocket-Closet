@@ -12,6 +12,10 @@ import GlobalStyles from '../GlobalComponents/GlobalStyles'
 import { clothingInProgressAttributeAdded } from '../../redux/reducers/closetSlice'
 import { Dimensions } from 'react-native';
 import { useDispatch } from 'react-redux'
+import { clothingInProgressCleansed } from '../../redux/reducers/closetSlice'
+
+
+
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
@@ -142,7 +146,9 @@ export const UploadImage = () => {
             flex: 1,
             backgroundColor: 'white'
         }}>
-            <TopNavScreenHeader title={'Upload Image'} exitDestination={'CLOSETSCREEN'} />
+            <TopNavScreenHeader title={'Upload Image'} exitDestination={'CLOSETSCREEN'} extraFunc={
+                () => dispatch(clothingInProgressCleansed())
+            } />
             
             <View style={{
                 margin: 10,

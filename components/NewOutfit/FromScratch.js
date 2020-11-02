@@ -9,11 +9,12 @@ import {
     Text, } from 'react-native'
 import { TopNav, TopNavScreenHeader } from '../GlobalComponents/TopNav'
 import { ScreenHeader } from '../GlobalComponents/ScreenHeader'
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import { NextButton } from '../NewClothing/NextButton'
 import { Ionicons } from '@expo/vector-icons';
 import { CheckIcon, PlusIcon } from '../GlobalComponents/GlobalIcons'
 import GlobalStyles from '../GlobalComponents/GlobalStyles'
+import { outfitInProgressCleansed } from '../../redux/reducers/outfitsSlice'
 
 
 
@@ -163,13 +164,14 @@ export const FromScratch = () => {
     const navigation = useNavigation();
     const closetObject = useSelector(state => state.closet.closetObject);
     const closetObjectKeys = Object.keys(closetObject);
+    const dispatch = useDispatch();
 
     return (
         <View 
         style={{flex: 1, backgroundColor: 'white'}}>
             {/* <TopNav title={'From Scratch!'} exitDestination={'HOMESCREEN'}/> */}
             {/* <ScreenHeader title={'Select Clothing'}/> */}
-            <TopNavScreenHeader title={'Select Clothing'} exitDestination={'HOMESCREEN'}/>
+            <TopNavScreenHeader title={'Select Clothing'} exitDestination={'HOMESCREEN'} extraFunc={() => dispatch(outfitInProgressCleansed())}/>
             <View style={{
                 height: 'auto',
                 width: '100%',

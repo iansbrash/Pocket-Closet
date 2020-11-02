@@ -1,9 +1,8 @@
 import React from 'react'
 import { View, TouchableOpacity, StyleSheet } from 'react-native'
-import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native'
 import { RightIcon, CheckIcon } from '../GlobalComponents/GlobalIcons'
-
+import GlobalStyles from '../GlobalComponents/GlobalStyles'
 
 export const FinalizeButton = ({disabledHook, onPressFunc}) => {
 
@@ -55,7 +54,7 @@ export const NextButton = ({disabledHook, navpath, extraFunc}) => {
             {
             !disabledHook && (
                 <TouchableOpacity 
-                style={styles.TOBasic}
+                style={[styles.TOBasic, GlobalStyles.bgColorMain]}
                 onPress={() => onClickFunc()}>
                     {/* <Icon style={{marginRight: 5, marginLeft: 5}} width='50' height='50' fill='white' name='arrow-forward-outline'/> */}
                     <RightIcon size={50} style={{marginRight: 5, marginLeft: 5, color: 'white'}}/>
@@ -72,7 +71,6 @@ const styles = StyleSheet.create({
         width: 70,
         margin: 20,
         borderRadius: 5,
-        backgroundColor: '#3366ff',
         justifyContent: 'center',
         alignItems:'center',
         elevation: 10

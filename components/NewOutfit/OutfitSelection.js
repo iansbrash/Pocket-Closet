@@ -21,6 +21,7 @@ import { ScreenHeader } from '../GlobalComponents/ScreenHeader'
 import { PlusButton } from './PlusButton'
 import GlobalStyles from '../GlobalComponents/GlobalStyles'
 import { PlusIcon, XIcon } from '../GlobalComponents/GlobalIcons'
+import { outfitInProgressCleansed } from '../../redux/reducers/outfitsSlice'
 
 
 var TopsArray = [];
@@ -251,6 +252,7 @@ export const OutfitSelection = ({ route, navigation }) => {
 
     console.log(ClosetArray)
 
+    
     const dispatch = useDispatch();
 
     const addToArray = (item) => {
@@ -259,7 +261,6 @@ export const OutfitSelection = ({ route, navigation }) => {
         console.log(item)
 
         //use arrayname as itemType in action dispatch
-
         dispatch(outfitInProgressItemAdded(item, arrayName));
 
         // TopsArray.push(item);
@@ -325,12 +326,13 @@ export const OutfitSelection = ({ route, navigation }) => {
             </View>
         )
     }
-
     return (
         <View 
         style={{flex: 1, 
             backgroundColor: 'white'}}>
-            <TopNavScreenHeader title={topNavTitle} exitDestination={'HOMESCREEN'}/>
+            <TopNavScreenHeader title={topNavTitle} 
+            exitDestination={'HOMESCREEN'} 
+            extraFunc={() => dispatch(outfitInProgressCleansed())}/>
             <View style={{position: 'relative'}}>
                 {/* <ScreenHeader title={topNavTitle}/> */}
                 <DropDownViewTest 

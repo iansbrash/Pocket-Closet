@@ -11,6 +11,8 @@ import { clothingInProgressAttributeAdded, sizeAdded, sizeDeleted } from '../../
 import GlobalStyles from '../GlobalComponents/GlobalStyles'
 import { PlusIcon } from '../GlobalComponents/GlobalIcons'
 import { YesNoModal, TextInputModal } from '../GlobalComponents/GlobalModals'
+import { clothingInProgressCleansed } from '../../redux/reducers/closetSlice'
+
 
 
 
@@ -105,7 +107,8 @@ export const SizeOfClothing = () => {
 
     return (
         <View style={{flex: 1, backgroundColor:'white'}}>
-            <TopNavScreenHeader title={'Selected Size'} exitDestination={"CLOSETSCREEN"}/>
+            <TopNavScreenHeader title={'Selected Size'} exitDestination={"CLOSETSCREEN"}
+            extraFunc={() => dispatch(clothingInProgressCleansed())}/>
             <YesNoModal 
                 setModalVisible={setDeleteModal} 
                 modalVisible={deleteModal} 

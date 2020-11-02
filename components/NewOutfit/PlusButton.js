@@ -3,7 +3,7 @@ import { View, TouchableOpacity, StyleSheet } from 'react-native'
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native'
 import { PlusIcon } from '../GlobalComponents/GlobalIcons'
-
+import GlobalStyles from '../GlobalComponents/GlobalStyles'
 
 export const PlusButton = ({disabledHook, onPressFunc}) => {
 
@@ -15,7 +15,7 @@ export const PlusButton = ({disabledHook, onPressFunc}) => {
         }}>
             { !disabledHook && (
                 <TouchableOpacity 
-                style={styles.TOSuccess}
+                style={[styles.TOSuccess, GlobalStyles.bgColorMain]}
                 onPress={onPressFunc}>
                     {/* <Icon style={{marginRight: 5, marginLeft: 5}} width='50' height='50' fill='white' name='plus'/> */}
                     <PlusIcon style={[{marginRight: 5, marginLeft: 5, color: 'white'}]} size={50}/>
@@ -42,7 +42,6 @@ const styles = StyleSheet.create({
         width: 70,
         margin: 20,
         borderRadius: 5,
-        backgroundColor: '#3366ff',
         justifyContent: 'center',
         alignItems:'center',
         elevation: 10

@@ -17,6 +17,8 @@ import { FinalizeButton } from '../NewClothing/NextButton'
 import GlobalStyles from '../GlobalComponents/GlobalStyles'
 import { XIcon } from '../GlobalComponents/GlobalIcons'
 import { MediumButton } from '../GlobalComponents/GlobalButtons'
+import { outfitInProgressCleansed } from '../../redux/reducers/outfitsSlice'
+
 
 
 
@@ -146,7 +148,7 @@ export const FinalizeOutfit = () => {
             flex: 1,
             backgroundColor: 'white'
         }}>
-           <TopNavScreenHeader title={'Finalize Outfit'} exitDestination={'HOMESCREEN'}/>
+           <TopNavScreenHeader title={'Finalize Outfit'} exitDestination={'HOMESCREEN'} extraFunc={() => dispatch(outfitInProgressCleansed())}/>
            {/* <ScreenHeader title={'Finalize Outfit'}/> */}
             <View style={{
                 flex: 1

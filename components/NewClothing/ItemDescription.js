@@ -16,6 +16,8 @@ import { useDispatch } from 'react-redux'
 import { clothingInProgressAttributeAdded } from '../../redux/reducers/closetSlice'
 import GlobalStyles from '../GlobalComponents/GlobalStyles'
 import { XIcon } from '../GlobalComponents/GlobalIcons'
+import { clothingInProgressCleansed } from '../../redux/reducers/closetSlice'
+
 
 const IndividualTag = ({title, deleteFunc}) => {
     return (
@@ -128,8 +130,9 @@ export const ItemDescription = () => {
 
     return (
         <View style={{flex: 1, backgroundColor: 'white'}}>
-            <TopNavScreenHeader title={'Enter Description'} exitDestination={'CLOSETSCREEN'}/>
-            <ScrollView style={{marginBottom: 10}}>
+            <TopNavScreenHeader title={'Enter Description'} exitDestination={'CLOSETSCREEN'}
+            extraFunc={() => dispatch(clothingInProgressCleansed())}/>
+            <View style={{marginBottom: 10}}>
                 
                 <View style={{
                     flex: 1,
@@ -148,7 +151,8 @@ export const ItemDescription = () => {
                         flexDirection: 'column',
                         justifyContent: 'flex-start',
                         alignItems: 'flex-start',
-                        height: 75
+                        minHeight: 75,
+                        maxHeight: 150
 
                     }}>
                         <Text style={[{
@@ -160,14 +164,15 @@ export const ItemDescription = () => {
                         </Text>
                         <View style={{
                             width: '100%',
-                            height: 60,
+                            minHeight: 60,
+                            maxHeight: 135,
                             marginTop: -4,
-                            justifyContent: 'center',
+                            justifyContent: 'flex-start',
                         }}>
                             <TextInput style={{
                                 borderColor: 'white',
                                 backgroundColor: 'white',
-                                height: '100%',
+                                height: 'auto',
                                 width: '100%',
                                 marginTop: 3
                             }}
@@ -245,7 +250,7 @@ export const ItemDescription = () => {
 
                 </View>
                 
-            </ScrollView>
+            </View>
             <NextButton navpath={"UPLOADIMAGE"} 
             disabledHook={nameInput === ''} 
             extraFunc={dispatch(clothingInProgressAttributeAdded({

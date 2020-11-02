@@ -1,19 +1,58 @@
-import React from 'react'
+import React, {useState, useEffect} from 'react'
 import {
     Modal,
     View,
     Text,
     TouchableOpacity,
     TextInput,
+    Animated
 } from 'react-native'
 import GlobalStyles from './GlobalStyles'
 import { CheckIcon, XIcon } from './GlobalIcons'
+import { BlurView } from 'expo-blur';
 
 export const YesNoModal = ({setModalVisible, modalVisible, onPressFunc, title}) => {
 
-    
+    const [viewBlur] = useState(new Animated.Value(0))
+
+    const onShow = () => {
+        Animated.timing(viewBlur, {
+            toValue: 1,
+            duration: 250,
+            useNativeDriver: true
+        }).start();
+    }
+
+    const onDismiss = () => {
+        Animated.timing(viewBlur, {
+            toValue: 0,
+            duration: 250,
+            useNativeDriver: true
+        }).start();
+    }
+
+    useEffect(() => {
+        if (modalVisible){
+            onShow()
+        } else {
+            onDismiss()
+        }
+    },[modalVisible])
 
     return (
+        <Animated.View style={{
+            position: 'absolute',
+            height: '100%',
+            width: '100%',
+            opacity: viewBlur,
+            zIndex: 2
+        }}
+        pointerEvents={'none'}>
+        <BlurView 
+        intensity={100} style={{
+            height: '100%',
+            width: '100%'
+        }}>
         <Modal
         animationType="slide"
         transparent={true}
@@ -94,11 +133,56 @@ export const YesNoModal = ({setModalVisible, modalVisible, onPressFunc, title}) 
                   </View>
           </View>
       </Modal>
+      </BlurView>
+      </Animated.View>
     )
 }
 
 export const TextInputModal = ({setModalVisible, modalVisible, onPressFunc, title, searchInput, setSearchInput}) => {
+
+    const [viewBlur] = useState(new Animated.Value(0))
+
+    const onShow = () => {
+        Animated.timing(viewBlur, {
+            toValue: 1,
+            duration: 250,
+            useNativeDriver: true
+        }).start();
+    }
+
+    const onDismiss = () => {
+        Animated.timing(viewBlur, {
+            toValue: 0,
+            duration: 250,
+            useNativeDriver: true
+        }).start();
+    }
+
+    useEffect(() => {
+        if (modalVisible){
+            onShow()
+        } else {
+            onDismiss()
+        }
+    },[modalVisible])
+
+
+
     return (
+        <Animated.View style={{
+            position: 'absolute',
+            height: '100%',
+            width: '100%',
+            opacity: viewBlur,
+            zIndex: 2
+        }}
+        pointerEvents={'none'}>
+        <BlurView 
+        intensity={100} style={{
+            height: '100%',
+            width: '100%'
+        }}>
+
         <Modal
         animationType="slide"
         transparent={true}
@@ -106,7 +190,9 @@ export const TextInputModal = ({setModalVisible, modalVisible, onPressFunc, titl
         onRequestClose={() => {
           Alert.alert("Modal has been closed.");
         }}
-      >
+        // onShow={() => onShow()}
+        // onDismiss={() => onDismiss()}
+        >
           <View style={{
               top: 300,
               justifyContent: 'center', alignItems: 'center'}}>
@@ -213,5 +299,7 @@ export const TextInputModal = ({setModalVisible, modalVisible, onPressFunc, titl
                   </View>
           </View>
       </Modal>
+      </BlurView>
+      </Animated.View>
     )
 }

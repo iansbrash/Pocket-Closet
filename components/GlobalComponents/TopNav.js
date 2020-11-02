@@ -31,9 +31,15 @@ export const TopNav = ({title, exitDestination}) => {
 }
 
 
-export const TopNavScreenHeader = ({title, exitDestination}) => {
+export const TopNavScreenHeader = ({title, exitDestination, extraFunc}) => {
 
     const navigation = useNavigation();
+
+
+    const combineFunc = () => {
+        if (extraFunc) {extraFunc()}
+        navigation.navigate(exitDestination);
+    }
 
     return (
         <View style={{
@@ -62,7 +68,7 @@ export const TopNavScreenHeader = ({title, exitDestination}) => {
                 </View>
 
                 <TouchableOpacity
-                onPress={() => navigation.navigate(exitDestination)}>
+                onPress={() => combineFunc()}>
                     <ExitIcon size={30} style={[GlobalStyles.colorMain, {marginRight: 10}]}/>
                 </TouchableOpacity>
             </View>

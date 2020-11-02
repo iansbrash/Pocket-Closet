@@ -113,7 +113,7 @@ const closetSlice = createSlice({
             clothingName: '',
             pieceType: '',
             size: '',
-            price: '$0',
+            price: '', //$0
             color: '',
             brandName: [
                 []
@@ -133,7 +133,7 @@ const closetSlice = createSlice({
         },
         brandsArray: 
             [
-                ['Comme Des Garcons, CDG'], 
+                ['Comme Des Garcons', 'CDG'], 
                 ['Supreme'], 
                 ['Undefeated', 'UNDFTD'],
                 ['Ader Error', 'AE'],
@@ -205,14 +205,58 @@ const closetSlice = createSlice({
         },
         sizeAdded: {
             reducer (state, action) {
-                state.sizingObject[action.payload.sizeType] = 
-                [...state.sizingObject[action.payload.sizeType], action.payload.sizeToAdd]
+                if (action.payload.sizeToAdd !== ''){
+                    state.sizingObject[action.payload.sizeType] = 
+                    [...state.sizingObject[action.payload.sizeType], action.payload.sizeToAdd]
+                }else {
+                    console.log(`entered a '' payload, not saving`)
+                }
+                
             }
         },
         sizeDeleted: {
             reducer (state, action) {
+
                 state.sizingObject[action.payload.sizeType] =
                 state.sizingObject[action.payload.sizeType].filter(sz => sz !== action.payload.sizeToDelete)
+            }
+        },
+        brandAdded: {
+            reducer (state, action) {
+                if (action.payload.newBrandArray[0] !== ''){
+                    state.brandsArray = [...state.brandsArray, action.payload.newBrandArray]
+                } else {
+                    console.log(`entered a '' payload, not saving`)
+                }
+                
+            }
+        },
+        brandDeleted: {
+            reducer (state, action) {
+                state.brandsArray = 
+                state.brandsArray.filter(brandArray => brandArray[0] !== action.payload.brandArrayToRemove[0])
+            }
+        },
+        clothingInProgressCleansed: {
+            reducer (state, action) {
+                state.clothingPieceInProgress = {
+                    _id: 0,
+                    clothingType: '',
+                    clothingName: '',
+                    pieceType: '',
+                    size: '',
+                    price: '', //$0
+                    color: '',
+                    brandName: [
+                        []
+                    ], // array of names and nicknames
+                    timesWorn: 0, //defaults to zero, user can't control this
+                    tags: [],
+                    images: [],
+                    favorite: false,
+                }
+                console.log('cleansed clothingPieceInProgress')
+                console.log(state.clothingPieceInProgress);
             }
         },
         topAddedToCloset: {
@@ -253,5 +297,8 @@ export const {
     typesOfClothingSpecificTypeAdded,
     typesOfClothingSpecificTypeDeleted,
     sizeAdded,
-    sizeDeleted
+    sizeDeleted,
+    brandAdded,
+    brandDeleted,
+    clothingInProgressCleansed
 } = closetSlice.actions;
