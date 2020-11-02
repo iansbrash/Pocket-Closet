@@ -423,7 +423,7 @@ export const ViewIndividualPiece = ({ route}) => {
             <YesNoModal modalVisible={modalVisible} setModalVisible={setModalVisible} onPressFunc={() => ConfirmDelete()}/>
             
             <ScrollView style={{
-                flex: 1,
+                
                 zIndex: 0
             }} 
             scrollEventThrottle={10}
@@ -433,6 +433,8 @@ export const ViewIndividualPiece = ({ route}) => {
                     {/* DONT DELETE THIS */}
                     <ItemStats item={item}/>
                     <ItemTags item={item}/>
+
+                    <View style={{height: 50}}></View>
 
                     
             </ScrollView>

@@ -24,7 +24,7 @@ const outfitsSlice = createSlice({
             footwearArray: [
 
             ],
-            accessoriesArray: [
+            otherArray: [
 
             ]
         },
@@ -74,8 +74,9 @@ const outfitsSlice = createSlice({
         },
         outfitInProgressItemDeleted: {
             reducer (state, action) {
-                state.outfitInProgress[action.payload.clothingType + "Array"] = 
-                state.outfitInProgress[action.payload.clothingType + "Array"].filter(obj => obj._id !== action.payload._id)   //.splice(delIndex, 1);
+                console.log(action.payload)
+                state.outfitInProgress[action.payload.clothingType.toLowerCase() + "Array"] = 
+                state.outfitInProgress[action.payload.clothingType.toLowerCase() + "Array"].filter(obj => obj._id !== action.payload._id)   //.splice(delIndex, 1);
             }
         },
         outfitInProgressCleansed: {
@@ -90,7 +91,7 @@ const outfitsSlice = createSlice({
                     footwearArray: [
         
                     ],
-                    accessoriesArray: [
+                    otherArray: [
         
                     ]
                 }

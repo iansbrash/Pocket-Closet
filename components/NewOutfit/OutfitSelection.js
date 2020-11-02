@@ -33,7 +33,13 @@ const ClothingAddedIcon = (props) => {
 
    
 
-    let src = { uri: 'https://randomuser.me/api/portraits/men/1.jpg' }
+    let src;
+
+    if (item.images.length !== 0){
+        src = {uri: item.images[0]}
+    } else {
+        src = { uri: 'https://randomuser.me/api/portraits/men/1.jpg' }
+    }
     
 
     const dispatch = useDispatch();
@@ -247,6 +253,7 @@ export const OutfitSelection = ({ route, navigation }) => {
     const { topNavTitle , arrayName} = route.params;
     const OutfitArray = useSelector(state => state.outfits.outfitInProgress[arrayName])
 
+    console.log(`arrayName: ${arrayName}`)
     const ClosetArray = useSelector(state => state.closet.closetObject[arrayName])
     const [searchInput, setSearchInput] = useState('');
 

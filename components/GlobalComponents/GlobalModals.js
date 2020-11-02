@@ -17,7 +17,7 @@ export const YesNoModal = ({setModalVisible, modalVisible, onPressFunc, title}) 
 
     const onShow = () => {
         Animated.timing(viewBlur, {
-            toValue: 1,
+            toValue: .95,
             duration: 250,
             useNativeDriver: true
         }).start();
@@ -144,7 +144,7 @@ export const TextInputModal = ({setModalVisible, modalVisible, onPressFunc, titl
 
     const onShow = () => {
         Animated.timing(viewBlur, {
-            toValue: 1,
+            toValue: .95,
             duration: 250,
             useNativeDriver: true
         }).start();

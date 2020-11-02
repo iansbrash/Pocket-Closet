@@ -27,8 +27,8 @@ const SelectClothingButton = ({title, navpath, iconName, defaultChecked, navprop
 
     //weird interaction because 'accessories' and 'other' aren't the same name... need to address somehow
     //i haven't addressed this because accessories is a long word and doesn't fit into the box
-    const fuckThis = title === 'Other' ? 'accessoriesArray' : title.toLowerCase() + 'Array'
-    const clothingArray = useSelector(state => state.outfits.outfitInProgress[fuckThis])
+    
+    const clothingArray = useSelector(state => state.outfits.outfitInProgress[title.toLowerCase() + 'Array'])
     const numOfItems = clothingArray.length;
 
 //temp, useSelector to find number of items
@@ -210,7 +210,7 @@ export const FromScratch = () => {
                 navpath={'OUTFITSELECTION'}
                 navprops={{
                     topNavTitle: 'Other',
-                    arrayName: 'accessoriesArray'}}/>
+                    arrayName: 'otherArray'}}/>
             </View>
             <NextButton disabledHook={false} navpath={'FINALIZEOUTFIT'} />
 

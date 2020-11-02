@@ -12,7 +12,7 @@ import { clothingAddedToCloset } from '../../redux/reducers/closetSlice'
 import GlobalStyles from '../GlobalComponents/GlobalStyles'
 import { XIcon } from '../GlobalComponents/GlobalIcons'
 import { clothingInProgressCleansed } from '../../redux/reducers/closetSlice'
-
+import { nanoid } from 'nanoid/async/index.native'
 
 const FinalizeDescription = ({title, value}) => {
     return (
@@ -21,7 +21,6 @@ const FinalizeDescription = ({title, value}) => {
             justifyContent: 'space-between',
             alignItems: 'center',
             height: 30
-
         }}>
             <Text style={[{
                 width: 'auto',
@@ -90,9 +89,12 @@ export const FinalizeClothing = () => {
     const [tags, setTags] = useState(clothingPieceInProgress.tags)
 
 
-    const saveItem = () => {
+    const saveItem = async () => {
         //send item to redux store
-        dispatch(clothingAddedToCloset(clothingPieceInProgress))
+        dispatch(clothingAddedToCloset({
+            ...clothingPieceInProgress,
+            _id: await nanoid()
+        }))
         navigation.navigate('CLOSETSCREEN');
         //alternatively have  a'success' page like when u create an outfit
         
