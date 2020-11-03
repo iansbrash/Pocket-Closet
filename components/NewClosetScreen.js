@@ -385,7 +385,7 @@ const ClosetListOneCol = ({searchInput, filtersEnabled, heartToggleChecked}) => 
 
         <View style={{
             width: '100%',
-            height: 'auto'
+            height: '100%'
         }}>
             
             <FlatList
@@ -787,44 +787,36 @@ export const NewClosetScreen = () => {
             status='primary'
             style={{
                 width: '100%',
+                height: '100%',
                 alignItems: 'center',
-                justifyContent: 'space-between',
-                flexDirection: 'row',
+                justifyContent: 'flex-start',
+                flexDirection: 'column',
                 paddingTop: 10
             }}>
                 <View 
                 style={{
-                    flex: 1,
+                    height: 'auto',
+                    width: '100%',
                     borderRadius: 10,
                 }}>
                     <ClosetSearch searchInput={searchInput} setSearchInput={setSearchInput}/>
                     {/** This is going to be the clothing/outfits toggle */}
                     <View style={{height: 10}}></View>
-                    <View style={{
-                        height: 20,
-                        justifyContent: 'flex-end',
-                        alignItems: 'center',
-                        flexDirection: 'row',
-                        }}>
-                        
-                    </View>
                     <ClosetOutfitsToggle closetIsActive={closetIsActive} setClosetIsActive={setClosetIsActive} />
-                    
+                </View>
+                <View style={{flex: 1}}>
                     <View 
-                        style={{
-                            height: '85.5%', //this right here... this is some FUCKY ass code
-                            //could potentially fix by putting a view under the list with the same height
-                            //as the bottomtabnav
-                            }}>
-                        {closetIsActive ? <ClosetListOneCol  //can change between ClosetListOneCol and TwoCol
-                                    searchInput={searchInput}
-                                    filtersEnabled={filtersEnabled}
-                                    heartToggleChecked={heartToggleChecked}/>
-                                : <OutfitList 
-                                    searchInput={searchInput}/>
-                            }
-                            {/* <ShittyModal /> currently doesnt work we need to rework */}
-                    </View>
+                            style={{
+                                height: '100%', }}>
+                            {closetIsActive ? <ClosetListOneCol  //can change between ClosetListOneCol and TwoCol
+                                        searchInput={searchInput}
+                                        filtersEnabled={filtersEnabled}
+                                        heartToggleChecked={heartToggleChecked}/>
+                                    : <OutfitList 
+                                        searchInput={searchInput}/>
+                                }
+                                {/* <ShittyModal /> currently doesnt work we need to rework */}
+                        </View>
                 </View>
             </View>
         </View>
