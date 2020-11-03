@@ -139,45 +139,184 @@ function RenderSingleLineClosetItem ({item})  {
     )
 }
 
+/** An outfit is an object
+ *  that contains 4 arrays
+ *  topsArray, bottomsArray, footwearArray, otherArray */
+function RenderOutfit ({item})  {
+
+    // let src;
+
+    // if (!item.images || item.images.length === 0){
+    //     //very important function
+    //     src = { uri: `https://randomuser.me/api/portraits/men/${Math.floor(Math.random() * 100 % 100 + 1)}.jpg` } //default replacement image
+    // } else {
+    //     src = {uri: item.images[0]}
+    // }
+
+    //wtf... so apparently item contains a date object, then an outfitArr object (with the arrays)
+
+    
+
+    let outfitArray = item.outfitArr;
+
+
+    console.log(item);
+
+    let combinedClothingItemsArray = [
+        ...outfitArray.topsArray,
+        ...outfitArray.bottomsArray,
+        ...outfitArray.footwearArray,
+        ...outfitArray.otherArray
+    ]
+
+    const origLength = combinedClothingItemsArray.length
+
+    const needsCrop = combinedClothingItemsArray.length > 8;
+
+    if (needsCrop){
+        combinedClothingItemsArray = combinedClothingItemsArray.slice(0, 7) // should only include the first 7 terms
+    }
+
+    console.log(combinedClothingItemsArray)
+    
+
+    const navigation = useNavigation();
+
+
+    return (
+        <View style={{
+            height: 200, //was 120
+            width: '100%',
+        }}>
+            <TouchableOpacity style={[{
+                width: 'auto',
+                marginLeft: 10,
+                marginRight: 10,
+                marginTop: 5,
+                marginBottom: 5,
+                height: 'auto',
+                backgroundColor: 'white',
+                borderRadius: 10
+            }, GlobalStyles.shadowLight]}
+            activeOpacity={0.5}
+            onPress={() => null /** Needs to navigate to an outfit-viewing screen */}> 
+                <View style={{
+                    height: 'auto',
+                    width: '100%',
+                    justifyContent: 'flex-start',
+                    alignItems: 'center',
+                    flexDirection: 'column',
+                }}>
+                    <View style={[{
+                        position: 'absolute',
+                        width: 'auto',
+                        height: 'auto',
+                        borderRadius: 10,
+                        top: 0,
+                        right: 0,
+                        zIndex: 3,
+                        padding: 5
+                    }, GlobalStyles.bgColorMain]}>
+                        <Text style={[{color: 'white', fontWeight: 'bold'}, GlobalStyles.h5]}>
+                            {'11/20/20'}
+                        </Text>
+                    </View>
+                    <View 
+                    style={{
+                        height: 10, 
+                        borderTopLeftRadius: 10, 
+                        borderTopRightRadius: 10, 
+                        backgroundColor: '#09122b',
+                        width: '100%'}}></View>
+                    <View style={{
+                        height: 180,
+                        width: '100%',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                        flexDirection: 'column',
+                    }}>
+                        <View style={{
+                            justifyContent: 'flex-start',
+                            alignItems: 'left',
+                            flexDirection: 'row',
+                            height: 'auto',
+                            width: '100%',
+                            flexWrap: 'wrap',
+                            
+                            padding: 5,
+
+                        }}>
+                            {combinedClothingItemsArray.map(clothingObject => (
+                                <View style={[{
+                                        height: 'auto', 
+                                        aspectRatio: 1,
+                                        borderRadius: 10,
+                                        margin: 5,
+                                        borderRadius: 10,
+                                    }, GlobalStyles.shadowLight]}> 
+                                    <Image source={clothingObject.images ? (clothingObject.images.length === 0 ?
+                                    { uri: `https://randomuser.me/api/portraits/men/${Math.floor(Math.random() * 100 % 100 + 1)}.jpg` } :
+                                    { uri: clothingObject.images[0] }) : null} style={{height: 75, aspectRatio: 1, borderRadius: 10}} />
+                                </View>
+                                )
+                            )}
+                            {needsCrop ? (
+                                <View style={[{
+                                    height: 'auto', 
+                                    aspectRatio: 1,
+                                    borderRadius: 10,
+                                    margin: 5,
+                                    borderRadius: 10,
+                                    backgroundColor: 'white'
+                                }, GlobalStyles.shadowLight]}> 
+                                    <View 
+                                    style={{
+                                        height: 75, 
+                                        aspectRatio: 1, 
+                                        borderRadius: 10, 
+                                        justifyContent: 'center',
+                                        alignItems: 'center'}} >
+                                            {/* <PlusIcon size={45} style={GlobalStyles.colorMain}/> */}
+                                            <Text style={[GlobalStyles.h5, {fontWeight: 'bold'}]}>
+                                                {`+${origLength - 7}`}
+                                            </Text>
+                                    </View>
+                            </View>
+                            ) : null}
+                        </View>
+                    </View>
+                </View> 
+            </TouchableOpacity>
+        </View>
+    )
+}
+
+
+/** An outfit is an object
+ *  that contains 4 arrays
+ *  topsArray, bottomsArray, footwearArray, otherArray */
 const OutfitList = ({searchInput}) => {
 
     //temp
     let src = { uri: 'https://randomuser.me/api/portraits/men/1.jpg' }
 
-    const outfitArray = useSelector(state => state.outfits.outfitsArray);
+    const outfitsArray = useSelector(state => state.outfits.outfitsArray);
 
-    //item is an outfitObject
-    const renderItem = ({item, index}) => {
-        return (
-            <View style={{
-                width: '100%', 
-                height: 100,
-                paddingTop: 5,
-                paddingBottom: 5}}>
-                <View style={{
-                    height: '100%',
-                    aspectRatio: 1,
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                }}>
-                    <Image source={src} style={{
-                        height: '90%',
-                        aspectRatio: 1,
-                        borderRadius: 5
-                    }}/>
-                </View>
-            </View>
-        )
-    }
+
 
     return (
-            <View>
-                <Text>List used to be here XD</Text>
-                {/* <List
-                style={{maxHeight: '100%', width: '100%'}}
-                data={outfitArray}
-                renderItem={renderItem} /> */}
-            </View>
+        <View style={{
+            width: '100%',
+            height: 'auto'
+        }}>
+            
+            <FlatList
+            data={outfitsArray}
+            renderItem={object => <RenderOutfit {...object}/>
+            /** HOW THE FUCK DOES THE ABOVE WORK... WTF */}
+            />
+            
+        </View>
     )
 }
 
@@ -580,64 +719,7 @@ const ClosetSearch = ({searchInput, setSearchInput}) => {
                         </Animated.View>
                     </Animated.View>
                 </View>
-                
-                {/* <View style={{
-                width: '100%',
-                height: 'auto',
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-                paddingRight: 7
-            }}>
-                <Input
-                    style={{
-                        borderRadius: 5,
-                        marginLeft: 10,
-                        // marginBottom: 10,
-                        width: '70%',
-                        //backgroundColor: 'white',
-                        borderColor: 'white'
-                    }}
-                    //value={searchInput}
-                    placeholder='Search your closet!'
-                    //onChangeText={nextValue => setSearchInput(nextValue)}
-                    status='basic'
-                    accessoryLeft={SearchIcon}
-                    textStyle={{fontWeight: 'bold'}}
-                    >
-                </Input>
-                <Button
-                    status='basic'
-                    appearance='outline'
-                    style={{
-                        width: '10%',
-                        aspectRatio: 1,
-                        borderRadius: 5,
-                        borderColor: 'white'
-                    }}
-                    //onPress={() => setModalVisible(true)}
-                    accessoryLeft={ListIcon}>
-
-                </Button>
-                <Button
-                    status='basic'
-                    appearance='outline'
-                    style={{
-                        width: '10%',
-                        aspectRatio: 1,
-                        borderRadius: 5,
-                        borderColor: 'white'
-                    }}
-                    accessoryLeft={PlusIconSmall}
-                    onPress={() => navigation.navigate('NEWCLOTHING')}>
-
-                </Button>
-            </View> */}
             </View>
-            
-        //</KeyboardAvoidingView>
-        
-            
-       
     )
 }
 

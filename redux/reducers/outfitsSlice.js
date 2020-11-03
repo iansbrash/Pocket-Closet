@@ -48,7 +48,7 @@ const outfitsSlice = createSlice({
                     topsArray: [],
                     bottomsArray: [],
                     footwearArray: [],
-                    accessoriesArray: []}
+                    otherArray: []}
             },
             prepare( outfitArr ) {
                 return {

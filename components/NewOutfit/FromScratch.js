@@ -25,8 +25,7 @@ const SelectClothingButton = ({title, navpath, iconName, defaultChecked, navprop
     const navigation = useNavigation();
     const [checked, setChecked] = useState(defaultChecked);
 
-    //weird interaction because 'accessories' and 'other' aren't the same name... need to address somehow
-    //i haven't addressed this because accessories is a long word and doesn't fit into the box
+    
     
     const clothingArray = useSelector(state => state.outfits.outfitInProgress[title.toLowerCase() + 'Array'])
     const numOfItems = clothingArray.length;
