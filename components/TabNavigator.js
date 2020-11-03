@@ -20,9 +20,10 @@ import { SizeOfClothing } from './NewClothing/SizeOfClothing'
 import { TypeOfBrands } from './NewClothing/TypeOfBrands'
 import { ItemDescription } from './NewClothing/ItemDescription'
 import { FinalizeClothing } from './NewClothing/FinalizeClothing'
-// import KeyboardListener from 'react-native-keyboard-listener';
+import { ViewIndividualOutfit } from './ViewIndividualOutfit'
 import { OutfitFrom } from './NewOutfit/OutfitFrom'
 import { HangerIcon, HomeIcon, CalendarIcon } from './GlobalComponents/GlobalIcons'
+
 import GlobalStyles from './GlobalComponents/GlobalStyles'
 // Destructuring React Navigator import
 const BottomTab = createBottomTabNavigator();
@@ -79,6 +80,7 @@ const ClosetNav = () => {
             <ClosetStack.Screen name="ITEMDESCRIPTION" component={ItemDescription}/>
             <ClosetStack.Screen name="UPLOADIMAGE" component={UploadImage}/>
             <ClosetStack.Screen name="FINALIZECLOTHING" component={FinalizeClothing} />
+            <ClosetStack.Screen name="VIEWINDIVIDUALOUTFIT" component={ViewIndividualOutfit} />
         </ClosetStack.Navigator>
     )
 }

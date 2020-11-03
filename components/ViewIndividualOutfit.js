@@ -20,6 +20,7 @@ import { Children } from 'react'
 import { itemFavoriteToggled, clothingDeletedFromCloset } from '../redux/reducers/closetSlice'
 import { useNavigation } from '@react-navigation/native'
 import { YesNoModal } from './GlobalComponents/GlobalModals'
+import { MiniScreenHeader } from './GlobalComponents/ScreenHeader'
 
 const windowWidth = Dimensions.get('window').width;
 //edit these instead of numbers in handleScroll
@@ -158,9 +159,9 @@ const ItemTags = ({item}) => {
 }
 
 
-const ButtonsStyleTwo = ({imageHeight, item, setModalVisible}) => {
+const ButtonsStyleTwo = ({imageHeight, outfitObject, setModalVisible}) => {
 
-    const [favorited, setFavorited] = useState(item.favorite)
+    const [favorited, setFavorited] = useState(outfitObject.favorite)
     const dispatch = useDispatch();
 
     const FourButton = ({icon, onPressFunc}) => {
@@ -240,20 +241,20 @@ const ButtonsStyleTwo = ({imageHeight, item, setModalVisible}) => {
 }
 
 
-export const ViewIndividualPiece = ({ route }) => {
+export const ViewIndividualOutfit = ({ route }) => {
 
     const [modalVisible, setModalVisible] = useState(false);
 
     // we pass in the item we clicked on so we can display stats XDDDD
-    const { item } = route.params;
+    const outfitObject = route.params.item;
     // console.log('item')
     // console.log(item)
 
     let src
 
     //temp image
-    if (item.images.length !== 0){
-        src = {uri: item.images[0]}
+    if (outfitObject.fitpic && outfitObject.fitpic !== ''){
+        src = {uri: outfitObject.fitpic}
     } else {
         src = { uri: 'https://randomuser.me/api/portraits/men/1.jpg' }
     }
@@ -267,7 +268,7 @@ export const ViewIndividualPiece = ({ route }) => {
 
     const ConfirmDelete = () => {
         setModalVisible(false)
-        dispatch(clothingDeletedFromCloset({...item}))
+        //dispatch(clothingDeletedFromCloset({...item}))
         navigation.navigate('CLOSETSCREEN')
     }
     
@@ -275,9 +276,6 @@ export const ViewIndividualPiece = ({ route }) => {
     const handleScroll = (event) => {
 
         let numWereUsing = event.nativeEvent.contentOffset.y
-
-      
-       
 
         let toChangeHeight = maxImageHeight - (numWereUsing);
 
@@ -295,9 +293,7 @@ export const ViewIndividualPiece = ({ route }) => {
     return (
         <View 
         style={{flex: 1, backgroundColor: 'white'}}>
-            {/* <TopNav title={item.clothingName} exitDestination={'CLOSETSCREEN'}/> */}
-            {/* <ScreenHeader title={item.clothingName}/> */}
-            <TopNavScreenHeader title={item.clothingName} exitDestination={'CLOSETSCREEN'}/>
+            <TopNavScreenHeader title={outfitObject.date} exitDestination={'CLOSETSCREEN'}/>
             
             <View style={{
                 justifyContent: 'flex-start',
@@ -329,7 +325,7 @@ export const ViewIndividualPiece = ({ route }) => {
                         alignItems: 'center'
                     }}
                     >
-                        <ButtonsStyleTwo imageHeight={imageHeight} item={item} setModalVisible={setModalVisible}/>
+                        <ButtonsStyleTwo imageHeight={imageHeight} outfitObject={outfitObject} setModalVisible={setModalVisible}/>
                     </View>
                 </View>
                 <View 
@@ -353,8 +349,46 @@ export const ViewIndividualPiece = ({ route }) => {
                     {/* DONT DELETE THIS */}
                     <View style={{height: 180}} ></View>
                     {/* DONT DELETE THIS */}
-                    <ItemStats item={item}/>
-                    <ItemTags item={item}/>
+                    {Object.keys(outfitObject.outfitArr).map(key => (
+                        outfitObject.outfitArr[key].length !== 0 ?
+                        <View style={{
+                            width: '100%'
+                        }}>
+                            <MiniScreenHeader title={outfitObject.outfitArr[key][0].clothingType}/> 
+                            <View 
+                                style={{
+                                    justifyContent: 'flex-start',
+                                    alignItems: 'center',
+                                    flexWrap: 'wrap',
+                                    flexDirection: 'row',
+                                    width: 'auto',
+                                    margin: 5
+                                }}>
+                                {outfitObject.outfitArr[key].map(clothingObject => (
+                                    <View style={{
+                                        width: '33.3%',
+                                        aspectRatio: 1
+                                    }}>
+                                        <View style={{
+                                            height: '100%',
+                                            width: '100%'
+                                        }}>
+                                            <View style={[{
+                                                flex: 1, // IS THIS BEST PRACTICE??? IS THIS SPAGHETTI CODE???
+                                                margin: 5,
+                                                borderRadius: 10,
+                                                backgroundColor: 'white'
+                                            }, GlobalStyles.shadowLight]}>
+
+                                            </View>
+                                        </View>
+                                    </View>
+                                ))}
+                            </View>
+                        </View>
+                        
+                        : null
+                    ))}
 
                     <View style={{height: 50}}></View>
 

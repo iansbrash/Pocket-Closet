@@ -171,10 +171,10 @@ function RenderOutfit ({item})  {
 
     const origLength = combinedClothingItemsArray.length
 
-    const needsCrop = combinedClothingItemsArray.length > 8;
+    const needsCrop = combinedClothingItemsArray.length > 4;
 
     if (needsCrop){
-        combinedClothingItemsArray = combinedClothingItemsArray.slice(0, 7) // should only include the first 7 terms
+        combinedClothingItemsArray = combinedClothingItemsArray.slice(0, 3) // should only include the first 3 terms
     }
 
     console.log(combinedClothingItemsArray)
@@ -185,7 +185,7 @@ function RenderOutfit ({item})  {
 
     return (
         <View style={{
-            height: 200, //was 120
+            height: 200, //origLength > 4 ? 200 : 115, //was 120
             width: '100%',
         }}>
             <TouchableOpacity style={[{
@@ -199,7 +199,7 @@ function RenderOutfit ({item})  {
                 borderRadius: 10
             }, GlobalStyles.shadowLight]}
             activeOpacity={0.5}
-            onPress={() => null /** Needs to navigate to an outfit-viewing screen */}> 
+            onPress={() => navigation.navigate("VIEWINDIVIDUALOUTFIT", {item: item})}> 
                 <View style={{
                     height: 'auto',
                     width: '100%',
@@ -229,8 +229,9 @@ function RenderOutfit ({item})  {
                         backgroundColor: '#09122b',
                         width: '100%'}}></View>
                     <View style={{
-                        height: 180,
+                        //height: 180, //origLength > 4 ? 180 : 95,
                         width: '100%',
+                        height: 'auto',
                         justifyContent: 'space-between',
                         alignItems: 'center',
                         flexDirection: 'column',
@@ -242,47 +243,87 @@ function RenderOutfit ({item})  {
                             height: 'auto',
                             width: '100%',
                             flexWrap: 'wrap',
-                            
-                            padding: 5,
 
                         }}>
-                            {combinedClothingItemsArray.map(clothingObject => (
-                                <View style={[{
-                                        height: 'auto', 
+                            <View style={{
+                                width: '50%',
+                                height: 'auto'}}>
+                                <View style={{
+                                    width: 'auto',
+                                    marginLeft: 10,
+                                    marginTop: 10,
+                                    marginBottom: 10,
+                                    height: 'auto'
+                                }}>
+                                    <View style={[{
+                                        marginRight: 5,
+                                        width: 'auto',
                                         aspectRatio: 1,
-                                        borderRadius: 10,
-                                        margin: 5,
-                                        borderRadius: 10,
-                                    }, GlobalStyles.shadowLight]}> 
-                                    <Image source={clothingObject.images ? (clothingObject.images.length === 0 ?
-                                    { uri: `https://randomuser.me/api/portraits/men/${Math.floor(Math.random() * 100 % 100 + 1)}.jpg` } :
-                                    { uri: clothingObject.images[0] }) : null} style={{height: 75, aspectRatio: 1, borderRadius: 10}} />
-                                </View>
-                                )
-                            )}
-                            {needsCrop ? (
-                                <View style={[{
-                                    height: 'auto', 
-                                    aspectRatio: 1,
-                                    borderRadius: 10,
-                                    margin: 5,
-                                    borderRadius: 10,
-                                    backgroundColor: 'white'
-                                }, GlobalStyles.shadowLight]}> 
-                                    <View 
-                                    style={{
-                                        height: 75, 
-                                        aspectRatio: 1, 
-                                        borderRadius: 10, 
-                                        justifyContent: 'center',
-                                        alignItems: 'center'}} >
-                                            {/* <PlusIcon size={45} style={GlobalStyles.colorMain}/> */}
-                                            <Text style={[GlobalStyles.h5, {fontWeight: 'bold'}]}>
-                                                {`+${origLength - 7}`}
-                                            </Text>
+                                        backgroundColor: 'white',
+                                        borderRadius: 10
+                                    }, GlobalStyles.shadowLight]}>
+                                        <Image source={{ uri: `https://randomuser.me/api/portraits/men/${Math.floor(Math.random() * 100 % 100 + 1)}.jpg` }}
+                                            style={{height: '100%', width: '100%', borderRadius: 10}}/>
                                     </View>
+                                </View>
                             </View>
-                            ) : null}
+                            
+                            <View style={{
+                                width: '50%',
+                            }}>
+                                <View style={{
+                                    marginTop: 5,
+                                    marginRight: 5,
+                                    marginBottom: 5,
+                                    flexDirection: 'row',
+                                    flexWrap: 'wrap',
+                                    alignItems: 'center'
+                                }}>
+                                    {combinedClothingItemsArray.map(clothingObject => (
+                                        <View style={[{
+                                                width: '50%', 
+                                                aspectRatio: 1,
+                                            }]}> 
+                                            <View style={[{
+                                                margin: 5,
+                                                width: 'auto',
+                                                height: 'auto',
+                                                borderRadius: 10,
+                                                backgroundColor: 'white'
+                                            }, GlobalStyles.shadowLight]}>
+                                                <Image source={clothingObject.images ? (clothingObject.images.length === 0 ?
+                                                    { uri: `https://randomuser.me/api/portraits/men/${Math.floor(Math.random() * 100 % 100 + 1)}.jpg` } :
+                                                    { uri: clothingObject.images[0] }) : null} style={{height: '100%', aspectRatio: 1, borderRadius: 10}} />
+                                            </View>
+                                            
+                                        </View>
+                                        )
+                                    )}
+                                    {needsCrop ? (
+                                        <View style={[{
+                                            height: 'auto', 
+                                            aspectRatio: 1,
+                                            borderRadius: 10,
+                                            margin: 5,
+                                            borderRadius: 10,
+                                            backgroundColor: 'white'
+                                        }, GlobalStyles.shadowLight]}> 
+                                            <View 
+                                            style={{
+                                                height: 75, 
+                                                aspectRatio: 1, 
+                                                borderRadius: 10, 
+                                                justifyContent: 'center',
+                                                alignItems: 'center'}} >
+                                                    {/* <PlusIcon size={45} style={GlobalStyles.colorMain}/> */}
+                                                    <Text style={[GlobalStyles.h3, {fontWeight: 'bold'}]}>
+                                                        {`+${origLength - 3}`}
+                                                    </Text>
+                                            </View>
+                                    </View>
+                                    ) : null}
+                                </View>
+                            </View>
                         </View>
                     </View>
                 </View> 
