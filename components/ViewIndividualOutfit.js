@@ -503,6 +503,15 @@ const DisplayClothingTypeFour = ({outfitObject, icon}) => {
     const typesArray = useSelector(state => Object.keys(state.closet.typesOfClothing))
     const [type, setType] = useState('tops');
     const dummySrc = { uri: 'https://randomuser.me/api/portraits/men/1.jpg' }
+
+    // const topsArray = useSelector(state => state.closet.closetObject.topsArray);
+    // const bottomsArray = useSelector(state => state.closet.closetObject.bottomsArray);
+    // const footwearArray = useSelector(state => state.closet.closetObject.footwearArray);
+    // const otherArray = useSelector(state => state.closet.closetObject.otherArray);
+    const closetObject = useSelector(state => state.closet.closetObject)
+    const navigation = useNavigation();
+
+    //this is an array of all the IDs... not so useful
     const combinedClothingArray = [
         ...outfitObject.outfitArr.topsArray,
         ...outfitObject.outfitArr.bottomsArray,
@@ -510,15 +519,22 @@ const DisplayClothingTypeFour = ({outfitObject, icon}) => {
         ...outfitObject.outfitArr.otherArray
     ]
 
+    
+
+
+
+    // I just realized that when we store the outfit, it is then constant, and doesn't change when we favorite/edit desciriptn... etc
     const ScrollClothingList = () => {
         return (
             <View style={{width: '100%'}}>
                 <ScrollView
-                style={{height: 'auto'}}
+                style={{height: 'auto', paddingTop: 5, paddingBottom: 5}}
                 horizontal={true}>
                     
-                        {outfitObject.outfitArr[`${type}Array`].map(clothingObj => (
-                            <ClothingIcon clothingObject={clothingObj}/>
+                        {outfitObject.outfitArr[`${type}Array`].map(id => (
+                            <ClothingIcon clothingObject={closetObject[`${type}Array`].find(
+                                clothingObject => clothingObject._id === id
+                            )}/>
                         ))}
                     
                 </ScrollView>
@@ -528,44 +544,44 @@ const DisplayClothingTypeFour = ({outfitObject, icon}) => {
 
     const ClothingIcon = ({clothingObject}) => {
 
-        console.log(`clothingObject.favorite: ${clothingObject.favorite}`)
 
         return (
             <View style={{
                 width: 150, // might just have to do this
                 height: 'auto',
             }}>
-                
-                <View style={[{
-                    margin: 5,
-                    height: 'auto',
-                    width: 'auto',
-                    borderRadius: 5,
-                    backgroundColor: 'white',
-                }, GlobalStyles.shadowLight]}>
-                    <View style={[GlobalStyles.bgColorMain, {width: '100%', borderTopLeftRadius: 5, borderTopRightRadius: 5, height: 5}]}></View>
-                    <View style={{
+                <TouchableOpacity
+                onPress={() => navigation.navigate('VIEWINDIVIDUALPIECE',{item: clothingObject})}>
+                    <View style={[{
                         margin: 5,
+                        height: 'auto',
                         width: 'auto',
-                        height: 'auto'
-                    }}>
-                        <Image source={typeof clothingObject.images === 'Array' && clothingObject.images.length !== 0 ? 
-                            {uri: images[0]} : dummySrc} style={{width: '100%', aspectRatio: 1, borderRadius: 5}}/>
+                        borderRadius: 5,
+                        backgroundColor: 'white',
+                    }, GlobalStyles.shadowLight]}>
+                        <View style={[GlobalStyles.bgColorMain, {width: '100%', borderTopLeftRadius: 5, borderTopRightRadius: 5, height: 5}]}></View>
+                        <View style={{
+                            margin: 5,
+                            width: 'auto',
+                            height: 'auto'
+                        }}>
+                            <Image source={typeof clothingObject.images === 'object' && clothingObject.images.length !== 0 ? 
+                                {uri: clothingObject.images[0]} : dummySrc} style={{width: '100%', aspectRatio: 1, borderRadius: 5}}/>
+                        </View>
+                        <View style={{marginLeft: 5, marginBottom: 5}}>
+                            <Text style={[{fontWeight: 'bold'}, GlobalStyles.h7]}>{clothingObject.clothingName}</Text>
+                            <Text style={GlobalStyles.h7}>{clothingObject.pieceType}</Text>
+                        </View>
+                        <View style={{
+                            position: 'absolute',
+                            bottom: 5,
+                            right: 5
+                        }}>
+                            <HeartIcon style={{color: clothingObject.favorite ? 'red' : 'black'}} size={20}/>
+                        </View>
+                        
                     </View>
-                    <View style={{marginLeft: 5, marginBottom: 5}}>
-                        <Text style={[{fontWeight: 'bold'}, GlobalStyles.h7]}>{clothingObject.clothingName}</Text>
-                        <Text style={GlobalStyles.h7}>{clothingObject.pieceType}</Text>
-                    </View>
-                    <View style={{
-                        position: 'absolute',
-                        bottom: 5,
-                        right: 5
-                    }}>
-                        <HeartIcon style={{color: clothingObject.favorite ? 'red' : 'black'}} size={20}/>
-                    </View>
-                    
-                </View>
-
+                </TouchableOpacity>
             </View>
         )
     }
@@ -591,7 +607,7 @@ const DisplayClothingTypeFour = ({outfitObject, icon}) => {
                         <View>
                             {icon}
                         </View>
-                        <View style={[{height: 5, width: '100%', marginTop: 5}, type === clothingType ? GlobalStyles.bgColorMain : {backgroundColor: 'lightgray'}]}></View>
+                        <View style={[{height: 5, width: '100%', marginTop: 5}, type === clothingType ? GlobalStyles.bgColorMain : {backgroundColor: 'white'}]}></View>
                     </View>
                 </TouchableOpacity>
             </View>

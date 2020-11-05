@@ -131,7 +131,31 @@ export const FinalizeOutfit = () => {
     
     const FinalizeClicked = () => {
 
-        dispatch(outfitCreatedFromHome(outfitInProgress))
+
+
+        //we can leave much of the codebase unchanged (11/5/20 update)
+        //but we need to instead to fill the 4 clothing arrays with the IDs
+
+        const combinedClothingArrays = [
+            ...outfitInProgress.topsArray,
+            ...outfitInProgress.bottomsArray,
+            ...outfitInProgress.footwearArray,
+            ...outfitInProgress.otherArray,
+        ]
+
+        const idArrayObject = {
+            topsArray: [],
+            bottomsArray: [],
+            footwearArray: [],
+            otherArray: []
+        }
+
+        combinedClothingArrays.forEach((outfitObj, index) => {
+            idArrayObject[`${outfitObj.clothingType.toLowerCase()}Array`].push(outfitObj._id)
+        })
+
+        dispatch(outfitCreatedFromHome(idArrayObject))
+        // dispatch(outfitCreatedFromHome(outfitInProgress))
         navigation.navigate("FINALIZESUCCESS")
     }
 
