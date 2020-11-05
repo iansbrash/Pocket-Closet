@@ -27,6 +27,7 @@ const maxImageHeight = windowWidth - 20; //accounts for margins
 const minImageHieght = maxImageHeight / 2;
 const desiredIconSize = 40;
 const desiredIconSizeTwo = 60;
+const scrollEventThrottleValue = 16;
 
 
 
@@ -299,14 +300,14 @@ export const ViewIndividualPiece = ({ route }) => {
             {/* <ScreenHeader title={item.clothingName}/> */}
             <TopNavScreenHeader title={item.clothingName} exitDestination={'CLOSETSCREEN'}/>
             
-            <View style={{
+            <View style={[{
                 justifyContent: 'flex-start',
                 alignItems: 'flex-start',
                 position: 'relative',
                 width: '100%',
                 flexDirection: 'column',
-                zIndex: 2
-            }}>
+                zIndex: 2,
+            }]}>
                 <View style={[{
                 height: 'auto',
                 position: 'absolute',
@@ -332,12 +333,12 @@ export const ViewIndividualPiece = ({ route }) => {
                         <ButtonsStyleTwo imageHeight={imageHeight} item={item} setModalVisible={setModalVisible}/>
                     </View>
                 </View>
-                <View 
-                style={[{ // This is the divider between the image and text... yee yee ass code
+                {/* <View 
+                style={[{
                     height: 1, 
                     width: '100%', 
                     top: imageHeight + 20}
-                    , GlobalStyles.bgHint]}></View>
+                    , GlobalStyles.bgHint]}></View> */}
             </View>
             
             <View style={{height: minImageHieght + 20}}></View>
@@ -348,10 +349,10 @@ export const ViewIndividualPiece = ({ route }) => {
                 
                 zIndex: 0
             }} 
-            scrollEventThrottle={10}
+            scrollEventThrottle={scrollEventThrottleValue}
             onScroll={handleScroll} /** Tentative... this shit is probably so innefficient */>
                     {/* DONT DELETE THIS */}
-                    <View style={{height: 180}} ></View>
+                    <View style={{height: 180, }} ></View>
                     {/* DONT DELETE THIS */}
                     <ItemStats item={item}/>
                     <ItemTags item={item}/>

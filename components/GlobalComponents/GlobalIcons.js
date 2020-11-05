@@ -4,7 +4,7 @@ import { Feather } from '@expo/vector-icons';
 import { Entypo } from '@expo/vector-icons'; 
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
-
+import { Ionicons } from '@expo/vector-icons';
 
 export const LeftIcon = (props) => {
     return (
@@ -81,5 +81,41 @@ export const DeleteIcon = (props) => {
 export const ShareIcon = (props) => {
     return (
         <Feather style={props.style} name="share" size={props.size} />
+    )
+}
+
+export const ShoeIcon = (props) => {
+    return (
+        <MaterialCommunityIcons style={props.style} name="shoe-formal" size={props.size}/>
+    )
+}
+
+export const ShirtIcon = (props) => {
+    return (
+        <MaterialCommunityIcons style={props.style} name="tshirt-crew" size={props.size}/>
+    )
+}
+
+export const LegIcon = (props) => {
+    return (
+        <MaterialCommunityIcons style={props.style} name="seat-legroom-normal" size={props.size}/>
+    )
+}
+
+export const BagIcon = (props) => {
+    return (
+        <MaterialCommunityIcons style={props.style} name="bag-personal" size={props.size}/>
+    )
+}
+
+export const ArrowBack = (props) => {
+    return (
+        <Ionicons style={props.style} name="ios-arrow-back" size={props.size}/>
+    )
+}
+
+export const MdClose = (props) => {
+    return (
+        <Ionicons style={props.style} name="md-close" size={props.size}/>
     )
 }

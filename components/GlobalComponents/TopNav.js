@@ -1,10 +1,10 @@
 import React from 'react'
 import { useNavigation } from '@react-navigation/native'
-import { View, Text } from 'react-native'
+import { View, Text, Pressable } from 'react-native'
 import { Feather } from '@expo/vector-icons'; 
 import { Entypo } from '@expo/vector-icons'; 
-import { TouchableOpacity } from 'react-native-gesture-handler';
-import { ExitIcon, LeftIcon } from './GlobalIcons'
+import { TouchableOpacity, } from 'react-native-gesture-handler';
+import { ExitIcon, LeftIcon, ArrowBack, MdClose } from './GlobalIcons'
 import GlobalStyles from './GlobalStyles'
 
 // TEMPPERM
@@ -43,34 +43,34 @@ export const TopNavScreenHeader = ({title, exitDestination, extraFunc}) => {
 
     return (
         <View style={{
-            height: 55, 
+            height: 35, 
             width: '100%', 
             backgroundColor: 'white', 
             zIndex: 2,
             backgroundColor: 'white', //we need this to animate stuff sliding out
-            borderBottomColor: 'lightgray', // this replaces the divider. fuck dividers
-            borderBottomWidth: 1 // and this
+            //borderBottomColor: 'lightgray', // this replaces the divider. fuck dividers
+            //borderBottomWidth: 1 // and this
             }}>
             <View style={{justifyContent: 'space-between', alignItems: 'center', flexDirection: 'row'}}>
-                <TouchableOpacity 
+                <Pressable 
                 style={[GlobalStyles.shadowLight, {marginLeft: 10}] }
-                onPress={() => navigation.goBack()}>
-                    <LeftIcon size={30} style={[GlobalStyles.colorMain]}/>
-                </TouchableOpacity>
+                onPress={() => navigation.goBack()}
+                hitSlop={20}>
+                    <ArrowBack size={30} style={[GlobalStyles.colorMain]}/>
+                </Pressable>
 
                 <View style={{
                 width: 'auto',
                 height: 'auto',
-                paddingTop: 5,
-                paddingBottom: 10,
                 }}>
-                    <Text category='h2' style={[{fontWeight: 'bold'}, GlobalStyles.h1]}>{title}</Text>
+                    <Text style={[{fontWeight: 'bold'}, GlobalStyles.h4]}>{title}</Text>
                 </View>
 
-                <TouchableOpacity
-                onPress={() => combineFunc()}>
-                    <ExitIcon size={30} style={[GlobalStyles.colorMain, {marginRight: 10}]}/>
-                </TouchableOpacity>
+                <Pressable
+                onPress={() => combineFunc()}
+                hitSlop={20}>
+                    <MdClose size={30} style={[GlobalStyles.colorMain, {marginRight: 10}]}/>
+                </Pressable>
             </View>
         </View>
     )

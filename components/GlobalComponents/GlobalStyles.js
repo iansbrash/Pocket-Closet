@@ -40,6 +40,12 @@ const GlobalStyles = StyleSheet.create({
     h6: {
         fontSize: 17
     },
+    h7: {
+        fontSize: 14
+    },
+    h8: {
+        fontSize: 11
+    },
     hint: {
         color: '#a2a6b0' //random ass color
     },
