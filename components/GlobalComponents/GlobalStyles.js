@@ -49,6 +49,9 @@ const GlobalStyles = StyleSheet.create({
     hint: {
         color: '#a2a6b0' //random ass color
     },
+    lighterHint: {
+        color: '#c9c9c9'
+    },
     bgHint: {
         backgroundColor: 'lightgray'
     }

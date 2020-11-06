@@ -38,9 +38,16 @@ const outfitsSlice = createSlice({
 
                 //adds outfit to our state
                 //date is tentative
+
+                //update 11/5/20: we need to store our items as an array of IDs and 
+                //fetch the corresponding items when we need them, or else we don't
+                //have dynamic items that can be edited once we put them in
+                //the outfits store
                 let date = new Date();
                 date = date.toDateString();
                 action.payload.date = date;
+
+                //this will be an object that holds 4 arrays that each hold the IDs of the clothing
                 state.outfitsArray.push(action.payload);
 
                 // resets outfit in progress
@@ -48,7 +55,8 @@ const outfitsSlice = createSlice({
                     topsArray: [],
                     bottomsArray: [],
                     footwearArray: [],
-                    otherArray: []}
+                    otherArray: []
+                }
             },
             prepare( outfitArr ) {
                 return {

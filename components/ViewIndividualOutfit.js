@@ -7,10 +7,11 @@ import {
     Dimensions,
     Alert,
     Vibration,
-    FlatList
+    FlatList,
+    Animated
 } from 'react-native'
 import { useSelector, useDispatch} from 'react-redux' 
-
+import GestureRecognizer, {swipeDirections} from 'react-native-swipe-gestures';
 
 import { TopNav, TopNavScreenHeader } from './GlobalComponents/TopNav'
 import { ScreenHeader } from './GlobalComponents/ScreenHeader'
@@ -125,23 +126,23 @@ const ItemStats = ({item}) => {
     )
 }
 
-const IndividualTag = ({tag}) => {
-    return (
-        <View style={[{
-            width: 'auto',
-            height: 'auto',
-            borderRadius: 5,
-            paddingLeft: 5,
-            paddingRight: 5,
-            margin: 5,
-            elevation: 3
-        }, GlobalStyles.bgColorMain]} >
-            <Text  status='control' style={[{fontWeight: 'bold', color: 'white', margin: 5}, GlobalStyles.h4]}>
-                {tag.toUpperCase()}
-            </Text>
-        </View>
-    )
-}
+// const IndividualTag = ({tag}) => {
+//     return (
+//         <View style={[{
+//             width: 'auto',
+//             height: 'auto',
+//             borderRadius: 5,
+//             paddingLeft: 5,
+//             paddingRight: 5,
+//             margin: 5,
+//             elevation: 3
+//         }, GlobalStyles.bgColorMain]} >
+//             <Text  status='control' style={[{fontWeight: 'bold', color: 'white', margin: 5}, GlobalStyles.h4]}>
+//                 {tag.toUpperCase()}
+//             </Text>
+//         </View>
+//     )
+// }
 
 const ItemTags = ({item}) => {
 
@@ -512,12 +513,12 @@ const DisplayClothingTypeFour = ({outfitObject, icon}) => {
     const navigation = useNavigation();
 
     //this is an array of all the IDs... not so useful
-    const combinedClothingArray = [
-        ...outfitObject.outfitArr.topsArray,
-        ...outfitObject.outfitArr.bottomsArray,
-        ...outfitObject.outfitArr.footwearArray,
-        ...outfitObject.outfitArr.otherArray
-    ]
+    // const combinedClothingArray = [
+    //     ...outfitObject.outfitArr.topsArray,
+    //     ...outfitObject.outfitArr.bottomsArray,
+    //     ...outfitObject.outfitArr.footwearArray,
+    //     ...outfitObject.outfitArr.otherArray
+    // ]
 
     
 
@@ -551,7 +552,7 @@ const DisplayClothingTypeFour = ({outfitObject, icon}) => {
                 height: 'auto',
             }}>
                 <TouchableOpacity
-                onPress={() => navigation.navigate('VIEWINDIVIDUALPIECE',{item: clothingObject})}>
+                onPress={() => navigation.navigate('VIEWINDIVIDUALPIECE', {item: clothingObject})}>
                     <View style={[{
                         margin: 5,
                         height: 'auto',
@@ -579,7 +580,6 @@ const DisplayClothingTypeFour = ({outfitObject, icon}) => {
                         }}>
                             <HeartIcon style={{color: clothingObject.favorite ? 'red' : 'black'}} size={20}/>
                         </View>
-                        
                     </View>
                 </TouchableOpacity>
             </View>
@@ -592,6 +592,7 @@ const DisplayClothingTypeFour = ({outfitObject, icon}) => {
             <View style={{
                 width: '25%',
                 height: 'auto',
+                marginTop: 10,
             }}> 
                 <TouchableOpacity
                 onPress={() => setType(clothingType)}>
@@ -638,15 +639,151 @@ const DisplayClothingTypeFour = ({outfitObject, icon}) => {
     )
 } 
 
+const OutfitDescription = ({outfitArr}) => {
+    const {footwearArray, bottomsArray, topsArray, otherArray} = outfitArr;
+    return (
+        <View style={{
+            width: '100%',
+            marginTop: -5
+        }}>
+            <View style={{
+                width: 'auto',
+                justifyContent: 'center',
+                alignItems:'center',
+                flexDirection: 'row'
+            }}>
+                <Text style={[GlobalStyles.h5, {fontWeight: 'bold'}]}>
+                    {`${
+                        footwearArray.length + 
+                        bottomsArray.length + 
+                        topsArray.length + 
+                        otherArray.length
+                        } pieces`}</Text>
+                <Text style={[{fontWeight: 'bold', marginLeft: 5, marginRight: 5}, GlobalStyles.h3, GlobalStyles.lighterHint]}>•</Text>
+                <Text style={[GlobalStyles.h5, {fontWeight: 'bold'}]}>{`${0} brands`}</Text>
+                <Text style={[{fontWeight: 'bold', marginLeft: 5, marginRight: 5}, GlobalStyles.h3, GlobalStyles.lighterHint]}>•</Text>
+
+                <Text style={[GlobalStyles.h5, {fontWeight: 'bold'}]}>{`${0} colors`}</Text>
+            </View>
+            <View style={{
+                width: 'auto',
+                marginLeft: 10,
+                marginRight: 10,
+                marginTop: 0,
+                marginBottom: 10
+            }}>
+                <Text style={[GlobalStyles.lighterHint, GlobalStyles.h5]}>
+                    {`The user's description goes here. If they said anything about the outfit, it'll be under the initial stats.`}
+                </Text>
+            </View>
+        </View>
+    )
+}
+
+const OutfitTags = () => {
+
+    const tagsArray = ['Temp', 'Tags', 'Go', 'Here', 'Please', 'Replace']
+
+    const IndividualTags = ({title}) => {
+        return (
+            <View style={[{
+                width: 'auto',
+                padding: 3,
+                margin: 3,
+                height: 'auto',
+                justifyContent: 'center',
+                alignItems:'center',
+                borderRadius: 5,
+            }, GlobalStyles.shadowLight, GlobalStyles.bgColorMain]}>
+                <Text style={[{fontWeight: 'bold', color: 'white'}, GlobalStyles.h6, ]}>{title}</Text>
+            </View>
+        )
+    }
+
+    return (
+        <View style={{width: '100%', height: 'auto'}}>
+            <View style={{
+                marginLeft: 10,
+                marginRight: 10,
+                width: 'auto'
+            }}>
+                <View style={{
+                    width: '100%',
+                    height: 'auto',
+                    flexDirection: 'row',
+                    justifyContent: 'flex-start',
+                    alignItems: 'center',
+                    flexWrap: 'wrap'
+                }}>
+                    {tagsArray.map(tag => (
+                        <IndividualTags title={tag}/>
+                    ))}
+                </View>
+            </View>
+        </View>
+    )
+}
+
+const BrandTags = () => {
+    const brandsArray = ['Supreme', 'Guess', 'American Eagle', 'Nike', 'Jordan', 'Please', 'Change', ]
+
+    const IndividualTags = ({title}) => {
+        return (
+            <View style={[{
+                width: 'auto',
+                padding: 5,
+                margin: 5,
+                height: 'auto',
+                justifyContent: 'center',
+                alignItems:'center',
+                borderRadius: 5,
+                backgroundColor: 'white'
+            }, GlobalStyles.shadowLight, ]}>
+                <Text style={[{fontWeight: 'bold',}, GlobalStyles.h5, GlobalStyles.colorMain ]}>{title}</Text>
+            </View>
+        )
+    }
+
+    return (
+        <View style={{width: '100%', height: 'auto'}}>
+            <View style={{
+                marginLeft: 10,
+                marginRight: 10,
+                width: 'auto'
+            }}>
+                <View style={{
+                    width: '100%',
+                    height: 'auto',
+                    flexDirection: 'row',
+                    justifyContent: 'flex-start',
+                    alignItems: 'center',
+                    flexWrap: 'wrap'
+                }}>
+                    {brandsArray.map(tag => (
+                        <IndividualTags title={tag}/>
+                    ))}
+                </View>
+            </View>
+        </View>
+    )
+}
+
 export const ViewIndividualOutfit = ({ route }) => {
 
     const [modalVisible, setModalVisible] = useState(false);
 
     // we pass in the item we clicked on so we can display stats XDDDD
+    const closetObject = useSelector(state => state.closet.closetObject);
     const outfitObject = route.params.item;
+    const fetchedOutfitObject = null;
     // console.log('item')
     // console.log(item)
+    console.log(Math.random)
 
+
+
+    const [imageIsSmall, setImageIsSmall] = useState(false)
+    const [imageWidth] = useState(new Animated.Value(1))
     
     
 
@@ -662,7 +799,9 @@ export const ViewIndividualOutfit = ({ route }) => {
 
     const image = useRef(null)
 
-    const [imageHeight, setImageHeight] = useState(350);
+
+    //this might be causing all the updating... nvm
+    //const [imageHeight, setImageHeight] = useState(350);
 
     const navigation = useNavigation();
     const dispatch = useDispatch();
@@ -672,90 +811,96 @@ export const ViewIndividualOutfit = ({ route }) => {
         //dispatch(clothingDeletedFromCloset({...item}))
         navigation.navigate('CLOSETSCREEN')
     }
-    
-    
 
-    const handleScroll = (event) => {
-
-        let numWereUsing = event.nativeEvent.contentOffset.y
-
-        let toChangeHeight = maxImageHeight - (numWereUsing);
-
-        if (toChangeHeight >= minImageHieght && toChangeHeight <= maxImageHeight){
-            setImageHeight(toChangeHeight);
-        }
-        else if (toChangeHeight <= minImageHieght) {
-            setImageHeight(minImageHieght)
-        } else {
-            setImageHeight(maxImageHeight)
-        }
-
+   
+    //makes image small
+    const onSwipeUp = (gestureState) => {
+        setImageIsSmall(true);
+        Animated.timing(imageWidth, {
+            toValue: Number(false),
+            duration: 250
+        }).start();
     }
+    //makes image big
+    const onSwipeDown = (gestureState) => {
+        setImageIsSmall(false);
+        Animated.timing(imageWidth, {
+            toValue: Number(true),
+            duration: 250
+        }).start();
+    }
+
+    
+    
 
     return (
         <View 
         style={{flex: 1, backgroundColor: 'white'}}>
             <TopNavScreenHeader title={outfitObject.date} exitDestination={'CLOSETSCREEN'}/>
             
-            <View style={{
-                justifyContent: 'flex-start',
-                alignItems: 'flex-start',
-                position: 'relative',
-                width: '100%',
-                flexDirection: 'column',
-                zIndex: 2
-            }}>
-                <View style={[{
-                height: 'auto',
-                position: 'absolute',
-                width: 'auto',
-                flexDirection: 'row'}, 
-                GlobalStyles.shadowLight]} >
-                    <Image ref={image} 
-                    source={src} 
-                    style={{
-                        height: imageHeight,
-                        
-                        aspectRatio: 1,
-                    }} />
-                    <View style={{
-                        height: imageHeight,
-                        aspectRatio: 1,
-                        justifyContent: 'center',
-                        alignItems: 'center'
-                    }}
-                    >
-                        <ButtonsStyleTwo imageHeight={imageHeight} outfitObject={outfitObject} setModalVisible={setModalVisible}/>
-                    </View>
-                </View>
-                <View 
-                style={[{ // This is the divider between the image and text... yee yee ass code
-                    height: 1, 
-                    width: '100%', 
-                    top: imageHeight + 20}
-                    , GlobalStyles.bgHint]}></View>
-            </View>
-            
-            <View style={{height: minImageHieght + 20}}></View>
-            
             <YesNoModal modalVisible={modalVisible} setModalVisible={setModalVisible} onPressFunc={() => ConfirmDelete()}/>
             
-            <ScrollView style={{
-                
-                zIndex: 0
-            }} 
-            scrollEventThrottle={scrollEventThrottleValue}
-            onScroll={handleScroll} /** Tentative... this shit is probably so innefficient */>
-                    {/* DONT DELETE THIS */}
-                    <View style={{height: 180}} ></View>
-                    {/* DONT DELETE THIS */}
+            
+            {/* Yee Yee Ass Fix.. put GestureRecognizers around everything except the scrollview */}
+            <GestureRecognizer
+            //onSwipe={(direction, state) => onSwipe(direction, state)}
+            onSwipeUp={state => onSwipeUp()}
+            onSwipeDown={state => onSwipeDown()}
+            >
+            
+                <Animated.View style={{
+                    width: imageWidth.interpolate({
+                        inputRange: [0, 1],
+                        outputRange: ['50%', '100%']
+                    })
+                }}>
+                    <View style={{
+                        margin: 10,
+                        width: 'auto',
+                        height: 'auto',
+                        borderRadius: 5
+                    }}>
+                        <Image ref={image} 
+                            source={src} 
+                            style={{
+                                width: '100%',//'imageHeight',
+                                aspectRatio: 1,
+                                borderRadius: 5
+                            }} />
+                    </View>
                     
-                    <DisplayClothingTypeFour outfitObject={outfitObject}/>
+                </Animated.View>
+            </GestureRecognizer>
 
-                    <View style={{height: 50}}></View>
 
-                    
-            </ScrollView>
+            <GestureRecognizer
+            //onSwipe={(direction, state) => onSwipe(direction, state)}
+            onSwipeUp={state => onSwipeUp()}
+            onSwipeDown={state => onSwipeDown()}
+            >
+                <OutfitDescription outfitArr={outfitObject.outfitArr}/>
+            </GestureRecognizer>
+
+            <GestureRecognizer
+            //onSwipe={(direction, state) => onSwipe(direction, state)}
+            onSwipeUp={state => onSwipeUp()}
+            onSwipeDown={state => onSwipeDown()}
+            >
+                <OutfitTags />
+            </GestureRecognizer>
+
+            <GestureRecognizer
+            //onSwipe={(direction, state) => onSwipe(direction, state)}
+            onSwipeUp={state => onSwipeUp()}
+            onSwipeDown={state => onSwipeDown()}
+            >
+                <BrandTags/>
+            </GestureRecognizer>
+
+
+            <DisplayClothingTypeFour outfitObject={outfitObject}/>
+            
+            
             
             
             
