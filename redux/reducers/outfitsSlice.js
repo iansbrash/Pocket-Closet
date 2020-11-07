@@ -50,6 +50,11 @@ const outfitsSlice = createSlice({
                 //this will be an object that holds 4 arrays that each hold the IDs of the clothing
                 state.outfitsArray.push(action.payload);
 
+
+                //turns out outfitArr is an object... holding the 4 ararys... kill me
+                console.log("about to log action.payload")
+                console.log(action.payload)
+
                 // resets outfit in progress
                 state.outfitInProgress = {
                     topsArray: [],

@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import { 
     Image, 
     ScrollView, 
@@ -639,8 +639,8 @@ const DisplayClothingTypeFour = ({outfitObject, icon}) => {
     )
 } 
 
-const OutfitDescription = ({outfitArr}) => {
-    const {footwearArray, bottomsArray, topsArray, otherArray} = outfitArr;
+const OutfitDescription = ({fetchedOutfitObject}) => {
+    const {footwearArray, bottomsArray, topsArray, otherArray} = fetchedOutfitObject.outfitArr;
     return (
         <View style={{
             width: '100%',
@@ -680,9 +680,13 @@ const OutfitDescription = ({outfitArr}) => {
     )
 }
 
-const OutfitTags = () => {
+const OutfitTags = ({fetchedOutfitObject}) => {
 
     const tagsArray = ['Temp', 'Tags', 'Go', 'Here', 'Please', 'Replace']
+
+
+    // testing plz delete 
+    if (fetchedOutfitObject.tags.length === 0) fetchedOutfitObject.tags.push('i pushed this tag for sanity')
 
     const IndividualTags = ({title}) => {
         return (
@@ -715,7 +719,7 @@ const OutfitTags = () => {
                     alignItems: 'center',
                     flexWrap: 'wrap'
                 }}>
-                    {tagsArray.map(tag => (
+                    {fetchedOutfitObject.tags.map(tag => (
                         <IndividualTags title={tag}/>
                     ))}
                 </View>
@@ -724,8 +728,32 @@ const OutfitTags = () => {
     )
 }
 
-const BrandTags = () => {
+const BrandTags = ({fetchedOutfitObject}) => {
     const brandsArray = ['Supreme', 'Guess', 'American Eagle', 'Nike', 'Jordan', 'Please', 'Change', ]
+    const [brandsSet, setBrandsSet] = useState(new Set())
+
+    const nonStateSet = new Set();
+
+    // called to create the set. stops re rendering
+    const fetchedOutfitObjectOutfitArrKeys = Object.keys(fetchedOutfitObject.outfitArr)
+    useEffect(() => {
+        for (let i = 0; i < fetchedOutfitObjectOutfitArrKeys.length; i++){
+            console.log('big XD')
+
+            for (let k = 0; k < fetchedOutfitObject.outfitArr[fetchedOutfitObjectOutfitArrKeys[i]].length; k++){
+                console.log(`'xd' iteration ${k}`)
+
+                console.log('fetchedOutfitObject.outfitArr[fetchedOutfitObjectOutfitArrKeys[i]][k]:')
+                console.log(fetchedOutfitObject.outfitArr[fetchedOutfitObjectOutfitArrKeys[i]][k])
+
+                if (fetchedOutfitObject.outfitArr[fetchedOutfitObjectOutfitArrKeys[i]][k].brandsArray.length != 0){
+                    nonStateSet.add(fetchedOutfitObject.outfitArr[fetchedOutfitObjectOutfitArrKeys[i]][k].brandsArray[0])
+                }
+            }
+        }
+        console.log(`nonStateSet.size: ${nonStateSet.size}`)
+    }, [])
+
 
     const IndividualTags = ({title}) => {
         return (
@@ -759,9 +787,7 @@ const BrandTags = () => {
                     alignItems: 'center',
                     flexWrap: 'wrap'
                 }}>
-                    {brandsArray.map(tag => (
-                        <IndividualTags title={tag}/>
-                    ))}
+                    {brandsSet.forEach(tag => <IndividualTags title={tag}/>)}
                 </View>
             </View>
         </View>
@@ -775,7 +801,53 @@ export const ViewIndividualOutfit = ({ route }) => {
     // we pass in the item we clicked on so we can display stats XDDDD
     const closetObject = useSelector(state => state.closet.closetObject);
     const outfitObject = route.params.item;
-    const fetchedOutfitObject = null;
+    const [fetchedOutfitObject, setFetchedOutfitObject] = useState({
+        date: outfitObject.date,
+        fitpic: outfitObject.fitpic ? outfitObject.fitpic : null,
+        tags: outfitObject.tags ? outfitObject.tags : [],
+        outfitArr: {
+            topsArray: [],
+            bottomsArray: [],
+            footwearArray: [],
+            otherArray: []
+        }
+    });
+    console.log('ok we just instantiated the fetchedOO')
+    console.log(fetchedOutfitObject)
+
+    /**
+     * fetchedOutfitObject.outfitArr[outfitArrKeys[i]]
+                    .push(closetObject[outfitArrKeys[i]].find(clothingObj => 
+                        clothingObj._id === outfitObject.outfitArr[outfitArrKeys[i]][k]
+     */
+    // this is unneccesarily called every time something re renders... XD
+    useEffect(() => {
+        const outfitArrKeys = Object.keys(fetchedOutfitObject.outfitArr)
+        for (let i = 0; i < outfitArrKeys.length; i++){
+            console.log('WHAT THE FUCKKKKKKKKKKKKK')
+            for (let k = 0; k < outfitObject.outfitArr[outfitArrKeys[i]].length; k++){
+                console.log('boutta set')
+                console.log(fetchedOutfitObject)
+                setFetchedOutfitObject(
+                    {...fetchedOutfitObject, 
+                    outfitArr: {
+                        ...fetchedOutfitObject.outfitArr,
+                        [outfitArrKeys[i]]:
+                            [...fetchedOutfitObject.outfitArr[outfitArrKeys[i]],
+                            closetObject[outfitArrKeys[i]].find(clothingObj => 
+                            clothingObj._id === outfitObject.outfitArr[outfitArrKeys[i]][k]
+                        )
+                        ]
+                    }}
+                    )
+                }
+            }
+            console.log(fetchedOutfitObject.outfitArr.topsArray)
+        }, [])
+    
+
+    console.log("ok we looped thru")
+    console.log(fetchedOutfitObject)
     // console.log('item')
     // console.log(item)
     console.log(Math.random)
@@ -878,7 +950,7 @@ export const ViewIndividualOutfit = ({ route }) => {
             onSwipeUp={state => onSwipeUp()}
             onSwipeDown={state => onSwipeDown()}
             >
-                <OutfitDescription outfitArr={outfitObject.outfitArr}/>
+                <OutfitDescription fetchedOutfitObject={fetchedOutfitObject}/>
             </GestureRecognizer>
 
             <GestureRecognizer
@@ -886,7 +958,7 @@ export const ViewIndividualOutfit = ({ route }) => {
             onSwipeUp={state => onSwipeUp()}
             onSwipeDown={state => onSwipeDown()}
             >
-                <OutfitTags />
+                <OutfitTags fetchedOutfitObject={fetchedOutfitObject}/>
             </GestureRecognizer>
 
             <GestureRecognizer
@@ -894,7 +966,7 @@ export const ViewIndividualOutfit = ({ route }) => {
             onSwipeUp={state => onSwipeUp()}
             onSwipeDown={state => onSwipeDown()}
             >
-                <BrandTags/>
+                <BrandTags fetchedOutfitObject={fetchedOutfitObject}/>
             </GestureRecognizer>
 
 
