@@ -600,11 +600,6 @@ const DisplayClothingTypeFour = ({outfitObject, icon}) => {
                         justifyContent: 'center',
                         alignItems: 'center'
                     }}>
-                        {/* <Text style={[{fontWeight: 'bold'}, type !== clothingType ? 
-                        {color: 'lightgray'} : 
-                        GlobalStyles.colorMain, GlobalStyles.h4]}>
-                            {clothingType}
-                        </Text> */}
                         <View>
                             {icon}
                         </View>
@@ -639,8 +634,12 @@ const DisplayClothingTypeFour = ({outfitObject, icon}) => {
     )
 } 
 
-const OutfitDescription = ({fetchedOutfitObject}) => {
+const OutfitDescription = ({fetchedOutfitObject, brandsLength, colorsLength}) => {
     const {footwearArray, bottomsArray, topsArray, otherArray} = fetchedOutfitObject.outfitArr;
+    const piecesLength = footwearArray.length + 
+    bottomsArray.length + 
+    topsArray.length + 
+    otherArray.length;
     return (
         <View style={{
             width: '100%',
@@ -653,17 +652,12 @@ const OutfitDescription = ({fetchedOutfitObject}) => {
                 flexDirection: 'row'
             }}>
                 <Text style={[GlobalStyles.h5, {fontWeight: 'bold'}]}>
-                    {`${
-                        footwearArray.length + 
-                        bottomsArray.length + 
-                        topsArray.length + 
-                        otherArray.length
-                        } pieces`}</Text>
+                    {`${piecesLength} piece${piecesLength !== 1 ? 's' : ''}`}</Text>
                 <Text style={[{fontWeight: 'bold', marginLeft: 5, marginRight: 5}, GlobalStyles.h3, GlobalStyles.lighterHint]}>•</Text>
-                <Text style={[GlobalStyles.h5, {fontWeight: 'bold'}]}>{`${0} brands`}</Text>
+                <Text style={[GlobalStyles.h5, {fontWeight: 'bold'}]}>{`${brandsLength} brand${brandsLength !== 1 ? 's' : ''}`}</Text>
                 <Text style={[{fontWeight: 'bold', marginLeft: 5, marginRight: 5}, GlobalStyles.h3, GlobalStyles.lighterHint]}>•</Text>
 
-                <Text style={[GlobalStyles.h5, {fontWeight: 'bold'}]}>{`${0} colors`}</Text>
+                <Text style={[GlobalStyles.h5, {fontWeight: 'bold'}]}>{`${colorsLength} color${colorsLength !== 1 ? 's' : ''}`}</Text>
             </View>
             <View style={{
                 width: 'auto',
@@ -728,31 +722,17 @@ const OutfitTags = ({fetchedOutfitObject}) => {
     )
 }
 
-const BrandTags = ({fetchedOutfitObject}) => {
+const BrandTags = ({fetchedOutfitObject, brandsSet}) => {
     const brandsArray = ['Supreme', 'Guess', 'American Eagle', 'Nike', 'Jordan', 'Please', 'Change', ]
-    const [brandsSet, setBrandsSet] = useState(new Set())
+    //const [brandsSet, setBrandsSet] = useState(new Set())
 
-    const nonStateSet = new Set();
+    //const nonStateSet = new Set();
 
     // called to create the set. stops re rendering
-    const fetchedOutfitObjectOutfitArrKeys = Object.keys(fetchedOutfitObject.outfitArr)
-    useEffect(() => {
-        for (let i = 0; i < fetchedOutfitObjectOutfitArrKeys.length; i++){
-            console.log('big XD')
-
-            for (let k = 0; k < fetchedOutfitObject.outfitArr[fetchedOutfitObjectOutfitArrKeys[i]].length; k++){
-                console.log(`'xd' iteration ${k}`)
-
-                console.log('fetchedOutfitObject.outfitArr[fetchedOutfitObjectOutfitArrKeys[i]][k]:')
-                console.log(fetchedOutfitObject.outfitArr[fetchedOutfitObjectOutfitArrKeys[i]][k])
-
-                if (fetchedOutfitObject.outfitArr[fetchedOutfitObjectOutfitArrKeys[i]][k].brandsArray.length != 0){
-                    nonStateSet.add(fetchedOutfitObject.outfitArr[fetchedOutfitObjectOutfitArrKeys[i]][k].brandsArray[0])
-                }
-            }
-        }
-        console.log(`nonStateSet.size: ${nonStateSet.size}`)
-    }, [])
+    //const fetchedOutfitObjectOutfitArrKeys = Object.keys(fetchedOutfitObject.outfitArr)
+    
+        
+    //console.log(`nonStateSet.size: ${nonStateSet.size}`)
 
 
     const IndividualTags = ({title}) => {
@@ -787,7 +767,7 @@ const BrandTags = ({fetchedOutfitObject}) => {
                     alignItems: 'center',
                     flexWrap: 'wrap'
                 }}>
-                    {brandsSet.forEach(tag => <IndividualTags title={tag}/>)}
+                    {[...brandsSet].map(tag => <IndividualTags title={tag}/>)}
                 </View>
             </View>
         </View>
@@ -797,87 +777,128 @@ const BrandTags = ({fetchedOutfitObject}) => {
 export const ViewIndividualOutfit = ({ route }) => {
 
     const [modalVisible, setModalVisible] = useState(false);
+    const [previouslyIterated, setPreviouslyIterated] = useState(false)
 
     // we pass in the item we clicked on so we can display stats XDDDD
     const closetObject = useSelector(state => state.closet.closetObject);
     const outfitObject = route.params.item;
-    const [fetchedOutfitObject, setFetchedOutfitObject] = useState({
+
+    //creating only the outfitArr as a hook should hopefully make it 
+    //easier to add the full clothingObjects to the fetchedOutfitObject
+    const [outfitArr, setOutfitArr] = useState({
+        topsArray: [],
+        bottomsArray: [],
+        footwearArray: [],
+        otherArray: []
+    })
+    const fetchedOutfitObject = {
         date: outfitObject.date,
         fitpic: outfitObject.fitpic ? outfitObject.fitpic : null,
         tags: outfitObject.tags ? outfitObject.tags : [],
-        outfitArr: {
-            topsArray: [],
-            bottomsArray: [],
-            footwearArray: [],
-            otherArray: []
-        }
-    });
+        outfitArr: outfitArr //this is the hook we just made
+    };
     console.log('ok we just instantiated the fetchedOO')
     console.log(fetchedOutfitObject)
+    const [brandsSet, setBrandsSet] = useState(new Set())
+    const [colorsSet, setColorsSet] = useState(new Set())
 
-    /**
-     * fetchedOutfitObject.outfitArr[outfitArrKeys[i]]
-                    .push(closetObject[outfitArrKeys[i]].find(clothingObj => 
-                        clothingObj._id === outfitObject.outfitArr[outfitArrKeys[i]][k]
-     */
+    
+
     // this is unneccesarily called every time something re renders... XD
     useEffect(() => {
-        const outfitArrKeys = Object.keys(fetchedOutfitObject.outfitArr)
-        for (let i = 0; i < outfitArrKeys.length; i++){
-            console.log('WHAT THE FUCKKKKKKKKKKKKK')
-            for (let k = 0; k < outfitObject.outfitArr[outfitArrKeys[i]].length; k++){
-                console.log('boutta set')
-                console.log(fetchedOutfitObject)
-                setFetchedOutfitObject(
-                    {...fetchedOutfitObject, 
-                    outfitArr: {
-                        ...fetchedOutfitObject.outfitArr,
-                        [outfitArrKeys[i]]:
-                            [...fetchedOutfitObject.outfitArr[outfitArrKeys[i]],
-                            closetObject[outfitArrKeys[i]].find(clothingObj => 
-                            clothingObj._id === outfitObject.outfitArr[outfitArrKeys[i]][k]
-                        )
-                        ]
-                    }}
-                    )
+        console.log("In useEffect")
+
+        //stops accidental repopulation of fetchedOutfitArray leading to duplicates
+        //this tends to happen when React Native hot refreshes when I'm working on it
+        if (!previouslyIterated){
+            setPreviouslyIterated(true)
+            // replaces fitpic image with stock image if it doesn't exist
+            if (!outfitObject.fitpic || outfitObject.fitpic === ''){
+                outfitObject.fitpic = 'https://randomuser.me/api/portraits/men/1.jpg'
+            } 
+
+
+            //populates fetchedOutfitObject's outfitArr
+            //i.e. it fills the arrays with clothingObjects, not _id's
+            const outfitArrKeys = Object.keys(fetchedOutfitObject.outfitArr)
+            for (let i = 0; i < outfitArrKeys.length; i++){
+                // console.log('WHAT THE FUCKKKKKKKKKKKKK')
+                for (let k = 0; k < outfitObject.outfitArr[outfitArrKeys[i]].length; k++){
+                    // console.log('boutta set')
+                    // console.log(fetchedOutfitObject)
+                    console.log('asd')
+                    let toAddClothingObject = closetObject[outfitArrKeys[i]].find(clothingObject =>
+                        clothingObject._id === outfitObject.outfitArr[outfitArrKeys[i]][k])
+                    let newArray = outfitArr[outfitArrKeys[i]];
+                    newArray.push(toAddClothingObject)
+                    setOutfitArr({
+                        ...outfitArr,
+                        [outfitArrKeys[i]]: newArray
+                    })
+                    console.log(outfitArr);
                 }
             }
             console.log(fetchedOutfitObject.outfitArr.topsArray)
-        }, [])
+
+            //gets the set of Brands... and the colors
+            const fetchedOutfitObjectOutfitArrKeys = Object.keys(fetchedOutfitObject.outfitArr)
+            const nonStateBrandsSet = new Set();
+            const nonStateColorsSet = new Set();
+            for (let i = 3; i >= 0; i--){
+                console.log('big XD')
+                console.log(fetchedOutfitObjectOutfitArrKeys)
+                console.log(fetchedOutfitObject.outfitArr)
+
+                for (let k = 0; k < fetchedOutfitObject.outfitArr[fetchedOutfitObjectOutfitArrKeys[i]].length; k++){
+                    console.log(`'xd' iteration ${k}`)
+
+                    console.log('fetchedOutfitObject.outfitArr[fetchedOutfitObjectOutfitArrKeys[i]][k]:')
+                    console.log(fetchedOutfitObject.outfitArr[fetchedOutfitObjectOutfitArrKeys[i]][k])
+
+                    console.log(`Color: ${fetchedOutfitObject.outfitArr[fetchedOutfitObjectOutfitArrKeys[i]][k].color}`)
+                    if (fetchedOutfitObject.outfitArr[fetchedOutfitObjectOutfitArrKeys[i]][k].color &&
+                        fetchedOutfitObject.outfitArr[fetchedOutfitObjectOutfitArrKeys[i]][k].color !== ''){
+                        nonStateColorsSet.add(fetchedOutfitObject.outfitArr[fetchedOutfitObjectOutfitArrKeys[i]][k].color)
+                    }
+                    if (fetchedOutfitObject.outfitArr[fetchedOutfitObjectOutfitArrKeys[i]][k].brandName && fetchedOutfitObject.outfitArr[fetchedOutfitObjectOutfitArrKeys[i]][k].brandName.length != 0){
+                        console.log("boutt aadd")
+                        nonStateBrandsSet.add(fetchedOutfitObject.outfitArr[fetchedOutfitObjectOutfitArrKeys[i]][k].brandName[0])
+                    }
+                }
+            }
+            setBrandsSet(nonStateBrandsSet)
+            setColorsSet(nonStateColorsSet)
+        } else {
+            console.log("Already iterated, not gonna bother executing the body of useEffect")
+        }
+
+        
+    }, [])
     
 
     console.log("ok we looped thru")
     console.log(fetchedOutfitObject)
-    // console.log('item')
-    // console.log(item)
     console.log(Math.random)
 
 
-
+    // hook whether image is small
     const [imageIsSmall, setImageIsSmall] = useState(false)
+
+    // value we use to animate the Animated.View
     const [imageWidth] = useState(new Animated.Value(1))
     
     
 
     const dummySrc = { uri: 'https://randomuser.me/api/portraits/men/1.jpg' }
-    let src
+    
 
-    //temp image
-    if (outfitObject.fitpic && outfitObject.fitpic !== ''){
-        src = {uri: outfitObject.fitpic}
-    } else {
-        src = { uri: 'https://randomuser.me/api/portraits/men/1.jpg' }
-    }
+    
 
-    const image = useRef(null)
-
-
-    //this might be causing all the updating... nvm
-    //const [imageHeight, setImageHeight] = useState(350);
-
+    const image = useRef(null) //might be useless
     const navigation = useNavigation();
     const dispatch = useDispatch();
 
+    //called when confirming delete on modal. in progress still, no functionality
     const ConfirmDelete = () => {
         setModalVisible(false)
         //dispatch(clothingDeletedFromCloset({...item}))
@@ -910,72 +931,157 @@ export const ViewIndividualOutfit = ({ route }) => {
         style={{flex: 1, backgroundColor: 'white'}}>
             <TopNavScreenHeader title={outfitObject.date} exitDestination={'CLOSETSCREEN'}/>
             
+            {/* Modal that shows when we want to delete the outfit... in progress */}
             <YesNoModal modalVisible={modalVisible} setModalVisible={setModalVisible} onPressFunc={() => ConfirmDelete()}/>
             
             
-            {/* Yee Yee Ass Fix.. put GestureRecognizers around everything except the scrollview */}
+            {/* GestureRecognizers allow us to swipe up/down to make the fitpic image big/small */}
             <GestureRecognizer
-            //onSwipe={(direction, state) => onSwipe(direction, state)}
             onSwipeUp={state => onSwipeUp()}
             onSwipeDown={state => onSwipeDown()}
             >
             
-                <Animated.View style={{
-                    width: imageWidth.interpolate({
-                        inputRange: [0, 1],
-                        outputRange: ['50%', '100%']
-                    })
+                {/* This is the image, wrapped in an Animated.View to make it big/small */}
+                <View style={{
+                    justifyContent: 'flex-start',
+                    flexDirection: 'row',
+                    margin: 5
                 }}>
-                    <View style={{
-                        margin: 10,
-                        width: 'auto',
-                        height: 'auto',
-                        borderRadius: 5
+                    <Animated.View style={{
+                        width: imageWidth.interpolate({
+                            inputRange: [0, 1],
+                            outputRange: ['50%', '100%']
+                        })
                     }}>
-                        <Image ref={image} 
-                            source={src} 
-                            style={{
-                                width: '100%',//'imageHeight',
-                                aspectRatio: 1,
-                                borderRadius: 5
-                            }} />
-                    </View>
+                        <View style={{
+                            margin: 5,
+                            width: 'auto',
+                            borderRadius: 5
+                        }}>
+                            <Image ref={image} //I think this is useless here, delete later
+                                source={{uri: outfitObject.fitpic}} 
+                                style={{
+                                    width: '100%',//'imageHeight',
+                                    aspectRatio: 1,
+                                    borderRadius: 5
+                                }} />
+                        </View>
+                    </Animated.View>
+                    <Animated.View style={{
+                        width: imageWidth.interpolate({
+                            inputRange: [0, 1],
+                            outputRange: ['50%', '100%']
+                        })
+                    }}>
+                        <View style={{
+                            margin: 5,
+                            width: 'auto',
+                            borderRadius: 5
+                        }}>
+                            <View style={{
+                                width: '100%',
+                                height: 'auto',
+                                flexDirection: 'row',
+                                flexWrap: 'wrap',
+                                justifyContent: 'center',
+                                alignItems: 'center'
+                            }}>
+                                <View 
+                                style={[{
+                                    width: '50%', 
+                                    aspectRatio: 1, 
+                                    backgroundColor: '#f2f2f2',
+                                    borderRadius: 5}]}></View>
+                                <View 
+                                style={[{
+                                    width: '50%', 
+                                    aspectRatio: 1, 
+                                }]}>
+                                    <View style={[{
+                                        width: 'auto',
+                                        height: 'auto',
+                                        marginLeft: 5,
+                                        marginBottom: 5,
+                                        borderRadius: 5,
+                                        backgroundColor: '#f2f2f2'
+                                    }]}>
+                                        <View style={{
+                                            height: '100%',
+                                            width: '100%'
+                                        }}>
+
+                                        </View>
+                                    </View>
+                                </View>
+                                <View 
+                                style={[{
+                                    width: '50%', 
+                                    aspectRatio: 1, 
+                                }]}>
+                                    <View style={[{
+                                        width: 'auto',
+                                        height: 'auto',
+                                        marginTop: 5,
+                                        marginRight: 5,
+                                        borderRadius: 5,
+                                        borderColor: 'black',
+                                        borderWidth: 1,
+                                        borderStyle: 'solid',
+                                    }]}>
+                                        <View style={{
+                                            height: '100%',
+                                            width: '100%'
+                                        }}>
+
+                                        </View>
+                                    </View>
+                                </View>
+                                <View 
+                                style={[{
+                                    width: '50%', 
+                                    aspectRatio: 1, 
+                                    borderColor: '#f2f2f2',
+                                    borderWidth: 1,
+                                    borderStyle: 'solid',
+                                    borderRadius: 5}]}></View>
+                                
+                            </View>
+                        </View>
+                    </Animated.View>
+                </View>
                     
-                </Animated.View>
             </GestureRecognizer>
 
-
+            {/* GestureRecognizers allow us to swipe up/down to make the fitpic image big/small */}
             <GestureRecognizer
-            //onSwipe={(direction, state) => onSwipe(direction, state)}
             onSwipeUp={state => onSwipeUp()}
             onSwipeDown={state => onSwipeDown()}
             >
-                <OutfitDescription fetchedOutfitObject={fetchedOutfitObject}/>
+                <OutfitDescription 
+                    fetchedOutfitObject={fetchedOutfitObject} 
+                    brandsLength={brandsSet.size}
+                    colorsLength={colorsSet.size}/>
             </GestureRecognizer>
 
+            {/* GestureRecognizers allow us to swipe up/down to make the fitpic image big/small */}
             <GestureRecognizer
-            //onSwipe={(direction, state) => onSwipe(direction, state)}
             onSwipeUp={state => onSwipeUp()}
             onSwipeDown={state => onSwipeDown()}
             >
                 <OutfitTags fetchedOutfitObject={fetchedOutfitObject}/>
             </GestureRecognizer>
 
+            {/* GestureRecognizers allow us to swipe up/down to make the fitpic image big/small */}
             <GestureRecognizer
-            //onSwipe={(direction, state) => onSwipe(direction, state)}
             onSwipeUp={state => onSwipeUp()}
             onSwipeDown={state => onSwipeDown()}
             >
-                <BrandTags fetchedOutfitObject={fetchedOutfitObject}/>
+                <BrandTags fetchedOutfitObject={fetchedOutfitObject} brandsSet={brandsSet}/>
             </GestureRecognizer>
 
 
+            {/* This is the 4 drawers, and the icons that show underneath them */}
             <DisplayClothingTypeFour outfitObject={outfitObject}/>
-            
-            
-            
-            
-            
         </View>
     )
 }

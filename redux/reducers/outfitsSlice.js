@@ -47,7 +47,21 @@ const outfitsSlice = createSlice({
                 date = date.toDateString();
                 action.payload.date = date;
 
-                //this will be an object that holds 4 arrays that each hold the IDs of the clothing
+                /** the object we push into the outfitsArray SHOULD (and hopefully will) look like this:
+                 *  {
+                 *      fitpic: '',             //not yet implemented
+                 *      date: new Date(),
+                 *      favorite: false,        //not yet implemented
+                 *      description: ''         //not yet implemented
+                 *      outfitArr: {            //each of these arrays only hold string _id's     
+                 *          topsArray: [],
+                 *          bottomsArray: [],
+                 *          footwearArray: [],
+                 *          otherArray: []
+                 *      }
+                 *  } 
+                 */
+
                 state.outfitsArray.push(action.payload);
 
 
