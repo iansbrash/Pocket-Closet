@@ -5,28 +5,25 @@ import {
     Text, 
     View, 
     Dimensions,
-    Alert,
     Vibration,
-    FlatList,
-    Animated
+    Animated,
+    Pressable
 } from 'react-native'
 import { useSelector, useDispatch} from 'react-redux' 
 import GestureRecognizer, {swipeDirections} from 'react-native-swipe-gestures';
 
-import { TopNav, TopNavScreenHeader } from './GlobalComponents/TopNav'
-import { ScreenHeader } from './GlobalComponents/ScreenHeader'
+import { TopNavScreenHeader } from './GlobalComponents/TopNav'
 import GlobalStyles from './GlobalComponents/GlobalStyles'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 import { HeartIcon, EditIcon, DeleteIcon, ShareIcon, CheckIcon, XIcon,
     BagIcon,
     ShirtIcon,
     LegIcon,
-    ShoeIcon } from './GlobalComponents/GlobalIcons'
-import { Children } from 'react'
+    ShoeIcon,
+    ArrowBack } from './GlobalComponents/GlobalIcons'
 import { itemFavoriteToggled, clothingDeletedFromCloset } from '../redux/reducers/closetSlice'
 import { useNavigation } from '@react-navigation/native'
 import { YesNoModal } from './GlobalComponents/GlobalModals'
-import { MiniScreenHeader } from './GlobalComponents/ScreenHeader'
 
 const windowWidth = Dimensions.get('window').width;
 //edit these instead of numbers in handleScroll
@@ -39,131 +36,6 @@ const scrollEventThrottleValue = 16;
 
 
 
-const ItemStats = ({item}) => {
-
-
-    //const timesWorn = item.timesWorn;
-
-    const Stat = ({stat, value}) => {
-
-        if (!value) value = 'N/A'
-
-        return (
-            <View style={{
-                height: 'auto',
-                width: '100%'
-            }}>
-                <View style={{
-                    margin: 5,
-                    width: 'auto',
-                    height: 'auto',
-                    justifyContent: 'flex-start',
-                    alignItems: 'center',
-                    flexDirection: 'row',
-                    flexWrap: 'wrap'
-                }}>
-                    <Text style={[{fontWeight: 'bold'}, GlobalStyles.colorMain, GlobalStyles.h3, ]}>
-                        {`${stat}: `}
-                    </Text>
-                    <Text style={GlobalStyles.hint, GlobalStyles.h4}>
-                        {value}
-                    </Text>
-                </View>
-            </View>
-        )
-    }
-
-    const StatHolder = (props) => {
-        return (
-            <View style={{
-                margin: 5,
-                width: 'auto',
-                height: 'auto',
-                justifyContent: 'flex-start',
-                alignItems: 'center',
-            }}>
-                <View 
-                style={[{height: 10, borderTopLeftRadius: 10, borderTopRightRadius: 10, width: '100%'}, GlobalStyles.bgColorMain]}></View>
-                <View style={[{
-                    borderBottomRightRadius: 10,
-                    borderBottomLeftRadius: 10,
-                    width: '100%',
-                    height:'auto',
-                    backgroundColor: 'white'
-                }, GlobalStyles.shadowLight]}>
-                    {props.children}
-                </View>
-            </View>
-        )
-    }
-
-    return (
-        <View style={{
-            width: '100%',
-            height: 'auto',
-        }}>
-            <StatHolder>
-                <Stat stat={"Name"} value={item.clothingName} />
-                <Stat stat={"Type"} value={
-                    item.pieceType ? item.pieceType : item.clothingType} />
-                <Stat stat={"Color"} value={item.color} />
-                <Stat stat={"Brands"} value={item.brandName[0]} />
-                
-                
-                <Stat stat={"Description"} value={
-                    item.description
-                } />
-            </StatHolder>  
-            <View style={{height: 25}}></View>
-            <StatHolder>
-                <Stat stat={"Times Worn"} value={item.timesWorn} />
-                <Stat stat={"Price"} value={
-                    item.price
-                } />
-            </StatHolder> 
-            <View style={{height: 25}}></View>
-        </View>
-    )
-}
-
-// const IndividualTag = ({tag}) => {
-//     return (
-//         <View style={[{
-//             width: 'auto',
-//             height: 'auto',
-//             borderRadius: 5,
-//             paddingLeft: 5,
-//             paddingRight: 5,
-//             margin: 5,
-//             elevation: 3
-//         }, GlobalStyles.bgColorMain]} >
-//             <Text  status='control' style={[{fontWeight: 'bold', color: 'white', margin: 5}, GlobalStyles.h4]}>
-//                 {tag.toUpperCase()}
-//             </Text>
-//         </View>
-//     )
-// }
-
-const ItemTags = ({item}) => {
-
-    if (!item.tags) { return null}
-
-    return (
-        <View style={{
-            width: '100%',
-            height: 'auto',
-            flexDirection: 'row',
-            flexWrap: 'wrap',
-            justifyContent: 'flex-start',
-            alignItems: 'center',
-            //margin: 5
-        }}>
-            {item.tags.map((tag) => (
-                <IndividualTag tag={tag}/>
-            ))}
-        </View>
-    )
-}
 
 
 const ButtonsStyleTwo = ({imageHeight, outfitObject, setModalVisible}) => {
@@ -500,7 +372,7 @@ const DisplayClothingTypeThree = ({outfitObject}) => {
     )
 }
 
-const DisplayClothingTypeFour = ({outfitObject, icon}) => {
+const DisplayClothingTypeFour = ({fetchedOutfitObject, outfitObject, icon}) => {
     const typesArray = useSelector(state => Object.keys(state.closet.typesOfClothing))
     const [type, setType] = useState('tops');
     const dummySrc = { uri: 'https://randomuser.me/api/portraits/men/1.jpg' }
@@ -522,8 +394,6 @@ const DisplayClothingTypeFour = ({outfitObject, icon}) => {
 
     
 
-
-
     // I just realized that when we store the outfit, it is then constant, and doesn't change when we favorite/edit desciriptn... etc
     const ScrollClothingList = () => {
         return (
@@ -531,13 +401,9 @@ const DisplayClothingTypeFour = ({outfitObject, icon}) => {
                 <ScrollView
                 style={{height: 'auto', paddingTop: 5, paddingBottom: 5}}
                 horizontal={true}>
-                    
-                        {outfitObject.outfitArr[`${type}Array`].map(id => (
-                            <ClothingIcon clothingObject={closetObject[`${type}Array`].find(
-                                clothingObject => clothingObject._id === id
-                            )}/>
+                        {fetchedOutfitObject.outfitArr[`${type}Array`].map(clothingObject => (
+                            <ClothingIcon clothingObject={clothingObject}/>
                         ))}
-                    
                 </ScrollView>
             </View>
         )
@@ -587,7 +453,7 @@ const DisplayClothingTypeFour = ({outfitObject, icon}) => {
     }
 
 
-    const TypesDrawer = ({clothingType, icon}) => {
+    const TypesDrawer = ({clothingType, icon, disabled}) => {
         return (
             <View style={{
                 width: '25%',
@@ -595,13 +461,32 @@ const DisplayClothingTypeFour = ({outfitObject, icon}) => {
                 marginTop: 10,
             }}> 
                 <TouchableOpacity
-                onPress={() => setType(clothingType)}>
+                onPress={() => setType(clothingType)}
+                disabled={disabled}>
                     <View style={{
                         justifyContent: 'center',
                         alignItems: 'center'
                     }}>
                         <View>
                             {icon}
+                            {disabled ? <View style={{
+                                position: 'absolute',
+                                height: '100%',
+                                aspectRatio: 1,
+                            }}>
+                                <View style={{
+                                    marginLeft: 12,
+                                    transform: [{ rotate: '45deg'}],
+                                    height: '100%',
+                                    width: 5,
+                                    backgroundColor: '#e6e6e6',
+                                    borderWidth: 1,
+                                    borderColor: 'white',
+                                    borderStyle: 'solid'
+                                }}>
+
+                                </View>
+                            </View> : null}
                         </View>
                         <View style={[{height: 5, width: '100%', marginTop: 5}, type === clothingType ? GlobalStyles.bgColorMain : {backgroundColor: 'white'}]}></View>
                     </View>
@@ -611,18 +496,34 @@ const DisplayClothingTypeFour = ({outfitObject, icon}) => {
     }
 
     return (
-        <View style={{width: '100%', justifyContent: 'center', alignItems: 'center'}}>
+        <View style={{width: '100%', justifyContent: 'center', alignItems: 'center', backgroundColor: 'white'}}>
             <View style={{
                 justifyContent: 'center', alignItems: 'center', flexDirection: 'row'
             }}>
-                <TypesDrawer clothingType={'tops'} 
-                    icon={<ShirtIcon size={30} style={type === 'tops' ? GlobalStyles.colorMain : {color: 'lightgray'}}/>}/>
-                <TypesDrawer clothingType={'bottoms'}
-                    icon={<LegIcon size={30} style={type === 'bottoms' ? GlobalStyles.colorMain : {color: 'lightgray'}}/>}/>
-                <TypesDrawer clothingType={'footwear'}
-                    icon={<ShoeIcon size={30} style={type === 'footwear' ? GlobalStyles.colorMain : {color: 'lightgray'}}/>}/>
-                <TypesDrawer clothingType={'other'}
-                    icon={<BagIcon size={30} style={type === 'other' ? GlobalStyles.colorMain : {color: 'lightgray'}}/>}/>
+                <TypesDrawer 
+                    disabled={fetchedOutfitObject.outfitArr.topsArray.length === 0}
+                    clothingType={'tops'} 
+                    icon={<ShirtIcon size={30} 
+                        style={fetchedOutfitObject.outfitArr.topsArray.length !== 0 ? 
+                            (type === 'tops' ? GlobalStyles.colorMain : {color: 'lightgray'}) : {color: '#ededed'}}/>}/>
+                <TypesDrawer 
+                    disabled={fetchedOutfitObject.outfitArr.bottomsArray.length === 0}
+                    clothingType={'bottoms'}
+                    icon={<LegIcon size={30} 
+                        style={fetchedOutfitObject.outfitArr.bottomsArray.length !== 0 ? 
+                            (type === 'bottoms' ? GlobalStyles.colorMain : {color: 'lightgray'}) : {color: '#ededed'}}/>}/>
+                <TypesDrawer 
+                    disabled={fetchedOutfitObject.outfitArr.footwearArray.length === 0}
+                    clothingType={'footwear'}
+                    icon={<ShoeIcon size={30} 
+                        style={fetchedOutfitObject.outfitArr.footwearArray.length !== 0  ?
+                            (type === 'footwear' ? GlobalStyles.colorMain : {color: 'lightgray'}) : {color: '#ededed'}}/>}/>
+                <TypesDrawer 
+                    disabled={fetchedOutfitObject.outfitArr.otherArray.length === 0}
+                    clothingType={'other'}
+                    icon={<BagIcon size={30} 
+                        style={fetchedOutfitObject.outfitArr.otherArray.length !== 0 ? 
+                            (type === 'other' ? GlobalStyles.colorMain : {color: 'lightgray'}) : {color: '#ededed'}}/>}/>
             </View>
             <View style={{
                 width: '100%'
@@ -724,6 +625,7 @@ const OutfitTags = ({fetchedOutfitObject}) => {
 
 const BrandTags = ({fetchedOutfitObject, brandsSet}) => {
     const brandsArray = ['Supreme', 'Guess', 'American Eagle', 'Nike', 'Jordan', 'Please', 'Change', ]
+    const [viewHeight, setViewHeight] = useState(null)
     //const [brandsSet, setBrandsSet] = useState(new Set())
 
     //const nonStateSet = new Set();
@@ -734,6 +636,36 @@ const BrandTags = ({fetchedOutfitObject, brandsSet}) => {
         
     //console.log(`nonStateSet.size: ${nonStateSet.size}`)
 
+    const [brandTagsArrowRotation] = useState(new Animated.Value(0))
+    const [drawerOpen, setDrawerOpen] = useState(false)
+    const [minTagViewHeight, setMinTagViewHeight] = useState(0);
+
+    const ToggleDrawer = () => {
+        console.log("Toggling drawer")
+        console.log(`viewHeight: ${viewHeight}`)
+        if (drawerOpen){
+            onDrawerClose();
+        } else {
+            onDrawerOpen()
+        }
+        setDrawerOpen(!drawerOpen)
+    }
+
+    const onDrawerOpen = (gestureState) => {
+        Animated.timing(brandTagsArrowRotation, {
+            toValue: 1,
+            duration: 250,
+            useNativeDriver: false
+        }).start();
+    }
+    //makes image big
+    const onDrawerClose = (gestureState) => {
+        Animated.timing(brandTagsArrowRotation, {
+            toValue: 0,
+            duration: 250,
+            useNativeDriver: false
+        }).start();
+    }
 
     const IndividualTags = ({title}) => {
         return (
@@ -754,22 +686,59 @@ const BrandTags = ({fetchedOutfitObject, brandsSet}) => {
 
     return (
         <View style={{width: '100%', height: 'auto'}}>
-            <View style={{
+            <Pressable style={{
                 marginLeft: 10,
                 marginRight: 10,
                 width: 'auto'
-            }}>
+            }}
+            onPress={() => ToggleDrawer()}>
                 <View style={{
                     width: '100%',
                     height: 'auto',
-                    flexDirection: 'row',
-                    justifyContent: 'flex-start',
-                    alignItems: 'center',
-                    flexWrap: 'wrap'
                 }}>
-                    {[...brandsSet].map(tag => <IndividualTags title={tag}/>)}
+                    <View style={{
+                        position: 'absolute',
+                        top: 7,
+                        right: 0,
+                        width: 30,
+                        height: 30,
+                        justifyContent: 'center',
+                        alignItems:'center',
+                    }}>
+                        {viewHeight >= 90 ?
+                            <Animated.View
+                            style={{
+                                transform: [{rotate: 
+                                    brandTagsArrowRotation.interpolate({
+                                        inputRange: [0, 1],
+                                        outputRange: ['0deg', '-90deg']
+                                    })
+                                }]
+                            }}>
+                                <ArrowBack size={30} />
+                            </Animated.View>
+                        : null}
+                    </View>
+                    <View 
+                    onLayout={event => !viewHeight ? setViewHeight(event.nativeEvent.layout.height) : null}>
+                        <Animated.View style={{
+                            height: viewHeight ? brandTagsArrowRotation.interpolate({
+                                inputRange: [0, 1],
+                                outputRange: [viewHeight >= 90 ? 88 : viewHeight,
+                                    viewHeight]
+                            }) : 'auto',
+                            flexDirection: 'row',
+                            justifyContent: 'flex-start',
+                            alignItems: 'center',
+                            flexWrap: 'wrap'
+                        }}
+                        >
+                            {[...brandsSet].map(tag => <IndividualTags title={tag}/>)}
+                        </Animated.View>
+                    </View>
+                   
                 </View>
-            </View>
+            </Pressable>
         </View>
     )
 }
@@ -777,7 +746,7 @@ const BrandTags = ({fetchedOutfitObject, brandsSet}) => {
 export const ViewIndividualOutfit = ({ route }) => {
 
     const [modalVisible, setModalVisible] = useState(false);
-    const [previouslyIterated, setPreviouslyIterated] = useState(false)
+    //const [previouslyIterated, setPreviouslyIterated] = useState(false)
 
     // we pass in the item we clicked on so we can display stats XDDDD
     const closetObject = useSelector(state => state.closet.closetObject);
@@ -791,14 +760,15 @@ export const ViewIndividualOutfit = ({ route }) => {
         footwearArray: [],
         otherArray: []
     })
-    const fetchedOutfitObject = {
+    // this is so fked
+    let fetchedOutfitObject = {
         date: outfitObject.date,
         fitpic: outfitObject.fitpic ? outfitObject.fitpic : null,
         tags: outfitObject.tags ? outfitObject.tags : [],
         outfitArr: outfitArr //this is the hook we just made
     };
-    console.log('ok we just instantiated the fetchedOO')
-    console.log(fetchedOutfitObject)
+    // console.log('ok we just instantiated the fetchedOO')
+    // console.log(fetchedOutfitObject)
     const [brandsSet, setBrandsSet] = useState(new Set())
     const [colorsSet, setColorsSet] = useState(new Set())
 
@@ -807,11 +777,27 @@ export const ViewIndividualOutfit = ({ route }) => {
     // this is unneccesarily called every time something re renders... XD
     useEffect(() => {
         console.log("In useEffect")
-
+        setOutfitArr(null)
+        console.log(outfitArr)
+        setOutfitArr({
+            ...outfitArr,
+            topsArray: new Array(),
+            bottomsArray: new Array(),
+            footwearArray: new Array(),
+            otherArray: new Array()
+        })
+        console.log(outfitArr)
+        fetchedOutfitObject = {
+            date: outfitObject.date,
+            fitpic: outfitObject.fitpic ? outfitObject.fitpic : null,
+            tags: outfitObject.tags ? outfitObject.tags : [],
+            outfitArr: outfitArr //this is the hook we just made
+        };
+        
         //stops accidental repopulation of fetchedOutfitArray leading to duplicates
         //this tends to happen when React Native hot refreshes when I'm working on it
-        if (!previouslyIterated){
-            setPreviouslyIterated(true)
+        //if (!previouslyIterated){
+            //setPreviouslyIterated(true)
             // replaces fitpic image with stock image if it doesn't exist
             if (!outfitObject.fitpic || outfitObject.fitpic === ''){
                 outfitObject.fitpic = 'https://randomuser.me/api/portraits/men/1.jpg'
@@ -826,7 +812,7 @@ export const ViewIndividualOutfit = ({ route }) => {
                 for (let k = 0; k < outfitObject.outfitArr[outfitArrKeys[i]].length; k++){
                     // console.log('boutta set')
                     // console.log(fetchedOutfitObject)
-                    console.log('asd')
+                    //console.log('asd')
                     let toAddClothingObject = closetObject[outfitArrKeys[i]].find(clothingObject =>
                         clothingObject._id === outfitObject.outfitArr[outfitArrKeys[i]][k])
                     let newArray = outfitArr[outfitArrKeys[i]];
@@ -835,52 +821,43 @@ export const ViewIndividualOutfit = ({ route }) => {
                         ...outfitArr,
                         [outfitArrKeys[i]]: newArray
                     })
-                    console.log(outfitArr);
+                    //console.log(outfitArr);
                 }
             }
-            console.log(fetchedOutfitObject.outfitArr.topsArray)
+            //console.log(fetchedOutfitObject.outfitArr.topsArray)
 
             //gets the set of Brands... and the colors
             const fetchedOutfitObjectOutfitArrKeys = Object.keys(fetchedOutfitObject.outfitArr)
             const nonStateBrandsSet = new Set();
             const nonStateColorsSet = new Set();
             for (let i = 3; i >= 0; i--){
-                console.log('big XD')
-                console.log(fetchedOutfitObjectOutfitArrKeys)
-                console.log(fetchedOutfitObject.outfitArr)
+                
 
                 for (let k = 0; k < fetchedOutfitObject.outfitArr[fetchedOutfitObjectOutfitArrKeys[i]].length; k++){
-                    console.log(`'xd' iteration ${k}`)
+                    //console.log(`'xd' iteration ${k}`)
 
-                    console.log('fetchedOutfitObject.outfitArr[fetchedOutfitObjectOutfitArrKeys[i]][k]:')
-                    console.log(fetchedOutfitObject.outfitArr[fetchedOutfitObjectOutfitArrKeys[i]][k])
+                    //console.log('fetchedOutfitObject.outfitArr[fetchedOutfitObjectOutfitArrKeys[i]][k]:')
+                    //console.log(fetchedOutfitObject.outfitArr[fetchedOutfitObjectOutfitArrKeys[i]][k])
 
-                    console.log(`Color: ${fetchedOutfitObject.outfitArr[fetchedOutfitObjectOutfitArrKeys[i]][k].color}`)
+                    //console.log(`Color: ${fetchedOutfitObject.outfitArr[fetchedOutfitObjectOutfitArrKeys[i]][k].color}`)
                     if (fetchedOutfitObject.outfitArr[fetchedOutfitObjectOutfitArrKeys[i]][k].color &&
                         fetchedOutfitObject.outfitArr[fetchedOutfitObjectOutfitArrKeys[i]][k].color !== ''){
                         nonStateColorsSet.add(fetchedOutfitObject.outfitArr[fetchedOutfitObjectOutfitArrKeys[i]][k].color)
                     }
                     if (fetchedOutfitObject.outfitArr[fetchedOutfitObjectOutfitArrKeys[i]][k].brandName && fetchedOutfitObject.outfitArr[fetchedOutfitObjectOutfitArrKeys[i]][k].brandName.length != 0){
-                        console.log("boutt aadd")
                         nonStateBrandsSet.add(fetchedOutfitObject.outfitArr[fetchedOutfitObjectOutfitArrKeys[i]][k].brandName[0])
                     }
                 }
             }
             setBrandsSet(nonStateBrandsSet)
             setColorsSet(nonStateColorsSet)
-        } else {
-            console.log("Already iterated, not gonna bother executing the body of useEffect")
-        }
+        //} else {
+        //    console.log("Already iterated, not gonna bother executing the body of useEffect")
+        //}
 
         
-    }, [])
+    }, [closetObject])
     
-
-    console.log("ok we looped thru")
-    console.log(fetchedOutfitObject)
-    console.log(Math.random)
-
-
     // hook whether image is small
     const [imageIsSmall, setImageIsSmall] = useState(false)
 
@@ -1081,7 +1058,7 @@ export const ViewIndividualOutfit = ({ route }) => {
 
 
             {/* This is the 4 drawers, and the icons that show underneath them */}
-            <DisplayClothingTypeFour outfitObject={outfitObject}/>
+            <DisplayClothingTypeFour fetchedOutfitObject={fetchedOutfitObject}/>
         </View>
     )
 }

@@ -6,9 +6,11 @@ import {
     View, 
     Dimensions,
     Alert,
-    Vibration
+    Vibration,
+    Animated
 } from 'react-native'
 import { useSelector, useDispatch} from 'react-redux' 
+import GestureRecognizer, {swipeDirections} from 'react-native-swipe-gestures';
 
 
 import { TopNav, TopNavScreenHeader } from './GlobalComponents/TopNav'
@@ -240,6 +242,148 @@ const ButtonsStyleTwo = ({imageHeight, item, setModalVisible}) => {
     )
 }
 
+const ThreeAttributeHeader = ({pieceType, brandsLength, price, description, color}) => {
+    return (
+        <View style={{
+            width: '100%',
+            marginTop: -5
+        }}>
+            <View style={{
+                width: 'auto',
+                justifyContent: 'center',
+                alignItems:'center',
+                flexDirection: 'row'
+            }}>
+                <Text style={[GlobalStyles.h5, {fontWeight: 'bold'}]}>
+                    {`${pieceType}`}
+                </Text>
+                <Text style={[{fontWeight: 'bold', marginLeft: 5, marginRight: 5}, GlobalStyles.h3, GlobalStyles.lighterHint]}>•</Text>
+                {/* <Text style={[GlobalStyles.h5, {fontWeight: 'bold'}]}>
+                    {`${brandsLength} brand${brandsLength !== 1 ? 's' : ''}`}
+                </Text> */}
+                <Text style={[GlobalStyles.h5, {fontWeight: 'bold'}]}>
+                    {`${color}`}
+                </Text>
+                <Text style={[{fontWeight: 'bold', marginLeft: 5, marginRight: 5}, GlobalStyles.h3, GlobalStyles.lighterHint]}>•</Text>
+                <Text style={[GlobalStyles.h5, {fontWeight: 'bold'}]}>
+                    {`$${price}`} 
+                </Text>
+            </View>
+            <View style={{
+                width: 'auto',
+                marginLeft: 10,
+                marginRight: 10,
+                marginTop: 0,
+                marginBottom: 10
+            }}>
+                <Text style={[GlobalStyles.lighterHint, GlobalStyles.h5]}>
+                    {description && description !== '' ? description : 'No description.'}
+                </Text>
+            </View>
+        </View>
+    )
+}
+
+const BrandTags = ({brandsArray}) => {
+    //const brandsArray = ['Supreme', 'Guess', 'American Eagle', 'Nike', 'Jordan', 'Please', 'Change', ]
+    //const [brandsSet, setBrandsSet] = useState(new Set())
+
+    //const nonStateSet = new Set();
+
+    // called to create the set. stops re rendering
+    //const fetchedOutfitObjectOutfitArrKeys = Object.keys(fetchedOutfitObject.outfitArr)
+    
+        
+    //console.log(`nonStateSet.size: ${nonStateSet.size}`)
+
+
+    const IndividualTags = ({title}) => {
+        return (
+            <View style={[{
+                width: 'auto',
+                padding: 5,
+                margin: 5,
+                height: 'auto',
+                justifyContent: 'center',
+                alignItems:'center',
+                borderRadius: 5,
+                backgroundColor: 'white'
+            }, GlobalStyles.shadowLight, ]}>
+                <Text style={[{fontWeight: 'bold',}, GlobalStyles.h5, GlobalStyles.colorMain ]}>{title}</Text>
+            </View>
+        )
+    }
+
+    return (
+        <View style={{width: '100%', height: 'auto'}}>
+            <View style={{
+                marginLeft: 10,
+                marginRight: 10,
+                width: 'auto'
+            }}>
+                <View style={{
+                    width: '100%',
+                    height: 'auto',
+                    flexDirection: 'row',
+                    justifyContent: 'flex-start',
+                    alignItems: 'center',
+                    flexWrap: 'wrap'
+                }}>
+                    {brandsArray.map(tag => <IndividualTags title={tag}/>)}
+                </View>
+            </View>
+        </View>
+    )
+}
+
+const ClothingTags = ({tagsArray}) => {
+
+    //const tagsArray = ['Temp', 'Tags', 'Go', 'Here', 'Please', 'Replace']
+
+
+    // testing plz delete 
+    if (tagsArray.length === 0) tagsArray.push('i pushed this tag for sanity')
+
+    const IndividualTags = ({title}) => {
+        return (
+            <View style={[{
+                width: 'auto',
+                padding: 3,
+                margin: 3,
+                height: 'auto',
+                justifyContent: 'center',
+                alignItems:'center',
+                borderRadius: 5,
+            }, GlobalStyles.shadowLight, GlobalStyles.bgColorMain]}>
+                <Text style={[{fontWeight: 'bold', color: 'white'}, GlobalStyles.h6, ]}>{title}</Text>
+            </View>
+        )
+    }
+
+    return (
+        <View style={{width: '100%', height: 'auto'}}>
+            <View style={{
+                marginLeft: 10,
+                marginRight: 10,
+                width: 'auto'
+            }}>
+                <View style={{
+                    width: '100%',
+                    height: 'auto',
+                    flexDirection: 'row',
+                    justifyContent: 'flex-start',
+                    alignItems: 'center',
+                    flexWrap: 'wrap'
+                }}>
+                    {tagsArray.map(tag => (
+                        <IndividualTags title={tag}/>
+                    ))}
+                </View>
+            </View>
+        </View>
+    )
+}
+
 
 export const ViewIndividualPiece = ({ route }) => {
 
@@ -263,6 +407,8 @@ export const ViewIndividualPiece = ({ route }) => {
 
     const [imageHeight, setImageHeight] = useState(350);
 
+ 
+
     const navigation = useNavigation();
     const dispatch = useDispatch();
 
@@ -274,14 +420,8 @@ export const ViewIndividualPiece = ({ route }) => {
     
 
     const handleScroll = (event) => {
-
         let numWereUsing = event.nativeEvent.contentOffset.y
-
-      
-       
-
         let toChangeHeight = maxImageHeight - (numWereUsing);
-
         if (toChangeHeight >= minImageHieght && toChangeHeight <= maxImageHeight){
             setImageHeight(toChangeHeight);
         }
@@ -290,7 +430,29 @@ export const ViewIndividualPiece = ({ route }) => {
         } else {
             setImageHeight(maxImageHeight)
         }
+    }
 
+    // hook whether image is small
+    const [imageIsSmall, setImageIsSmall] = useState(false)
+
+    // value we use to animate the Animated.View
+    const [imageWidth] = useState(new Animated.Value(1))
+
+    //makes image small
+    const onSwipeUp = (gestureState) => {
+        setImageIsSmall(true);
+        Animated.timing(imageWidth, {
+            toValue: Number(false),
+            duration: 250
+        }).start();
+    }
+    //makes image big
+    const onSwipeDown = (gestureState) => {
+        setImageIsSmall(false);
+        Animated.timing(imageWidth, {
+            toValue: Number(true),
+            duration: 250
+        }).start();
     }
 
     return (
@@ -300,67 +462,154 @@ export const ViewIndividualPiece = ({ route }) => {
             {/* <ScreenHeader title={item.clothingName}/> */}
             <TopNavScreenHeader title={item.clothingName} exitDestination={'CLOSETSCREEN'}/>
             
-            <View style={[{
-                justifyContent: 'flex-start',
-                alignItems: 'flex-start',
-                position: 'relative',
-                width: '100%',
-                flexDirection: 'column',
-                zIndex: 2,
-            }]}>
-                <View style={[{
-                height: 'auto',
-                position: 'absolute',
-                width: 'auto',
-                margin: 10,
-                flexDirection: 'row'}, 
-                GlobalStyles.shadowLight]} >
-                    <Image ref={image} 
-                    source={src} 
-                    style={{
-                        height: imageHeight,
-                        
-                        aspectRatio: 1,
-                        borderRadius: 10
-                    }} />
-                    <View style={{
-                        height: imageHeight,
-                        aspectRatio: 1,
-                        justifyContent: 'center',
-                        alignItems: 'center'
-                    }}
-                    >
-                        <ButtonsStyleTwo imageHeight={imageHeight} item={item} setModalVisible={setModalVisible}/>
-                    </View>
-                </View>
-                {/* <View 
-                style={[{
-                    height: 1, 
-                    width: '100%', 
-                    top: imageHeight + 20}
-                    , GlobalStyles.bgHint]}></View> */}
-            </View>
+            <GestureRecognizer
+            onSwipeUp={state => onSwipeUp()}
+            onSwipeDown={state => onSwipeDown()}
+            >
             
-            <View style={{height: minImageHieght + 20}}></View>
+                {/* This is the image, wrapped in an Animated.View to make it big/small */}
+                <View style={{
+                    justifyContent: 'flex-start',
+                    flexDirection: 'row',
+                    margin: 5
+                }}>
+                    <Animated.View style={{
+                        width: imageWidth.interpolate({
+                            inputRange: [0, 1],
+                            outputRange: ['50%', '100%']
+                        })
+                    }}>
+                        <View style={{
+                            margin: 5,
+                            width: 'auto',
+                            borderRadius: 5
+                        }}>
+                            <Image ref={image} //I think this is useless here, delete later
+                                source={src} 
+                                style={{
+                                    width: '100%',//'imageHeight',
+                                    aspectRatio: 1,
+                                    borderRadius: 5
+                                }} />
+                        </View>
+                    </Animated.View>
+                    <Animated.View style={{
+                        width: imageWidth.interpolate({
+                            inputRange: [0, 1],
+                            outputRange: ['50%', '100%']
+                        })
+                    }}>
+                        <View style={{
+                            margin: 5,
+                            width: 'auto',
+                            borderRadius: 5
+                        }}>
+                            <View style={{
+                                width: '100%',
+                                height: 'auto',
+                                flexDirection: 'row',
+                                flexWrap: 'wrap',
+                                justifyContent: 'center',
+                                alignItems: 'center'
+                            }}>
+                                <View 
+                                style={[{
+                                    width: '50%', 
+                                    aspectRatio: 1, 
+                                    backgroundColor: '#f2f2f2',
+                                    borderRadius: 5}]}></View>
+                                <View 
+                                style={[{
+                                    width: '50%', 
+                                    aspectRatio: 1, 
+                                }]}>
+                                    <View style={[{
+                                        width: 'auto',
+                                        height: 'auto',
+                                        marginLeft: 5,
+                                        marginBottom: 5,
+                                        borderRadius: 5,
+                                        backgroundColor: '#f2f2f2'
+                                    }]}>
+                                        <View style={{
+                                            height: '100%',
+                                            width: '100%'
+                                        }}>
+
+                                        </View>
+                                    </View>
+                                </View>
+                                <View 
+                                style={[{
+                                    width: '50%', 
+                                    aspectRatio: 1, 
+                                }]}>
+                                    <View style={[{
+                                        width: 'auto',
+                                        height: 'auto',
+                                        marginTop: 5,
+                                        marginRight: 5,
+                                        borderRadius: 5,
+                                        borderColor: 'black',
+                                        borderWidth: 1,
+                                        borderStyle: 'solid',
+                                    }]}>
+                                        <View style={{
+                                            height: '100%',
+                                            width: '100%'
+                                        }}>
+
+                                        </View>
+                                    </View>
+                                </View>
+                                <View 
+                                style={[{
+                                    width: '50%', 
+                                    aspectRatio: 1, 
+                                    borderColor: '#f2f2f2',
+                                    borderWidth: 1,
+                                    borderStyle: 'solid',
+                                    borderRadius: 5}]}></View>
+                                
+                            </View>
+                        </View>
+                    </Animated.View>
+                </View>
+                    
+            </GestureRecognizer>
             
             <YesNoModal modalVisible={modalVisible} setModalVisible={setModalVisible} onPressFunc={() => ConfirmDelete()}/>
             
-            <ScrollView style={{
+
+            <ThreeAttributeHeader brandsLength={item.brandName.length} price={item.price} pieceType={'t-shirt'} color={item.color}/>
+            
+            <View style={{
+                marginLeft: 10,
+                marginTop: -10,
+            }}>
+                <Text style={
+                    [GlobalStyles.h6, {fontWeight :'bold'}]
+                }>
+                    {`${item.timesWorn && item.timesWorn !== 0 ? `Worn ${item.timesWorn}x` : 'Never worn. Try it on!'}`}
+                </Text>
+            </View>
+            
+            <ClothingTags tagsArray={item.tags}/>
+            <BrandTags brandsArray={item.brandName}/>
+            {/* <ScrollView style={{
                 
                 zIndex: 0
             }} 
-            scrollEventThrottle={scrollEventThrottleValue}
-            onScroll={handleScroll} /** Tentative... this shit is probably so innefficient */>
-                    {/* DONT DELETE THIS */}
-                    <View style={{height: 180, }} ></View>
-                    {/* DONT DELETE THIS */}
+            //scrollEventThrottle={scrollEventThrottleValue}
+            //onScroll={handleScroll}
+            >
                     <ItemStats item={item}/>
                     <ItemTags item={item}/>
 
                     <View style={{height: 50}}></View>
 
                     
-            </ScrollView>
+            </ScrollView> */}
             
             
             
