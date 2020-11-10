@@ -45,7 +45,7 @@ const outfitsSlice = createSlice({
                 //the outfits store
                 let date = new Date();
                 date = date.toDateString();
-                action.payload.date = date;
+                action.payload.item.date = date;
 
                 /** the object we push into the outfitsArray SHOULD (and hopefully will) look like this:
                  *  {
@@ -68,7 +68,7 @@ const outfitsSlice = createSlice({
                  //assign to read-only property' error
                 // state.outfitsArray.push(action.payload);
                 //this did not doa nything lmao
-                state.outfitsArray = [...state.outfitsArray, action.payload]
+                state.outfitsArray = [...state.outfitsArray, action.payload.item]
 
 
                 //turns out outfitArr is an object... holding the 4 ararys... kill me
@@ -86,8 +86,11 @@ const outfitsSlice = createSlice({
             prepare( outfitArr, _id ) {
                 return {
                     payload: {
-                        outfitArr,
-                        _id
+                        item: {
+                            outfitArr,
+                            _id
+                        }
+                        
                     }
                 }
             }
@@ -149,7 +152,7 @@ const outfitsSlice = createSlice({
         },
         outfitFavoriteToggled: {
             reducer(state, action) {
-                let itemToEdit = state.outfitsArray.find(outfitObject => outfitObject._id = action.payload._id)
+                let itemToEdit = state.outfitsArray.find(outfitObject => outfitObject._id === action.payload._id)
                 itemToEdit.favorite = !itemToEdit.favorite;
             },
             prepare (outfitId) {

@@ -108,6 +108,112 @@ const ButtonsStyleTwo = ({imageHeight, item, setModalVisible}) => {
     )
 }
 
+
+const TopButtonsStyleTwo = ({item, setModalVisible}) => {
+
+
+    const [isFavorited, setIsFavorited] = useState(item.favorite)
+    const dispatch = useDispatch();
+    const navigation = useNavigation();
+
+
+    const ToggleFavorite = () => {
+        setIsFavorited(!isFavorited)
+        //toggles favorite
+        dispatch(itemFavoriteToggled({
+            clothingType: item.clothingType,
+            _id: item._id
+        }));
+    }
+    
+
+    const EditOutfit = () => {
+
+    }
+
+    const DeleteOutfitButtonPressed = () => {
+        Vibration.vibrate(400)
+        setModalVisible(true)
+        console.log("in deltetOutfitButtonPressed")
+    }
+
+
+    const IndividualThirdButton = ({title, icon, onPressFunc}) => {
+        return (
+            <View style={{
+                height: '33.3%',
+                width: '100%'
+            }}>
+                <TouchableOpacity
+                onPress={() => onPressFunc()}>
+                    <View style={[{
+                        margin: 5,
+                        height: 'auto',
+                        width: 'auto',
+                        borderRadius: 5,
+                        backgroundColor: 'white'
+                    }, GlobalStyles.shadowLightest]}>
+                        <View style={{
+                            height: '100%',
+                            width: '100%',
+                            justifyContent: 'space-between',
+                            flexDirection: 'row',
+                            alignItems: 'center'
+                        }}>
+                            <View style={{
+                                height: '100%',
+                                aspectRatio: 1,
+                                marginLeft: 5,
+                                justifyContent: 'center',
+                                alignItems: 'center'
+                            }}>
+                                {icon}
+                            </View>
+                            <View style={{
+                                marginRight: 10
+                            }}>  
+                                <Text style={[{
+                                    fontWeight: 'bold'
+                                }, GlobalStyles.h4]}>
+                                    {title}
+                                </Text>
+                            </View>
+                        </View>
+                    </View>
+                </TouchableOpacity>
+            </View>
+        )
+    }
+    return (
+        <View style={{
+            width: 'auto',
+        }}>
+            <View style={{
+                width: '100%',
+                aspectRatio: 1,
+                justifyContent: 'center',
+                alignItems: 'center',
+                flexDirection: 'column'
+            }}>
+                <IndividualThirdButton 
+                    title={'Favorite'} 
+                    icon={<HeartIcon 
+                        style={[isFavorited ? {color: 'red'} : GlobalStyles.colorMain]} 
+                        size={'35%'} />}
+                    onPressFunc={() => ToggleFavorite()}/>
+                <IndividualThirdButton 
+                    title={'Edit'} 
+                    icon={<EditIcon style={[GlobalStyles.colorMain]} size={'35%'} />}
+                    onPressFunc={() => EditOutfit()}/>
+                <IndividualThirdButton 
+                    title={'Delete'} 
+                    icon={<DeleteIcon style={[GlobalStyles.colorMain]} size={'35%'} />}
+                    onPressFunc={() => DeleteOutfitButtonPressed()}/>
+            </View>
+        </View>
+    )
+}
+
 const ThreeAttributeHeader = ({pieceType, brandsLength, price, description, color}) => {
 
 
@@ -365,80 +471,7 @@ export const ViewIndividualPiece = ({ route }) => {
                             outputRange: ['50%', '100%']
                         })
                     }}>
-                        <View style={{
-                            margin: 5,
-                            width: 'auto',
-                            borderRadius: 5
-                        }}>
-                            <View style={{
-                                width: '100%',
-                                height: 'auto',
-                                flexDirection: 'row',
-                                flexWrap: 'wrap',
-                                justifyContent: 'center',
-                                alignItems: 'center'
-                            }}>
-                                <View 
-                                style={[{
-                                    width: '50%', 
-                                    aspectRatio: 1, 
-                                    backgroundColor: '#f2f2f2',
-                                    borderRadius: 5}]}></View>
-                                <View 
-                                style={[{
-                                    width: '50%', 
-                                    aspectRatio: 1, 
-                                }]}>
-                                    <View style={[{
-                                        width: 'auto',
-                                        height: 'auto',
-                                        marginLeft: 5,
-                                        marginBottom: 5,
-                                        borderRadius: 5,
-                                        backgroundColor: '#f2f2f2'
-                                    }]}>
-                                        <View style={{
-                                            height: '100%',
-                                            width: '100%'
-                                        }}>
-
-                                        </View>
-                                    </View>
-                                </View>
-                                <View 
-                                style={[{
-                                    width: '50%', 
-                                    aspectRatio: 1, 
-                                }]}>
-                                    <View style={[{
-                                        width: 'auto',
-                                        height: 'auto',
-                                        marginTop: 5,
-                                        marginRight: 5,
-                                        borderRadius: 5,
-                                        borderColor: 'black',
-                                        borderWidth: 1,
-                                        borderStyle: 'solid',
-                                    }]}>
-                                        <View style={{
-                                            height: '100%',
-                                            width: '100%'
-                                        }}>
-
-                                        </View>
-                                    </View>
-                                </View>
-                                <View 
-                                style={[{
-                                    width: '50%', 
-                                    aspectRatio: 1, 
-                                    borderColor: '#f2f2f2',
-                                    borderWidth: 1,
-                                    borderStyle: 'solid',
-                                    borderRadius: 5}]}></View>
-                                
-                            </View>
-                        </View>
+                        <TopButtonsStyleTwo item={item} setModalVisible={setModalVisible}/>
                     </Animated.View>
                 </View>
                     

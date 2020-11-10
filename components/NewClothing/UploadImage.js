@@ -1,5 +1,12 @@
 import React, {useState, useEffect} from 'react'
-import { TouchableOpacity, StyleSheet, ScrollView, View, Image, Text, } from 'react-native'
+import { 
+    TouchableOpacity, 
+    StyleSheet, 
+    ScrollView, 
+    View, 
+    Image, 
+    Text,
+    ActivityIndicator } from 'react-native'
 // import ImagePicker from 'react-native-image-picker';
 import * as ImagePicker from 'expo-image-picker';
 import axios from 'axios'
@@ -87,6 +94,8 @@ export const UploadImage = () => {
     const [imgurUrl, setImgurUrl] = useState([]);
     const [imageHeight, setImageHeight] = useState(1);
     const [imageWidth, setImageWidth] = useState(1);
+    const [awaitingResponse, setAwaitingResponse] = useState(false)
+    const [uploadSuccess, setUploadSuccess] = useState(false)
     var scaledWidth, scaledHeight;
 
     
@@ -108,7 +117,9 @@ export const UploadImage = () => {
     useEffect(() => {
         (async () => {
           if (Platform.OS !== 'web') {
-            const { status } = await ImagePicker.requestCameraRollPermissionsAsync();
+            //const { status } = await ImagePicker.requestCameraRollPermissionsAsync();
+            const { status } = await ImagePicker.requestCameraPermissionsAsync();
+
             if (status !== 'granted') {
               alert('Sorry, we need camera roll permissions to make this work!');
             }
@@ -118,9 +129,10 @@ export const UploadImage = () => {
 
 
     const pickImage = async () => {
-        let result = await ImagePicker.launchImageLibraryAsync({
+        // let result = await ImagePicker.launchImageLibraryAsync({
+        let result = await ImagePicker.launchCameraAsync({
           mediaTypes: ImagePicker.MediaTypeOptions.All,
-          allowsEditing: true,
+          allowsEditing: false,
           aspect: [4, 3],
           quality: 1,
           base64: true
@@ -139,6 +151,13 @@ export const UploadImage = () => {
     const pushImages = () => {
         console.log(imgurUrl)
         dispatch(clothingInProgressAttributeAdded({images: imgurUrl}))
+    }
+
+    const sendRequestAndWait = async () => {
+        setAwaitingResponse(true)
+        await sendRequest(fileData, setImgurUrl, setImageHeight, setImageWidth, imgurUrl)
+        setAwaitingResponse(false)
+        setUploadSuccess(true)
     }
     
     return (
@@ -198,11 +217,14 @@ export const UploadImage = () => {
                         </ScrollView>
                     </View>
                     <MediumButton 
-                        title={`Upload to Imgur`}
-                        onPressFunc={() => sendRequest(fileData, setImgurUrl, setImageHeight, setImageWidth, imgurUrl)}
-                        disabled={fileUri.length === 0}
-                        icon={<PlusIcon style={{marginRight: 15, marginLeft: 5, color: fileUri.length === 3 ? 'lightgray' : 'black'}} name="plus" size={30} 
-                    />}/>
+                        title={awaitingResponse ? 'Uploading...' : `Upload to Imgur`}
+                        onPressFunc={async () => sendRequestAndWait()}
+                        disabled={fileUri.length === 0 || awaitingResponse || uploadSuccess}
+                        icon={imgurUrl.length === 0 || !awaitingResponse ? 
+                        <PlusIcon style={{marginRight: 15, marginLeft: 5, 
+                            color: imgurUrl.length !== 0 || fileUri.length === 3 || awaitingResponse ? 'lightgray' : 'black'}} name="plus" size={30} 
+                    /> : 
+                    <View style={{marginRight: 15}}><ActivityIndicator size="small" color="lightgray"/></View>}/>
                     <Text category='h3' style={{
                         fontWeight: 'bold'
                     }}>{imgurUrl}</Text>

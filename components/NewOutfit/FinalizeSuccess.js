@@ -50,7 +50,7 @@ export const FinalizeSuccess = ({ finalizedOutfit }) => {
                             justifyContent: 'center',
                             alignItems: 'center'
                         }}>
-                            <Text style={{fontSize: 50, fontWeight: 'bold'}}>Fuck u</Text>
+                            <Text style={{fontSize: 50, fontWeight: 'bold'}}>success lol</Text>
                             {/* <TouchableOpacity
                                 style={{
                                     borderRadius: 125,

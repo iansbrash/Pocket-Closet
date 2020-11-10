@@ -44,341 +44,9 @@ const desiredIconSizeTwo = 60;
 
 
 
-const ButtonsStyleTwo = ({imageHeight, outfitObject, setModalVisible}) => {
-
-    const [favorited, setFavorited] = useState(outfitObject.favorite)
-    const dispatch = useDispatch();
-
-    const FourButton = ({icon, onPressFunc}) => {
-        return (
-            <View style={{
-                width: '50%',
-                height: '50%',
-                justifyContent: 'center',
-                alignItems: 'center'
-            }}>
-                <View style={{margin: 5, height: 'auto', width: 'auto'}}>
-                    <TouchableOpacity style={[{
-                        aspectRatio: 1,
-                        borderRadius: 10,
-                        height: '100%',
-                        width: '100%',
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        backgroundColor: 'white'
-                    }, GlobalStyles.shadowLight]}
-                    onPress={() => onPressFunc()}>
-                        {icon}
-                    </TouchableOpacity>
-                </View>
-            </View>
-            
-        )
-    }
-
-    const FavoriteFunc = () => {
-        setFavorited(!favorited)
-        //toggles favorite
-        dispatch(itemFavoriteToggled({
-            clothingType: item.clothingType,
-            _id: item._id
-        }));
-    }
-    const DeleteFunc = () => {
-        Vibration.vibrate(400)
-        setModalVisible(true);
-    }
-    const EditFunc = () => {
-
-    }
-    
-    return (
-        <View style={[{
-            //backgroundColor: 'white',
-            justifyContent: 'center',
-            alignItems: 'center',
-            flexDirection: 'row',
-            flexWrap: 'wrap',
-            height: '100%',
-            borderRadius: 10,
-            width: '100%',
-            opacity: 1 - (imageHeight - minImageHieght) / minImageHieght
-        }, ]}>
-            <FourButton 
-            icon={<HeartIcon style={favorited ? {color: 'red'} : {color: 'black'}} size={(imageHeight * desiredIconSizeTwo) / minImageHieght}/>}
-            onPressFunc={FavoriteFunc}/>
-
-            <FourButton 
-            icon={<EditIcon size={(imageHeight * desiredIconSizeTwo) / minImageHieght}/>}
-            onPressFunc={EditFunc}/>
-
-            <FourButton 
-            icon={<ShareIcon size={(imageHeight * desiredIconSizeTwo) / minImageHieght}/>}
-            onPressFunc={null}/>
-
-            <FourButton 
-            icon={<DeleteIcon size={(imageHeight * desiredIconSizeTwo) / minImageHieght}/>}
-            onPressFunc={DeleteFunc}/>
-
-
-        </View>
-    )
-}
-
-const ClothingDisplayStyleOne = ({outfitObject}) => {
-
-    const dummySrc = { uri: 'https://randomuser.me/api/portraits/men/1.jpg' }
-    const navigation = useNavigation();
-
-    return (
-        
-        <View>
-            {Object.keys(outfitObject.outfitArr).map(key => (
-                outfitObject.outfitArr[key].length !== 0 ?
-                <View style={{
-                    width: '100%'
-                }}>
-                    <View 
-                        style={{
-                            justifyContent: 'flex-start',
-                            alignItems: 'center',
-                            flexWrap: 'wrap',
-                            flexDirection: 'row',
-                            width: 'auto',
-                            margin: 5
-                        }}>
-                            <View style={[{
-                                position: 'absolute',
-                                width: 'auto',
-                                height: 'auto',
-                                borderRadius: 10,
-                                top: 0,
-                                right: 0,
-                                zIndex: 3,
-                                padding: 5
-                            }, GlobalStyles.bgColorMain]}>
-                                <Text style={[{color: 'white', fontWeight: 'bold'}, GlobalStyles.h5]}>
-                                    {outfitObject.outfitArr[key][0].clothingType}
-                                </Text>
-                            </View>
-                            
-                        {outfitObject.outfitArr[key].map(clothingObject => (
-                            <View style={{
-                                width: '33.3%',
-                                aspectRatio: 1
-                            }}>
-                                <View style={{
-                                    height: '100%',
-                                    width: '100%'
-                                }}>
-                                    <View style={[{
-                                        flex: 1, // IS THIS BEST PRACTICE??? IS THIS SPAGHETTI CODE???
-                                        margin: 5,
-                                        borderRadius: 10,
-                                        backgroundColor: 'white'
-                                    }, GlobalStyles.shadowLight]}>
-                                        <TouchableOpacity
-                                        onPress={() => navigation.navigate("VIEWINDIVIDUALPIECE", {item: clothingObject})}>
-                                            <Image source={
-                                                clothingObject.images.length !== 0 ?
-                                                {uri: clothingObject.images[0]} :
-                                                dummySrc}
-                                            style={{height: '100%', width: '100%', borderRadius: 10}}/>
-                                        </TouchableOpacity>
-                                        
-                                    </View>
-                                </View>
-                            </View>
-                        ))}
-                    </View>
-                </View>
-                
-                : null
-            ))}
-
-        </View>
-            
-        
-    )
-}
-
-const DisplayClothingTypeTwo = ({outfitObject}) => {
-
-    const navigation = useNavigation();
-    const dummySrc = { uri: 'https://randomuser.me/api/portraits/men/1.jpg' }
-    const combinedClothingArray = [
-        ...outfitObject.outfitArr.topsArray,
-        ...outfitObject.outfitArr.bottomsArray,
-        ...outfitObject.outfitArr.footwearArray,
-        ...outfitObject.outfitArr.otherArray
-    ]
-
-    const renderItem = ({item}) => {
-        const clothingObject = item;
-        return (
-            <View style={{
-                width: '33.3%',
-                aspectRatio: 1
-            }}>
-                <View style={{
-                    height: '100%',
-                    width: '100%'
-                }}>
-                    <View style={[{
-                        flex: 1, // IS THIS BEST PRACTICE??? IS THIS SPAGHETTI CODE???
-                        margin: 5,
-                        borderRadius: 10,
-                        backgroundColor: 'white'
-                    }, GlobalStyles.shadowLight]}>
-                        <TouchableOpacity
-                        onPress={() => navigation.navigate("VIEWINDIVIDUALPIECE", {item: clothingObject})}>
-                            <Image source={
-                                clothingObject.images.length !== 0 ?
-                                {uri: clothingObject.images[0]} :
-                                dummySrc}
-                            style={{height: '100%', width: '100%', borderRadius: 10}}/>
-                        </TouchableOpacity>
-                        
-                    </View>
-                </View>
-            </View>
-        )
-    }
-
-
-    return (
-        <View style={{
-            width: '100%',
-        }}>
-            <View 
-                style={{
-                    justifyContent: 'flex-start',
-                    alignItems: 'flex-start',
-                    flexWrap: 'wrap',
-                    flexDirection: 'row',
-                    width: 'auto',
-                    aspectRatio: 1.50
-                }}>
-                    <View style={[{
-                        position: 'absolute',
-                        width: 'auto',
-                        height: 'auto',
-                        borderRadius: 10,
-                        top: 0,
-                        right: 0,
-                        zIndex: 3,
-                        padding: 5
-                    }, GlobalStyles.bgColorMain]}>
-                        <Text style={[{color: 'white', fontWeight: 'bold'}, GlobalStyles.h5]}>
-                            {'asd'}
-                        </Text>
-                    </View>
-                    <ScrollView
-                    style={{
-                        height: '100%',
-                        padding: 5
-                    }}
-                    horizontal={true}>
-                        <View style={{
-                            height: '100%',
-                            justifyContent: 'flex-start',
-                            alignItems: 'flex-start',
-                            flexWrap: 'wrap',
-                            flexDirection: 'column',
-                            width: '100%'
-                        }}>
-                            {combinedClothingArray.map(clothingObject => (
-                                <View style={{
-                                    //width: '33.3%',
-                                    height: '50%',
-                                    aspectRatio: 1,
-                                    
-                                    backgroundColor: 'pink'
-                                }}>
-                                    <View style={{
-                                        aspectRatio: 1,
-                                    }}>
-                                        <View style={[{
-                                            flex: 1, // IS THIS BEST PRACTICE??? IS THIS SPAGHETTI CODE???
-                                            margin: 5,
-                                            borderRadius: 10,
-                                            backgroundColor: 'white'
-                                        }, GlobalStyles.shadowLight]}>
-                                            <TouchableOpacity
-                                            onPress={() => navigation.navigate("VIEWINDIVIDUALPIECE", {item: clothingObject})}>
-                                                <Image source={
-                                                    clothingObject.images.length !== 0 ?
-                                                    {uri: clothingObject.images[0]} :
-                                                    dummySrc}
-                                                style={{height: '100%', width: '100%', borderRadius: 10}}/>
-                                            </TouchableOpacity>
-                                            
-                                        </View>
-                                    </View>
-                                </View>
-                            ))}
-                        </View>
-                    </ScrollView>
-                    
-                    
-
-                    
-            </View>
-        </View>
-    )
-}
-
-
-const DisplayClothingTypeThree = ({outfitObject}) => {
-
-
-    const [type, setType] = useState('')
-
-    const ChooseClothingTypeButton = ({clothingType}) => {
-
-        const isSelected = type === clothingType;
-
-        return (
-            <TouchableOpacity style={[{
-                margin: 5,
-                width: 'auto',
-                height: 'auto',
-                borderRadius: 5,
-                // borderWidth: 1,
-                // borderColor: 'black',
-                // borderStyle: 'solid'
-            }, GlobalStyles.shadowLight, isSelected ? GlobalStyles.bgColorMain : {backgroundColor: 'white'}]}
-            onPress={() => setType(clothingType)}>
-                <View style={[{width: '100%', height: 5, borderTopLeftRadius: 5, borderTopRightRadius: 5}, isSelected ? {backgroundColor: 'white'} : GlobalStyles.bgColorMain]}></View>
-                <Text style={[isSelected ? {color: 'white'} : GlobalStyles.colorMain, GlobalStyles.h5, {fontWeight: 'bold', padding: 5}]}>
-                    {clothingType}
-                </Text>
-            </TouchableOpacity >
-        )
-    }
-
-    return (
-        <View style={{width: '100%'}}>
-            <Text style={[GlobalStyles.h3, {fontWeight: 'bold', marginLeft: 5}]}>Tap to view</Text>
-            <View style={{
-                flexDirection: 'row',
-                justifyContent: 'center',
-                alignItems:'center',
-                height: 'auto',
-                width: '100%'
-            }}>
-                <ChooseClothingTypeButton clothingType={'tops'}/>
-                <ChooseClothingTypeButton clothingType={'bottoms'}/>
-                <ChooseClothingTypeButton clothingType={'footwear'}/>
-                <ChooseClothingTypeButton clothingType={'other'}/>
-            </View>
-            
-
-        </View>
-    )
-}
-
 const DisplayClothingTypeFour = ({fetchedOutfitObject, outfitObject, icon}) => {
+
+
     const typesArray = useSelector(state => Object.keys(state.closet.typesOfClothing))
     const [type, setType] = useState('tops');
     const dummySrc = { uri: 'https://randomuser.me/api/portraits/men/1.jpg' }
@@ -387,16 +55,8 @@ const DisplayClothingTypeFour = ({fetchedOutfitObject, outfitObject, icon}) => {
     // const bottomsArray = useSelector(state => state.closet.closetObject.bottomsArray);
     // const footwearArray = useSelector(state => state.closet.closetObject.footwearArray);
     // const otherArray = useSelector(state => state.closet.closetObject.otherArray);
-    const closetObject = useSelector(state => state.closet.closetObject)
     const navigation = useNavigation();
 
-    //this is an array of all the IDs... not so useful
-    // const combinedClothingArray = [
-    //     ...outfitObject.outfitArr.topsArray,
-    //     ...outfitObject.outfitArr.bottomsArray,
-    //     ...outfitObject.outfitArr.footwearArray,
-    //     ...outfitObject.outfitArr.otherArray
-    // ]
 
     
 
@@ -542,6 +202,9 @@ const DisplayClothingTypeFour = ({fetchedOutfitObject, outfitObject, icon}) => {
 } 
 
 const OutfitDescription = ({fetchedOutfitObject, brandsLength, colorsLength}) => {
+
+
+
     const {footwearArray, bottomsArray, topsArray, otherArray} = fetchedOutfitObject.outfitArr;
     const piecesLength = footwearArray.length + 
     bottomsArray.length + 
@@ -649,6 +312,9 @@ const OutfitTags = ({fetchedOutfitObject}) => {
 }
 
 const BrandTags = ({fetchedOutfitObject, brandsSet}) => {
+
+
+
     const IndividualTags = ({title}) => {
         return (
             <View style={[{
@@ -760,6 +426,8 @@ const TopButtonsStyleOne = () => {
 }
 
 const TopButtonsStyleTwo = ({outfitObject, setModalVisible}) => {
+
+
     // the outfitObject is going to be the original
     // i.e. the arrays are filled with IDs, not clothingObjects
     const [isFavorited, setIsFavorited] = useState(outfitObject.favorite)
@@ -860,11 +528,13 @@ const TopButtonsStyleTwo = ({outfitObject, setModalVisible}) => {
 
 
 export const ViewIndividualOutfit = ({ route }) => {
+    
 
     const [modalVisible, setModalVisible] = useState(false);
     //const [previouslyIterated, setPreviouslyIterated] = useState(false)
 
     // we pass in the item we clicked on so we can display stats XDDDD
+    // dont think this is the problem to the readonly property problem
     const closetObject = useSelector(state => state.closet.closetObject);
 
     //we are just sweeping a problem under the rug here... was initially const but we sometimes edit it
@@ -880,10 +550,11 @@ export const ViewIndividualOutfit = ({ route }) => {
         footwearArray: [],
         otherArray: []
     })
+
     // this is so fked
     let fetchedOutfitObject = {
         date: outfitObject.date,
-        fitpic: outfitObject.fitpic ? outfitObject.fitpic : null,
+        fitpic: outfitObject.fitpic && outfitObject.fitpic !== '' ? outfitObject.fitpic : null,
         tags: outfitObject.tags ? outfitObject.tags : [],
         outfitArr: outfitArr //this is the hook we just made
     };
@@ -909,7 +580,7 @@ export const ViewIndividualOutfit = ({ route }) => {
         console.log(outfitArr)
         fetchedOutfitObject = {
             date: outfitObject.date,
-            fitpic: outfitObject.fitpic ? outfitObject.fitpic : null,
+            fitpic: outfitObject.fitpic ? outfitObject.fitpic : 'https://randomuser.me/api/portraits/men/1.jpg',
             tags: outfitObject.tags ? outfitObject.tags : [],
             outfitArr: outfitArr //this is the hook we just made
         };
@@ -919,11 +590,14 @@ export const ViewIndividualOutfit = ({ route }) => {
         //if (!previouslyIterated){
             //setPreviouslyIterated(true)
             // replaces fitpic image with stock image if it doesn't exist
-            if (!outfitObject.fitpic || outfitObject.fitpic === ''){
-                outfitObject.fitpic = 'https://randomuser.me/api/portraits/men/1.jpg'
-            } 
 
 
+            //waht the fuck
+            // if (!fetchedOutfitObject.fitpic || fetchedOutfitObject.fitpic === ''){
+            //     outfitObject.fitpic = 'https://randomuser.me/api/portraits/men/1.jpg'
+            // } 
+
+            
             //populates fetchedOutfitObject's outfitArr
             //i.e. it fills the arrays with clothingObjects, not _id's
             const outfitArrKeys = Object.keys(fetchedOutfitObject.outfitArr)
@@ -946,20 +620,18 @@ export const ViewIndividualOutfit = ({ route }) => {
             }
             //console.log(fetchedOutfitObject.outfitArr.topsArray)
 
+
             //gets the set of Brands... and the colors
             const fetchedOutfitObjectOutfitArrKeys = Object.keys(fetchedOutfitObject.outfitArr)
-            const nonStateBrandsSet = new Set();
-            const nonStateColorsSet = new Set();
+
+            //these used to be const... but we're adding to then... might be the solution to readonly problem
+            let nonStateBrandsSet = new Set();
+            let nonStateColorsSet = new Set();
             for (let i = 3; i >= 0; i--){
                 
 
                 for (let k = 0; k < fetchedOutfitObject.outfitArr[fetchedOutfitObjectOutfitArrKeys[i]].length; k++){
                     //console.log(`'xd' iteration ${k}`)
-
-                    //console.log('fetchedOutfitObject.outfitArr[fetchedOutfitObjectOutfitArrKeys[i]][k]:')
-                    //console.log(fetchedOutfitObject.outfitArr[fetchedOutfitObjectOutfitArrKeys[i]][k])
-
-                    //console.log(`Color: ${fetchedOutfitObject.outfitArr[fetchedOutfitObjectOutfitArrKeys[i]][k].color}`)
                     if (fetchedOutfitObject.outfitArr[fetchedOutfitObjectOutfitArrKeys[i]][k].color &&
                         fetchedOutfitObject.outfitArr[fetchedOutfitObjectOutfitArrKeys[i]][k].color !== ''){
                         nonStateColorsSet.add(fetchedOutfitObject.outfitArr[fetchedOutfitObjectOutfitArrKeys[i]][k].color)
@@ -977,6 +649,7 @@ export const ViewIndividualOutfit = ({ route }) => {
 
         
     }, [closetObject])
+
     
     // hook whether image is small
     const [imageIsSmall, setImageIsSmall] = useState(false)
@@ -984,14 +657,11 @@ export const ViewIndividualOutfit = ({ route }) => {
     // value we use to animate the Animated.View
     const [imageWidth] = useState(new Animated.Value(1))
     
-    
 
     const dummySrc = { uri: 'https://randomuser.me/api/portraits/men/1.jpg' }
     
 
-    
-
-    const image = useRef(null) //might be useless
+    // const image = useRef(null) //might be useless
     const navigation = useNavigation();
     const dispatch = useDispatch();
 
@@ -1024,7 +694,6 @@ export const ViewIndividualOutfit = ({ route }) => {
         }).start();
     }
 
-    
     
 
     return (
@@ -1063,8 +732,8 @@ export const ViewIndividualOutfit = ({ route }) => {
                             width: 'auto',
                             borderRadius: 5
                         }, GlobalStyles.shadowLightest]}>
-                            <Image ref={image} //I think this is useless here, delete later
-                                source={{uri: outfitObject.fitpic}} 
+                            <Image //ref={image} //I think this is useless here, delete later
+                                source={{uri: fetchedOutfitObject.fitpic}} 
                                 style={[{
                                     width: '100%',//'imageHeight',
                                     aspectRatio: 1,

@@ -193,7 +193,9 @@ const OutfitList = ({searchInput}) => {
             combinedClothingItemsArray = combinedClothingItemsArray.slice(0, 3) // should only include the first 3 terms
         }
 
-        const imageArrayFromIds = [];
+
+        //this used to be const but we are pushing to it
+        let imageArrayFromIds = [];
 
 
         //what is this spaghettii...
