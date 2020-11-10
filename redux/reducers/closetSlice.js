@@ -177,7 +177,6 @@ const closetSlice = createSlice({
 
                 let itemToEdit = state.closetObject[action.payload.clothingType.toLowerCase() + 'Array']
                 .find(clothingObj => clothingObj._id === action.payload._id);
-                console.log(itemToEdit); //SHIT WORKS
                 itemToEdit.favorite = !itemToEdit.favorite;
             }
         },
@@ -216,7 +215,6 @@ const closetSlice = createSlice({
         },
         sizeDeleted: {
             reducer (state, action) {
-
                 state.sizingObject[action.payload.sizeType] =
                 state.sizingObject[action.payload.sizeType].filter(sz => sz !== action.payload.sizeToDelete)
             }
@@ -259,36 +257,11 @@ const closetSlice = createSlice({
                 console.log(state.clothingPieceInProgress);
             }
         },
-        topAddedToCloset: {
-            reducer(state, action) {
-                console.log('fuck u')
-            }
-        }, bottomAddedToCloset: {
-            reducer(state, action) {
-                console.log('fuck u')
-            }
-        }, shoeAddedToCloset: {
-            reducer(state, action) {
-                console.log('fuck u')
-            }
-        }, accessoryAddedToCloset: {
-            reducer(state, action) {
-                console.log('fuck u')
-            }
-        }, outfitCreated: {
-            reducer(state, action) {
-                console.log('fuck u')
-            }
-        }
     },
 })
 
 export default closetSlice.reducer;
 export const { 
-    topAddedToCloset, 
-    bottomAddedToCloset, 
-    shoeAddedToCloset,
-    accessoryAddedToCloset,
     outfitCreated,
     clothingInProgressAttributeAdded ,
     clothingAddedToCloset,

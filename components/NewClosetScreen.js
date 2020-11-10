@@ -174,7 +174,7 @@ const OutfitList = ({searchInput}) => {
         let outfitArray = item.outfitArr;
 
 
-        console.log(item);
+        // console.log(item);
 
 
         //this is now one big list of IDs
@@ -217,7 +217,7 @@ const OutfitList = ({searchInput}) => {
             }
         }
 
-        console.log(combinedClothingItemsArray)
+        // console.log(combinedClothingItemsArray)
         
 
         const navigation = useNavigation();

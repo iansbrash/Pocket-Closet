@@ -11,154 +11,20 @@ import {
 } from 'react-native'
 import { useSelector, useDispatch} from 'react-redux' 
 import GestureRecognizer, {swipeDirections} from 'react-native-swipe-gestures';
-
-
-import { TopNav, TopNavScreenHeader } from './GlobalComponents/TopNav'
-import { ScreenHeader } from './GlobalComponents/ScreenHeader'
+import { TopNavScreenHeader } from './GlobalComponents/TopNav'
 import GlobalStyles from './GlobalComponents/GlobalStyles'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 import { HeartIcon, EditIcon, DeleteIcon, ShareIcon, CheckIcon, XIcon } from './GlobalComponents/GlobalIcons'
-import { Children } from 'react'
 import { itemFavoriteToggled, clothingDeletedFromCloset } from '../redux/reducers/closetSlice'
 import { useNavigation } from '@react-navigation/native'
 import { YesNoModal } from './GlobalComponents/GlobalModals'
+import { TogglableDrawer } from './GlobalComponents/GlobalDrawers'
 
 const windowWidth = Dimensions.get('window').width;
 //edit these instead of numbers in handleScroll
 const maxImageHeight = windowWidth - 20; //accounts for margins
 const minImageHieght = maxImageHeight / 2;
-const desiredIconSize = 40;
 const desiredIconSizeTwo = 60;
-const scrollEventThrottleValue = 16;
-
-
-
-
-const ItemStats = ({item}) => {
-
-
-    //const timesWorn = item.timesWorn;
-
-    const Stat = ({stat, value}) => {
-
-        if (!value) value = 'N/A'
-
-        return (
-            <View style={{
-                height: 'auto',
-                width: '100%'
-            }}>
-                <View style={{
-                    margin: 5,
-                    width: 'auto',
-                    height: 'auto',
-                    justifyContent: 'flex-start',
-                    alignItems: 'center',
-                    flexDirection: 'row',
-                    flexWrap: 'wrap'
-                }}>
-                    <Text style={[{fontWeight: 'bold'}, GlobalStyles.colorMain, GlobalStyles.h3, ]}>
-                        {`${stat}: `}
-                    </Text>
-                    <Text style={GlobalStyles.hint, GlobalStyles.h4}>
-                        {value}
-                    </Text>
-                </View>
-            </View>
-        )
-    }
-
-    const StatHolder = (props) => {
-        return (
-            <View style={{
-                margin: 5,
-                width: 'auto',
-                height: 'auto',
-                justifyContent: 'flex-start',
-                alignItems: 'center',
-            }}>
-                <View 
-                style={[{height: 10, borderTopLeftRadius: 10, borderTopRightRadius: 10, width: '100%'}, GlobalStyles.bgColorMain]}></View>
-                <View style={[{
-                    borderBottomRightRadius: 10,
-                    borderBottomLeftRadius: 10,
-                    width: '100%',
-                    height:'auto',
-                    backgroundColor: 'white'
-                }, GlobalStyles.shadowLight]}>
-                    {props.children}
-                </View>
-            </View>
-        )
-    }
-
-    return (
-        <View style={{
-            width: '100%',
-            height: 'auto',
-        }}>
-            <StatHolder>
-                <Stat stat={"Name"} value={item.clothingName} />
-                <Stat stat={"Type"} value={
-                    item.pieceType ? item.pieceType : item.clothingType} />
-                <Stat stat={"Color"} value={item.color} />
-                <Stat stat={"Brands"} value={item.brandName[0]} />
-                
-                
-                <Stat stat={"Description"} value={
-                    item.description
-                } />
-            </StatHolder>  
-            <View style={{height: 25}}></View>
-            <StatHolder>
-                <Stat stat={"Times Worn"} value={item.timesWorn} />
-                <Stat stat={"Price"} value={
-                    item.price
-                } />
-            </StatHolder> 
-            <View style={{height: 25}}></View>
-        </View>
-    )
-}
-
-const IndividualTag = ({tag}) => {
-    return (
-        <View style={[{
-            width: 'auto',
-            height: 'auto',
-            borderRadius: 5,
-            paddingLeft: 5,
-            paddingRight: 5,
-            margin: 5,
-            elevation: 3
-        }, GlobalStyles.bgColorMain]} >
-            <Text  status='control' style={[{fontWeight: 'bold', color: 'white', margin: 5}, GlobalStyles.h4]}>
-                {tag.toUpperCase()}
-            </Text>
-        </View>
-    )
-}
-
-const ItemTags = ({item}) => {
-
-    if (!item.tags) { return null}
-
-    return (
-        <View style={{
-            width: '100%',
-            height: 'auto',
-            flexDirection: 'row',
-            flexWrap: 'wrap',
-            justifyContent: 'flex-start',
-            alignItems: 'center',
-            //margin: 5
-        }}>
-            {item.tags.map((tag) => (
-                <IndividualTag tag={tag}/>
-            ))}
-        </View>
-    )
-}
 
 
 const ButtonsStyleTwo = ({imageHeight, item, setModalVisible}) => {
@@ -243,6 +109,24 @@ const ButtonsStyleTwo = ({imageHeight, item, setModalVisible}) => {
 }
 
 const ThreeAttributeHeader = ({pieceType, brandsLength, price, description, color}) => {
+
+
+    const ClothingDesc = () => {
+        return (
+            <View style={{
+                width: 'auto',
+                marginLeft: 10,
+                marginRight: 10,
+                marginTop: 0,
+                marginBottom: 10
+            }}>
+                <Text style={[GlobalStyles.lighterHint, GlobalStyles.h5,]}>
+                    {description && description !== '' ? description : 'No description. No description. No description. No description. No description. No description. No description.'}
+                </Text> 
+            </View>
+           
+        )
+    }
     return (
         <View style={{
             width: '100%',
@@ -269,33 +153,14 @@ const ThreeAttributeHeader = ({pieceType, brandsLength, price, description, colo
                     {`$${price}`} 
                 </Text>
             </View>
-            <View style={{
-                width: 'auto',
-                marginLeft: 10,
-                marginRight: 10,
-                marginTop: 0,
-                marginBottom: 10
-            }}>
-                <Text style={[GlobalStyles.lighterHint, GlobalStyles.h5]}>
-                    {description && description !== '' ? description : 'No description.'}
-                </Text>
-            </View>
+            <TogglableDrawer minHeight={60}>
+                <ClothingDesc />
+            </TogglableDrawer>
         </View>
     )
 }
 
 const BrandTags = ({brandsArray}) => {
-    //const brandsArray = ['Supreme', 'Guess', 'American Eagle', 'Nike', 'Jordan', 'Please', 'Change', ]
-    //const [brandsSet, setBrandsSet] = useState(new Set())
-
-    //const nonStateSet = new Set();
-
-    // called to create the set. stops re rendering
-    //const fetchedOutfitObjectOutfitArrKeys = Object.keys(fetchedOutfitObject.outfitArr)
-    
-        
-    //console.log(`nonStateSet.size: ${nonStateSet.size}`)
-
 
     const IndividualTags = ({title}) => {
         return (
@@ -315,24 +180,25 @@ const BrandTags = ({brandsArray}) => {
     }
 
     return (
-        <View style={{width: '100%', height: 'auto'}}>
-            <View style={{
-                marginLeft: 10,
-                marginRight: 10,
-                width: 'auto'
-            }}>
+        <TogglableDrawer minHeight={88}>
+            <View style={{width: '100%', height: 'auto'}}>
                 <View style={{
-                    width: '100%',
-                    height: 'auto',
-                    flexDirection: 'row',
-                    justifyContent: 'flex-start',
-                    alignItems: 'center',
-                    flexWrap: 'wrap'
+                    width: 'auto'
                 }}>
-                    {brandsArray.map(tag => <IndividualTags title={tag}/>)}
+                    <View style={{
+                        width: '100%',
+                        height: 'auto',
+                        flexDirection: 'row',
+                        justifyContent: 'flex-start',
+                        alignItems: 'center',
+                        flexWrap: 'wrap'
+                    }}>
+                        {brandsArray.map(tag => <IndividualTags title={tag}/>)}
+                    </View>
                 </View>
             </View>
-        </View>
+        </TogglableDrawer>
+        
     )
 }
 
@@ -361,26 +227,26 @@ const ClothingTags = ({tagsArray}) => {
     }
 
     return (
-        <View style={{width: '100%', height: 'auto'}}>
-            <View style={{
-                marginLeft: 10,
-                marginRight: 10,
-                width: 'auto'
-            }}>
+        <TogglableDrawer minHeight={35}>
+            <View style={{width: '100%', height: 'auto'}}>
                 <View style={{
-                    width: '100%',
-                    height: 'auto',
-                    flexDirection: 'row',
-                    justifyContent: 'flex-start',
-                    alignItems: 'center',
-                    flexWrap: 'wrap'
+                    width: 'auto'
                 }}>
-                    {tagsArray.map(tag => (
-                        <IndividualTags title={tag}/>
-                    ))}
+                    <View style={{
+                        width: '100%',
+                        height: 'auto',
+                        flexDirection: 'row',
+                        justifyContent: 'flex-start',
+                        alignItems: 'center',
+                        flexWrap: 'wrap'
+                    }}>
+                        {tagsArray.map(tag => (
+                            <IndividualTags title={tag}/>
+                        ))}
+                    </View>
                 </View>
             </View>
-        </View>
+        </TogglableDrawer>
     )
 }
 
@@ -585,7 +451,6 @@ export const ViewIndividualPiece = ({ route }) => {
             
             <View style={{
                 marginLeft: 10,
-                marginTop: -10,
             }}>
                 <Text style={
                     [GlobalStyles.h6, {fontWeight :'bold'}]
@@ -596,20 +461,13 @@ export const ViewIndividualPiece = ({ route }) => {
             
             <ClothingTags tagsArray={item.tags}/>
             <BrandTags brandsArray={item.brandName}/>
-            {/* <ScrollView style={{
-                
-                zIndex: 0
-            }} 
-            //scrollEventThrottle={scrollEventThrottleValue}
-            //onScroll={handleScroll}
-            >
-                    <ItemStats item={item}/>
-                    <ItemTags item={item}/>
+            <View style={{
+                backgroundColor: 'white',
+                width: '100%',
+                height: 300
+            }}>
 
-                    <View style={{height: 50}}></View>
-
-                    
-            </ScrollView> */}
+            </View>
             
             
             

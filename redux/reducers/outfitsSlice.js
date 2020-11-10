@@ -53,6 +53,7 @@ const outfitsSlice = createSlice({
                  *      date: new Date(),
                  *      favorite: false,        //not yet implemented
                  *      description: ''         //not yet implemented
+                 *      _id: 'ms892-sdj3ds'
                  *      outfitArr: {            //each of these arrays only hold string _id's     
                  *          topsArray: [],
                  *          bottomsArray: [],
@@ -62,7 +63,12 @@ const outfitsSlice = createSlice({
                  *  } 
                  */
 
-                state.outfitsArray.push(action.payload);
+
+                  // we previously used push, trying spread operator to get rid off:
+                 //assign to read-only property' error
+                // state.outfitsArray.push(action.payload);
+                //this did not doa nything lmao
+                state.outfitsArray = [...state.outfitsArray, action.payload]
 
 
                 //turns out outfitArr is an object... holding the 4 ararys... kill me
@@ -77,10 +83,11 @@ const outfitsSlice = createSlice({
                     otherArray: []
                 }
             },
-            prepare( outfitArr ) {
+            prepare( outfitArr, _id ) {
                 return {
                     payload: {
-                        outfitArr
+                        outfitArr,
+                        _id
                     }
                 }
             }
@@ -125,7 +132,34 @@ const outfitsSlice = createSlice({
                 console.log('cleansed outfitInProgress')
                 console.log(state.outfitInProgress);
             }
-        }
+        },
+        outfitDeletedFromOutfits: {
+            reducer (state, action) {
+                console.log("outfitDeletedFromOutfits called. Action.payload:")
+                console.log(action.payload)
+                state.outfitsArray = state.outfitsArray.filter(outfitObject => outfitObject._id !== action.payload._id)
+            },
+            prepare (outfitId) {
+                return {
+                    payload: {
+                        _id: outfitId
+                    }
+                }
+            }
+        },
+        outfitFavoriteToggled: {
+            reducer(state, action) {
+                let itemToEdit = state.outfitsArray.find(outfitObject => outfitObject._id = action.payload._id)
+                itemToEdit.favorite = !itemToEdit.favorite;
+            },
+            prepare (outfitId) {
+                return {
+                    payload: {
+                        _id: outfitId
+                    }
+                }
+            }
+        },
     }
 
 })
@@ -135,4 +169,7 @@ export const {
     outfitCreatedFromHome, 
     outfitInProgressItemAdded,
     outfitInProgressItemDeleted,
-    outfitInProgressCleansed } = outfitsSlice.actions
+    outfitInProgressCleansed,
+    outfitDeletedFromOutfits,
+    outfitFavoriteToggled
+} = outfitsSlice.actions

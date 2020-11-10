@@ -22,6 +22,13 @@ const GlobalStyles = StyleSheet.create({
         shadowOpacity: 0.5,
         elevation: 10
     },
+    shadowLightest: {
+        shadowColor: 'black',
+        shadowRadius: 3,
+        shadowOffset: {width: 1, height: 1},
+        shadowOpacity: 0.1,
+        elevation: 5
+    },
     h1: {
         fontSize: 32
     },

@@ -11,27 +11,33 @@ import {
 } from 'react-native'
 import { useSelector, useDispatch} from 'react-redux' 
 import GestureRecognizer, {swipeDirections} from 'react-native-swipe-gestures';
-
 import { TopNavScreenHeader } from './GlobalComponents/TopNav'
 import GlobalStyles from './GlobalComponents/GlobalStyles'
 import { TouchableOpacity } from 'react-native-gesture-handler'
-import { HeartIcon, EditIcon, DeleteIcon, ShareIcon, CheckIcon, XIcon,
+import { 
+    HeartIcon, 
+    EditIcon, 
+    DeleteIcon, 
+    ShareIcon, 
+    CheckIcon, 
+    XIcon,
     BagIcon,
     ShirtIcon,
     LegIcon,
     ShoeIcon,
-    ArrowBack } from './GlobalComponents/GlobalIcons'
+    ArrowBack,
+ } from './GlobalComponents/GlobalIcons'
 import { itemFavoriteToggled, clothingDeletedFromCloset } from '../redux/reducers/closetSlice'
+import { outfitDeletedFromOutfits, outfitFavoriteToggled } from '../redux/reducers/outfitsSlice'
 import { useNavigation } from '@react-navigation/native'
 import { YesNoModal } from './GlobalComponents/GlobalModals'
+import { TogglableDrawer } from './GlobalComponents/GlobalDrawers'
 
 const windowWidth = Dimensions.get('window').width;
 //edit these instead of numbers in handleScroll
 const maxImageHeight = windowWidth - 20; //accounts for margins
 const minImageHieght = maxImageHeight / 2;
-const desiredIconSize = 40;
 const desiredIconSizeTwo = 60;
-const scrollEventThrottleValue = 16;
 
 
 
@@ -541,9 +547,28 @@ const OutfitDescription = ({fetchedOutfitObject, brandsLength, colorsLength}) =>
     bottomsArray.length + 
     topsArray.length + 
     otherArray.length;
+
+    const OutfitDesc = () => {
+        return (
+            <View style={{
+                width: 'auto',
+                height: 'auto',
+                marginLeft: 10,
+                marginRight: 10,
+                marginTop: 0,
+                marginBottom: 10,
+            }}>
+                <Text style={[GlobalStyles.lighterHint, GlobalStyles.h5,]}>
+                    {`The user's description goes here. If they said anything about the outfit, it'll be under the initial stats. Adding more description for super long decriptions that might be affected differently`}
+                </Text>
+            </View>
+        )
+    }
+
     return (
         <View style={{
             width: '100%',
+            height: 'auto',
             marginTop: -5
         }}>
             <View style={{
@@ -560,17 +585,9 @@ const OutfitDescription = ({fetchedOutfitObject, brandsLength, colorsLength}) =>
 
                 <Text style={[GlobalStyles.h5, {fontWeight: 'bold'}]}>{`${colorsLength} color${colorsLength !== 1 ? 's' : ''}`}</Text>
             </View>
-            <View style={{
-                width: 'auto',
-                marginLeft: 10,
-                marginRight: 10,
-                marginTop: 0,
-                marginBottom: 10
-            }}>
-                <Text style={[GlobalStyles.lighterHint, GlobalStyles.h5]}>
-                    {`The user's description goes here. If they said anything about the outfit, it'll be under the initial stats.`}
-                </Text>
-            </View>
+            <TogglableDrawer minHeight={60}>
+                <OutfitDesc />
+            </TogglableDrawer>
         </View>
     )
 }
@@ -581,7 +598,12 @@ const OutfitTags = ({fetchedOutfitObject}) => {
 
 
     // testing plz delete 
-    if (fetchedOutfitObject.tags.length === 0) fetchedOutfitObject.tags.push('i pushed this tag for sanity')
+    if (fetchedOutfitObject.tags.length === 0) {
+        fetchedOutfitObject.tags.push('i pushed this tag for sanity')
+        fetchedOutfitObject.tags.push('sanity2')
+        fetchedOutfitObject.tags.push('SANNY 3')
+
+    }
 
     const IndividualTags = ({title}) => {
         return (
@@ -600,73 +622,33 @@ const OutfitTags = ({fetchedOutfitObject}) => {
     }
 
     return (
-        <View style={{width: '100%', height: 'auto'}}>
-            <View style={{
-                marginLeft: 10,
-                marginRight: 10,
-                width: 'auto'
-            }}>
+        <TogglableDrawer minHeight={30}>
+            <View style={{width: '100%', height: 'auto'}}>
                 <View style={{
-                    width: '100%',
-                    height: 'auto',
-                    flexDirection: 'row',
-                    justifyContent: 'flex-start',
-                    alignItems: 'center',
-                    flexWrap: 'wrap'
+                    marginLeft: 2,
+                    marginRight: 2,
+                    width: 'auto'
                 }}>
-                    {fetchedOutfitObject.tags.map(tag => (
-                        <IndividualTags title={tag}/>
-                    ))}
+                    <View style={{
+                        width: '100%',
+                        height: 'auto',
+                        flexDirection: 'row',
+                        justifyContent: 'flex-start',
+                        alignItems: 'center',
+                        flexWrap: 'wrap'
+                    }}>
+                        {fetchedOutfitObject.tags.map(tag => (
+                            <IndividualTags title={tag}/>
+                        ))}
+                    </View>
                 </View>
-            </View>
-        </View>
+            </View> 
+        </TogglableDrawer>
+        
     )
 }
 
 const BrandTags = ({fetchedOutfitObject, brandsSet}) => {
-    const brandsArray = ['Supreme', 'Guess', 'American Eagle', 'Nike', 'Jordan', 'Please', 'Change', ]
-    const [viewHeight, setViewHeight] = useState(null)
-    //const [brandsSet, setBrandsSet] = useState(new Set())
-
-    //const nonStateSet = new Set();
-
-    // called to create the set. stops re rendering
-    //const fetchedOutfitObjectOutfitArrKeys = Object.keys(fetchedOutfitObject.outfitArr)
-    
-        
-    //console.log(`nonStateSet.size: ${nonStateSet.size}`)
-
-    const [brandTagsArrowRotation] = useState(new Animated.Value(0))
-    const [drawerOpen, setDrawerOpen] = useState(false)
-    const [minTagViewHeight, setMinTagViewHeight] = useState(0);
-
-    const ToggleDrawer = () => {
-        console.log("Toggling drawer")
-        console.log(`viewHeight: ${viewHeight}`)
-        if (drawerOpen){
-            onDrawerClose();
-        } else {
-            onDrawerOpen()
-        }
-        setDrawerOpen(!drawerOpen)
-    }
-
-    const onDrawerOpen = (gestureState) => {
-        Animated.timing(brandTagsArrowRotation, {
-            toValue: 1,
-            duration: 250,
-            useNativeDriver: false
-        }).start();
-    }
-    //makes image big
-    const onDrawerClose = (gestureState) => {
-        Animated.timing(brandTagsArrowRotation, {
-            toValue: 0,
-            duration: 250,
-            useNativeDriver: false
-        }).start();
-    }
-
     const IndividualTags = ({title}) => {
         return (
             <View style={[{
@@ -685,63 +667,197 @@ const BrandTags = ({fetchedOutfitObject, brandsSet}) => {
     }
 
     return (
-        <View style={{width: '100%', height: 'auto'}}>
-            <Pressable style={{
-                marginLeft: 10,
-                marginRight: 10,
-                width: 'auto'
-            }}
-            onPress={() => ToggleDrawer()}>
-                <View style={{
-                    width: '100%',
-                    height: 'auto',
-                }}>
-                    <View style={{
-                        position: 'absolute',
-                        top: 7,
-                        right: 0,
-                        width: 30,
-                        height: 30,
-                        justifyContent: 'center',
-                        alignItems:'center',
-                    }}>
-                        {viewHeight >= 90 ?
-                            <Animated.View
-                            style={{
-                                transform: [{rotate: 
-                                    brandTagsArrowRotation.interpolate({
-                                        inputRange: [0, 1],
-                                        outputRange: ['0deg', '-90deg']
-                                    })
-                                }]
-                            }}>
-                                <ArrowBack size={30} />
-                            </Animated.View>
-                        : null}
-                    </View>
-                    <View 
-                    onLayout={event => !viewHeight ? setViewHeight(event.nativeEvent.layout.height) : null}>
-                        <Animated.View style={{
-                            height: viewHeight ? brandTagsArrowRotation.interpolate({
-                                inputRange: [0, 1],
-                                outputRange: [viewHeight >= 90 ? 88 : viewHeight,
-                                    viewHeight]
-                            }) : 'auto',
-                            flexDirection: 'row',
-                            justifyContent: 'flex-start',
-                            alignItems: 'center',
-                            flexWrap: 'wrap'
-                        }}
-                        >
-                            {[...brandsSet].map(tag => <IndividualTags title={tag}/>)}
-                        </Animated.View>
-                    </View>
-                   
+        <TogglableDrawer minHeight={88}>
+            {[...brandsSet].map(tag => <IndividualTags title={tag}/>)}
+        </TogglableDrawer>   
+    )
+}
+
+
+const TopButtonsStyleOne = () => {
+    return (<View style={{
+        margin: 5,
+        width: 'auto',
+        borderRadius: 5
+    }}>
+        <View style={{
+            width: '100%',
+            height: 'auto',
+            flexDirection: 'row',
+            flexWrap: 'wrap',
+            justifyContent: 'center',
+            alignItems: 'center'
+        }}>
+            <View 
+            style={[{
+                width: '50%', 
+                aspectRatio: 1, 
+                backgroundColor: 'white',
+                borderColor: '#f2f2f2',
+                borderWidth: 1,
+                borderStyle: 'solid',
+                borderRadius: 5}]}>
+                    <HeartIcon size={80} style={GlobalStyles.lighterHint}/>
                 </View>
-            </Pressable>
+            <View 
+            style={[{
+                width: '50%', 
+                aspectRatio: 1, 
+            }]}>
+                <View style={[{
+                    width: 'auto',
+                    height: 'auto',
+                    marginLeft: 5,
+                    marginBottom: 5,
+                    borderRadius: 5,
+                    backgroundColor: 'white',
+                    borderColor: '#f2f2f2',
+                    borderWidth: 1,
+                    borderStyle: 'solid',
+                }]}>
+                    <View style={{
+                        height: '100%',
+                        width: '100%'
+                    }}>
+                        
+                    </View>
+                </View>
+            </View>
+            <View 
+            style={[{
+                width: '50%', 
+                aspectRatio: 1, 
+            }]}>
+                <View style={[{
+                    width: 'auto',
+                    height: 'auto',
+                    marginTop: 5,
+                    marginRight: 5,
+                    borderRadius: 5,
+                    borderColor: '#f2f2f2',
+                    borderWidth: 1,
+                    borderStyle: 'solid',
+                }]}>
+                    <View style={{
+                        height: '100%',
+                        width: '100%'
+                    }}>
+
+                    </View>
+                </View>
+            </View>
+            <View 
+            style={[{
+                width: '50%', 
+                aspectRatio: 1, 
+                borderColor: '#f2f2f2',
+                borderWidth: 1,
+                borderStyle: 'solid',
+                borderRadius: 5}]}></View>
+            
+        </View>
+    </View>)
+}
+
+const TopButtonsStyleTwo = ({outfitObject, setModalVisible}) => {
+    // the outfitObject is going to be the original
+    // i.e. the arrays are filled with IDs, not clothingObjects
+    const [isFavorited, setIsFavorited] = useState(outfitObject.favorite)
+    const dispatch = useDispatch();
+    const navigation = useNavigation();
+
+
+    const ToggleFavorite = () => {
+        dispatch(outfitFavoriteToggled(outfitObject._id))
+        setIsFavorited(!isFavorited)
+    }
+
+    const EditOutfit = () => {
+
+    }
+
+    const DeleteOutfitButtonPressed = () => {
+        setModalVisible(true)
+        console.log("in deltetOutfitButtonPressed")
+    }
+
+
+    const IndividualThirdButton = ({title, icon, onPressFunc}) => {
+        return (
+            <View style={{
+                height: '33.3%',
+                width: '100%'
+            }}>
+                <TouchableOpacity
+                onPress={() => onPressFunc()}>
+                    <View style={[{
+                        margin: 5,
+                        height: 'auto',
+                        width: 'auto',
+                        borderRadius: 5,
+                        backgroundColor: 'white'
+                    }, GlobalStyles.shadowLightest]}>
+                        <View style={{
+                            height: '100%',
+                            width: '100%',
+                            justifyContent: 'space-between',
+                            flexDirection: 'row',
+                            alignItems: 'center'
+                        }}>
+                            <View style={{
+                                height: '100%',
+                                aspectRatio: 1,
+                                marginLeft: 5,
+                                justifyContent: 'center',
+                                alignItems: 'center'
+                            }}>
+                                {icon}
+                            </View>
+                            <View style={{
+                                marginRight: 10
+                            }}>  
+                                <Text style={[{
+                                    fontWeight: 'bold'
+                                }, GlobalStyles.h4]}>
+                                    {title}
+                                </Text>
+                            </View>
+                        </View>
+                    </View>
+                </TouchableOpacity>
+            </View>
+        )
+    }
+    return (
+        <View style={{
+            width: 'auto',
+        }}>
+            <View style={{
+                width: '100%',
+                aspectRatio: 1,
+                justifyContent: 'center',
+                alignItems: 'center',
+                flexDirection: 'column'
+            }}>
+                <IndividualThirdButton 
+                    title={'Favorite'} 
+                    icon={<HeartIcon 
+                        style={[isFavorited ? {color: 'red'} : GlobalStyles.colorMain]} 
+                        size={'35%'} />}
+                    onPressFunc={() => ToggleFavorite()}/>
+                <IndividualThirdButton 
+                    title={'Edit'} 
+                    icon={<EditIcon style={[GlobalStyles.colorMain]} size={'35%'} />}
+                    onPressFunc={() => null}/>
+                <IndividualThirdButton 
+                    title={'Delete'} 
+                    icon={<DeleteIcon style={[GlobalStyles.colorMain]} size={'35%'} />}
+                    onPressFunc={() => DeleteOutfitButtonPressed()}/>
+            </View>
         </View>
     )
 }
+
 
 export const ViewIndividualOutfit = ({ route }) => {
 
@@ -750,7 +866,11 @@ export const ViewIndividualOutfit = ({ route }) => {
 
     // we pass in the item we clicked on so we can display stats XDDDD
     const closetObject = useSelector(state => state.closet.closetObject);
-    const outfitObject = route.params.item;
+
+    //we are just sweeping a problem under the rug here... was initially const but we sometimes edit it
+    //i.e. we change fitpic to the dummy src if we don't have an imgur url there for convenience
+    //so we don't need any logic to chcek if the fitpic is empty when we load it into the <Image />
+    let outfitObject = route.params.item;
 
     //creating only the outfitArr as a hook should hopefully make it 
     //easier to add the full clothingObjects to the fetchedOutfitObject
@@ -875,10 +995,12 @@ export const ViewIndividualOutfit = ({ route }) => {
     const navigation = useNavigation();
     const dispatch = useDispatch();
 
-    //called when confirming delete on modal. in progress still, no functionality
+    //called when confirming delete on modal
     const ConfirmDelete = () => {
+        console.log("Delete confirmed")
         setModalVisible(false)
         //dispatch(clothingDeletedFromCloset({...item}))
+        dispatch(outfitDeletedFromOutfits(outfitObject._id))
         navigation.navigate('CLOSETSCREEN')
     }
 
@@ -888,7 +1010,8 @@ export const ViewIndividualOutfit = ({ route }) => {
         setImageIsSmall(true);
         Animated.timing(imageWidth, {
             toValue: Number(false),
-            duration: 250
+            duration: 250,
+            useNativeDriver: false
         }).start();
     }
     //makes image big
@@ -896,7 +1019,8 @@ export const ViewIndividualOutfit = ({ route }) => {
         setImageIsSmall(false);
         Animated.timing(imageWidth, {
             toValue: Number(true),
-            duration: 250
+            duration: 250,
+            useNativeDriver: false
         }).start();
     }
 
@@ -909,7 +1033,11 @@ export const ViewIndividualOutfit = ({ route }) => {
             <TopNavScreenHeader title={outfitObject.date} exitDestination={'CLOSETSCREEN'}/>
             
             {/* Modal that shows when we want to delete the outfit... in progress */}
-            <YesNoModal modalVisible={modalVisible} setModalVisible={setModalVisible} onPressFunc={() => ConfirmDelete()}/>
+            <YesNoModal 
+                title={'Delete Outfit?'}
+                modalVisible={modalVisible} 
+                setModalVisible={setModalVisible} 
+                onPressFunc={() => ConfirmDelete()}/>
             
             
             {/* GestureRecognizers allow us to swipe up/down to make the fitpic image big/small */}
@@ -930,18 +1058,18 @@ export const ViewIndividualOutfit = ({ route }) => {
                             outputRange: ['50%', '100%']
                         })
                     }}>
-                        <View style={{
+                        <View style={[{
                             margin: 5,
                             width: 'auto',
                             borderRadius: 5
-                        }}>
+                        }, GlobalStyles.shadowLightest]}>
                             <Image ref={image} //I think this is useless here, delete later
                                 source={{uri: outfitObject.fitpic}} 
-                                style={{
+                                style={[{
                                     width: '100%',//'imageHeight',
                                     aspectRatio: 1,
                                     borderRadius: 5
-                                }} />
+                                },]} />
                         </View>
                     </Animated.View>
                     <Animated.View style={{
@@ -950,80 +1078,7 @@ export const ViewIndividualOutfit = ({ route }) => {
                             outputRange: ['50%', '100%']
                         })
                     }}>
-                        <View style={{
-                            margin: 5,
-                            width: 'auto',
-                            borderRadius: 5
-                        }}>
-                            <View style={{
-                                width: '100%',
-                                height: 'auto',
-                                flexDirection: 'row',
-                                flexWrap: 'wrap',
-                                justifyContent: 'center',
-                                alignItems: 'center'
-                            }}>
-                                <View 
-                                style={[{
-                                    width: '50%', 
-                                    aspectRatio: 1, 
-                                    backgroundColor: '#f2f2f2',
-                                    borderRadius: 5}]}></View>
-                                <View 
-                                style={[{
-                                    width: '50%', 
-                                    aspectRatio: 1, 
-                                }]}>
-                                    <View style={[{
-                                        width: 'auto',
-                                        height: 'auto',
-                                        marginLeft: 5,
-                                        marginBottom: 5,
-                                        borderRadius: 5,
-                                        backgroundColor: '#f2f2f2'
-                                    }]}>
-                                        <View style={{
-                                            height: '100%',
-                                            width: '100%'
-                                        }}>
-
-                                        </View>
-                                    </View>
-                                </View>
-                                <View 
-                                style={[{
-                                    width: '50%', 
-                                    aspectRatio: 1, 
-                                }]}>
-                                    <View style={[{
-                                        width: 'auto',
-                                        height: 'auto',
-                                        marginTop: 5,
-                                        marginRight: 5,
-                                        borderRadius: 5,
-                                        borderColor: 'black',
-                                        borderWidth: 1,
-                                        borderStyle: 'solid',
-                                    }]}>
-                                        <View style={{
-                                            height: '100%',
-                                            width: '100%'
-                                        }}>
-
-                                        </View>
-                                    </View>
-                                </View>
-                                <View 
-                                style={[{
-                                    width: '50%', 
-                                    aspectRatio: 1, 
-                                    borderColor: '#f2f2f2',
-                                    borderWidth: 1,
-                                    borderStyle: 'solid',
-                                    borderRadius: 5}]}></View>
-                                
-                            </View>
-                        </View>
+                        <TopButtonsStyleTwo outfitObject={outfitObject} setModalVisible={setModalVisible}/>
                     </Animated.View>
                 </View>
                     
