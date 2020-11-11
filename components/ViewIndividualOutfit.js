@@ -566,88 +566,57 @@ export const ViewIndividualOutfit = ({ route }) => {
     
 
     // this is unneccesarily called every time something re renders... XD
+    // wow i think i fixed it
     useEffect(() => {
-        console.log("In useEffect")
+        //resets outfitArr hook in case we refresh(dev) or update items (i.e. favorite, delete)
         setOutfitArr(null)
-        console.log(outfitArr)
-        setOutfitArr({
-            ...outfitArr,
+        let tempOutfitArr = {
             topsArray: new Array(),
             bottomsArray: new Array(),
             footwearArray: new Array(),
             otherArray: new Array()
-        })
-        console.log(outfitArr)
+        }
+
         fetchedOutfitObject = {
             date: outfitObject.date,
             fitpic: outfitObject.fitpic ? outfitObject.fitpic : 'https://randomuser.me/api/portraits/men/1.jpg',
             tags: outfitObject.tags ? outfitObject.tags : [],
-            outfitArr: outfitArr //this is the hook we just made
+            outfitArr: tempOutfitArr ///outfitArr //this is the hook we just made
         };
         
-        //stops accidental repopulation of fetchedOutfitArray leading to duplicates
-        //this tends to happen when React Native hot refreshes when I'm working on it
-        //if (!previouslyIterated){
-            //setPreviouslyIterated(true)
-            // replaces fitpic image with stock image if it doesn't exist
+        //populates fetchedOutfitObject's outfitArr
+        //i.e. it fills the arrays with clothingObjects, not _id's
+        const outfitArrKeys = Object.keys(fetchedOutfitObject.outfitArr)
+        for (let i = 0; i < outfitArrKeys.length; i++){
+            for (let k = 0; k < outfitObject.outfitArr[outfitArrKeys[i]].length; k++){
+                let toAddClothingObject = closetObject[outfitArrKeys[i]].find(clothingObject =>
+                    clothingObject._id === outfitObject.outfitArr[outfitArrKeys[i]][k])
+                let newArray = tempOutfitArr[outfitArrKeys[i]];
+                newArray.push(toAddClothingObject)
+            }
+        }
 
+        //gets the set of Brands... and the colors
+        const fetchedOutfitObjectOutfitArrKeys = Object.keys(fetchedOutfitObject.outfitArr)
 
-            //waht the fuck
-            // if (!fetchedOutfitObject.fitpic || fetchedOutfitObject.fitpic === ''){
-            //     outfitObject.fitpic = 'https://randomuser.me/api/portraits/men/1.jpg'
-            // } 
-
-            
-            //populates fetchedOutfitObject's outfitArr
-            //i.e. it fills the arrays with clothingObjects, not _id's
-            const outfitArrKeys = Object.keys(fetchedOutfitObject.outfitArr)
-            for (let i = 0; i < outfitArrKeys.length; i++){
-                // console.log('WHAT THE FUCKKKKKKKKKKKKK')
-                for (let k = 0; k < outfitObject.outfitArr[outfitArrKeys[i]].length; k++){
-                    // console.log('boutta set')
-                    // console.log(fetchedOutfitObject)
-                    //console.log('asd')
-                    let toAddClothingObject = closetObject[outfitArrKeys[i]].find(clothingObject =>
-                        clothingObject._id === outfitObject.outfitArr[outfitArrKeys[i]][k])
-                    let newArray = outfitArr[outfitArrKeys[i]];
-                    newArray.push(toAddClothingObject)
-                    setOutfitArr({
-                        ...outfitArr,
-                        [outfitArrKeys[i]]: newArray
-                    })
-                    //console.log(outfitArr);
+        //these used to be const... but we're adding to then... might be the solution to readonly problem
+        let nonStateBrandsSet = new Set();
+        let nonStateColorsSet = new Set();
+        for (let i = 3; i >= 0; i--){
+            for (let k = 0; k < fetchedOutfitObject.outfitArr[fetchedOutfitObjectOutfitArrKeys[i]].length; k++){
+                //console.log(`'xd' iteration ${k}`)
+                if (fetchedOutfitObject.outfitArr[fetchedOutfitObjectOutfitArrKeys[i]][k].color &&
+                    fetchedOutfitObject.outfitArr[fetchedOutfitObjectOutfitArrKeys[i]][k].color !== ''){
+                    nonStateColorsSet.add(fetchedOutfitObject.outfitArr[fetchedOutfitObjectOutfitArrKeys[i]][k].color)
+                }
+                if (fetchedOutfitObject.outfitArr[fetchedOutfitObjectOutfitArrKeys[i]][k].brandName && fetchedOutfitObject.outfitArr[fetchedOutfitObjectOutfitArrKeys[i]][k].brandName.length != 0){
+                    nonStateBrandsSet.add(fetchedOutfitObject.outfitArr[fetchedOutfitObjectOutfitArrKeys[i]][k].brandName[0])
                 }
             }
-            //console.log(fetchedOutfitObject.outfitArr.topsArray)
-
-
-            //gets the set of Brands... and the colors
-            const fetchedOutfitObjectOutfitArrKeys = Object.keys(fetchedOutfitObject.outfitArr)
-
-            //these used to be const... but we're adding to then... might be the solution to readonly problem
-            let nonStateBrandsSet = new Set();
-            let nonStateColorsSet = new Set();
-            for (let i = 3; i >= 0; i--){
-                
-
-                for (let k = 0; k < fetchedOutfitObject.outfitArr[fetchedOutfitObjectOutfitArrKeys[i]].length; k++){
-                    //console.log(`'xd' iteration ${k}`)
-                    if (fetchedOutfitObject.outfitArr[fetchedOutfitObjectOutfitArrKeys[i]][k].color &&
-                        fetchedOutfitObject.outfitArr[fetchedOutfitObjectOutfitArrKeys[i]][k].color !== ''){
-                        nonStateColorsSet.add(fetchedOutfitObject.outfitArr[fetchedOutfitObjectOutfitArrKeys[i]][k].color)
-                    }
-                    if (fetchedOutfitObject.outfitArr[fetchedOutfitObjectOutfitArrKeys[i]][k].brandName && fetchedOutfitObject.outfitArr[fetchedOutfitObjectOutfitArrKeys[i]][k].brandName.length != 0){
-                        nonStateBrandsSet.add(fetchedOutfitObject.outfitArr[fetchedOutfitObjectOutfitArrKeys[i]][k].brandName[0])
-                    }
-                }
-            }
-            setBrandsSet(nonStateBrandsSet)
-            setColorsSet(nonStateColorsSet)
-        //} else {
-        //    console.log("Already iterated, not gonna bother executing the body of useEffect")
-        //}
-
-        
+        }
+        setOutfitArr(tempOutfitArr)
+        setBrandsSet(nonStateBrandsSet)
+        setColorsSet(nonStateColorsSet)
     }, [closetObject])
 
     
