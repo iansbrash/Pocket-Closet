@@ -44,8 +44,11 @@ const outfitsSlice = createSlice({
                 //have dynamic items that can be edited once we put them in
                 //the outfits store
                 let date = new Date();
-                date = date.toDateString();
-                action.payload.item.date = date;
+
+                //parse the date into ms after 1970... so it looks like
+                //48916294801235
+                //then we can retrieve the date info by doing new Date(outfitObject.date)
+                action.payload.item.date = Date.parse(date);
 
                 /** the object we push into the outfitsArray SHOULD (and hopefully will) look like this:
                  *  {

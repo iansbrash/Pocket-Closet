@@ -19,7 +19,7 @@ import { configureStore } from '@reduxjs/toolkit';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { PlusButton } from './NewOutfit/PlusButton'
 import GlobalStyles from './GlobalComponents/GlobalStyles'
-import { PlusIcon } from './GlobalComponents/GlobalIcons'
+import { PlusIcon, HeartIcon } from './GlobalComponents/GlobalIcons'
 
 
 
@@ -91,9 +91,9 @@ function RenderSingleLineClosetItem ({item})  {
                                     height: 'auto', 
                                     aspectRatio: 1,
                                     borderRadius: 10,
-                                    marginLeft: 10,
-                                    marginTop: 10,
-                                    marginBottom: 10,
+                                    marginLeft: 5, //was 10
+                                    marginTop: 5, //was 10
+                                    marginBottom: 5, //was 10
                                     borderRadius: 10,
                                 }, GlobalStyles.shadowLight]}> 
                                 <Image source={src} style={{height: '100%', aspectRatio: 1, borderRadius: 10}} />
@@ -103,34 +103,49 @@ function RenderSingleLineClosetItem ({item})  {
                                 flexDirection: 'column',
                                 alignItems: 'flex-start',
                                 justifyContent: 'flex-start',
-                                flexShrink: 1
                                 
                             }}>
                                 <View style={{
                                     flexDirection: 'row',
-                                    flexShrink: 1
                                 }}>
                                     <Text category='h4' 
-                                    style={[{fontWeight: 'bold', marginLeft: 15, flexShrink: 1}, GlobalStyles.h4]}
+                                    numberOfLines={1}
+                                    style={[{
+                                        fontWeight: 'bold', 
+                                        marginLeft: 10, 
+                                        maxWidth: 250,
+                                        lineHeight: 20,}, GlobalStyles.h5]}
                                     >{item.clothingName}</Text>
                                 </View>
                                 <View style={{
-                                    flexDirection: 'row',
-                                    flexShrink: 1
+                                    flexDirection: 'column',
+                                    flexWrap: 'wrap',
+
                                 }}>
-                                    <Text category='h5' appearance='hint' 
-                                    style={[{fontWeight: 'bold', marginLeft: 15, marginTop: -5, flexShrink: 1}, 
-                                    GlobalStyles.h5, GlobalStyles.hint]}
-                                    >{item.brandName[0]}</Text>
+                                    {item.brandName.slice(0, 4).map((brand, index) => (
+                                        <View>
+                                            <Text category='h5' appearance='hint' 
+                                            style={[{fontWeight: 'bold', marginLeft: 10, marginTop: -5, flexShrink: 1}, 
+                                            GlobalStyles.h6, GlobalStyles.hint]}
+                                            >{`${brand}${index === 3 && item.brandName.length > 4 ? '...' : ''}`}</Text>
+                                        </View>
+                                        )
+                                    )}
                                 </View>
-                                
                             </View>
-                            
+                        </View>
+                        {/* This is going to be the heart at the bottom */}
+                        <View style={{
+                            position: 'absolute',
+                            bottom: 5,
+                            right: 5
+                        }}>
+                            {
+                                item.favorite ? <HeartIcon size={20} style={{color: '#ff4040'}}/> : null
+                            }
                         </View>
                         <View style={{width: '15%', justifyContent: 'center', alignItems: 'center'}}>
-                            {/* <Icon style={{marginRight: 15, marginLeft: 5}} width='30' height='30' fill='black' name={'plus'}/> */}
-                            {/* <Ionicons name="md-checkmark-circle" size={32} color="green" /> */}
-    
+                            {/* This accounts for 15% of the right of the card lmaoooo spaghetti */}
                         </View>
                     </View>
                 </View> 
@@ -260,7 +275,7 @@ const OutfitList = ({searchInput}) => {
                             padding: 5
                         }, GlobalStyles.bgColorMain]}>
                             <Text style={[{color: 'white', fontWeight: 'bold'}, GlobalStyles.h5]}>
-                                {'11/20/20'}
+                                {`${new Date(item.date).toLocaleString('en-GB').substr(0, 10)}`}
                             </Text>
                         </View>
                         <View 

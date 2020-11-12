@@ -340,90 +340,6 @@ const BrandTags = ({fetchedOutfitObject, brandsSet}) => {
 }
 
 
-const TopButtonsStyleOne = () => {
-    return (<View style={{
-        margin: 5,
-        width: 'auto',
-        borderRadius: 5
-    }}>
-        <View style={{
-            width: '100%',
-            height: 'auto',
-            flexDirection: 'row',
-            flexWrap: 'wrap',
-            justifyContent: 'center',
-            alignItems: 'center'
-        }}>
-            <View 
-            style={[{
-                width: '50%', 
-                aspectRatio: 1, 
-                backgroundColor: 'white',
-                borderColor: '#f2f2f2',
-                borderWidth: 1,
-                borderStyle: 'solid',
-                borderRadius: 5}]}>
-                    <HeartIcon size={80} style={GlobalStyles.lighterHint}/>
-                </View>
-            <View 
-            style={[{
-                width: '50%', 
-                aspectRatio: 1, 
-            }]}>
-                <View style={[{
-                    width: 'auto',
-                    height: 'auto',
-                    marginLeft: 5,
-                    marginBottom: 5,
-                    borderRadius: 5,
-                    backgroundColor: 'white',
-                    borderColor: '#f2f2f2',
-                    borderWidth: 1,
-                    borderStyle: 'solid',
-                }]}>
-                    <View style={{
-                        height: '100%',
-                        width: '100%'
-                    }}>
-                        
-                    </View>
-                </View>
-            </View>
-            <View 
-            style={[{
-                width: '50%', 
-                aspectRatio: 1, 
-            }]}>
-                <View style={[{
-                    width: 'auto',
-                    height: 'auto',
-                    marginTop: 5,
-                    marginRight: 5,
-                    borderRadius: 5,
-                    borderColor: '#f2f2f2',
-                    borderWidth: 1,
-                    borderStyle: 'solid',
-                }]}>
-                    <View style={{
-                        height: '100%',
-                        width: '100%'
-                    }}>
-
-                    </View>
-                </View>
-            </View>
-            <View 
-            style={[{
-                width: '50%', 
-                aspectRatio: 1, 
-                borderColor: '#f2f2f2',
-                borderWidth: 1,
-                borderStyle: 'solid',
-                borderRadius: 5}]}></View>
-            
-        </View>
-    </View>)
-}
 
 const TopButtonsStyleTwo = ({outfitObject, setModalVisible}) => {
 
@@ -445,6 +361,7 @@ const TopButtonsStyleTwo = ({outfitObject, setModalVisible}) => {
     }
 
     const DeleteOutfitButtonPressed = () => {
+        Vibration.vibrate(400)
         setModalVisible(true)
         console.log("in deltetOutfitButtonPressed")
     }
@@ -529,7 +446,6 @@ const TopButtonsStyleTwo = ({outfitObject, setModalVisible}) => {
 
 export const ViewIndividualOutfit = ({ route }) => {
     
-
     const [modalVisible, setModalVisible] = useState(false);
     //const [previouslyIterated, setPreviouslyIterated] = useState(false)
 
@@ -668,7 +584,7 @@ export const ViewIndividualOutfit = ({ route }) => {
     return (
         <View 
         style={{flex: 1, backgroundColor: 'white'}}>
-            <TopNavScreenHeader title={outfitObject.date} exitDestination={'CLOSETSCREEN'}/>
+            <TopNavScreenHeader title={new Date(outfitObject.date).toDateString()} exitDestination={'CLOSETSCREEN'}/>
             
             {/* Modal that shows when we want to delete the outfit... in progress */}
             <YesNoModal 
@@ -702,7 +618,7 @@ export const ViewIndividualOutfit = ({ route }) => {
                             borderRadius: 5
                         }, GlobalStyles.shadowLightest]}>
                             <Image //ref={image} //I think this is useless here, delete later
-                                source={{uri: fetchedOutfitObject.fitpic}} 
+                                source={dummySrc} 
                                 style={[{
                                     width: '100%',//'imageHeight',
                                     aspectRatio: 1,
