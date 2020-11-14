@@ -5,7 +5,9 @@ import {
     Text,
     TouchableOpacity,
     TextInput,
-    Animated
+    Animated,
+    ScrollView,
+    Image,
 } from 'react-native'
 import GlobalStyles from './GlobalStyles'
 import { CheckIcon, XIcon } from './GlobalIcons'
@@ -301,5 +303,97 @@ export const TextInputModal = ({setModalVisible, modalVisible, onPressFunc, titl
       </Modal>
       </BlurView>
       </Animated.View>
+    )
+}
+
+export const ImageScrollModal = ({setModalVisible, modalVisible, imageArray, title}) => {
+    const [viewBlur] = useState(new Animated.Value(0))
+
+    const onShow = () => {
+        Animated.timing(viewBlur, {
+            toValue: .95,
+            duration: 250,
+            useNativeDriver: true
+        }).start();
+    }
+
+    const onDismiss = () => {
+        Animated.timing(viewBlur, {
+            toValue: 0,
+            duration: 250,
+            useNativeDriver: true
+        }).start();
+    }
+
+    useEffect(() => {
+        if (modalVisible){
+            onShow()
+        } else {
+            onDismiss()
+        }
+    },[modalVisible])
+
+    return (
+        
+        <Modal
+        animationType="slide"
+        transparent={false}
+        visible={modalVisible}
+        onRequestClose={() => {
+          Alert.alert("Modal has been closed.");
+        }}
+      >
+          <View style={{
+              flex: 1,
+              backgroundColor: 'black',
+              justifyContent: 'center',
+              alignItems: 'center'}}>
+                  
+                    <View style={{
+                        position: 'absolute',
+                        top: 40,
+                        left: 0,
+                        right: 0,
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                        flexDirection: 'row'
+                    }}>
+                        <TouchableOpacity style={{
+                            marginLeft: 10
+                        }}>
+                            <XIcon size={40} style={GlobalStyles.colorMain}/>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={{
+                            marginRight: 10
+                        }}
+                        onPress={() => setModalVisible(false)}>
+                            <XIcon size={40} style={{color: 'white'}}/>
+                        </TouchableOpacity>
+                    </View>
+                    <View style={{
+                        width: '100%',
+                        aspectRatio: 1
+                    }}>
+                        <ScrollView
+                        contentContainerStyle={{
+                            width: `${imageArray.length * 100}%`,
+                            height: 'auto'
+                        }}
+                        horizontal={true}
+                        showsHorizontalScrollIndicator={false}
+                        decelerationRate="fast"
+                        pagingEnabled
+                        >
+                            {imageArray.map(imageUrl => (
+                                <Image source={{uri: imageUrl}} style={{
+                                    height: '100%',
+                                    aspectRatio: 1
+                                }}/>
+                            ))}
+                        </ScrollView>
+                    </View>
+                    
+          </View>
+      </Modal>
     )
 }

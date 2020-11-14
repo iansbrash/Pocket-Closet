@@ -7,7 +7,8 @@ import {
     Dimensions,
     Alert,
     Vibration,
-    Animated
+    Animated,
+    Pressable
 } from 'react-native'
 import { useSelector, useDispatch} from 'react-redux' 
 import GestureRecognizer, {swipeDirections} from 'react-native-swipe-gestures';
@@ -17,7 +18,7 @@ import { TouchableOpacity } from 'react-native-gesture-handler'
 import { HeartIcon, EditIcon, DeleteIcon, ShareIcon, CheckIcon, XIcon } from './GlobalComponents/GlobalIcons'
 import { itemFavoriteToggled, clothingDeletedFromCloset } from '../redux/reducers/closetSlice'
 import { useNavigation } from '@react-navigation/native'
-import { YesNoModal } from './GlobalComponents/GlobalModals'
+import { YesNoModal, ImageScrollModal } from './GlobalComponents/GlobalModals'
 import { TogglableDrawer } from './GlobalComponents/GlobalDrawers'
 
 const windowWidth = Dimensions.get('window').width;
@@ -360,6 +361,7 @@ const ClothingTags = ({tagsArray}) => {
 export const ViewIndividualPiece = ({ route }) => {
 
     const [modalVisible, setModalVisible] = useState(false);
+    const [imageModal, setImageModal] = useState(false)
 
     // we pass in the item we clicked on so we can display stats XDDDD
     const { item } = route.params;
@@ -457,45 +459,18 @@ export const ViewIndividualPiece = ({ route }) => {
                             borderRadius: 5,
                             aspectRatio: 1
                         }}>
-                            <ScrollView
-                            contentContainerStyle={{
-                                width: `${item.images.length * 100}%`,
-                                height: 'auto'
-                            }}
-                            horizontal={true}
+                            <Pressable
+                            onPress={() => setImageModal(true)}>
+                                <Image //ref={image} //I think this is useless here, delete later
+                                    source={src} 
+                                    style={[{
+                                        width: '100%',//'imageHeight',
+                                        aspectRatio: 1,
+                                        borderRadius: 5
+                                    },]} 
+                                />
+                            </Pressable>
                             
-                            snapToInterval={250}
-                            decelerationRate="fast"
-                            bounces={false}
-                            >
-                                <View style={{
-                                    height: '100%',
-                                    aspectRatio: 1
-                                }}>
-                                <Image //ref={image} //I think this is useless here, delete later
-                                    source={src} 
-                                    style={[{
-                                        width: '100%',//'imageHeight',
-                                        aspectRatio: 1,
-                                        borderRadius: 5
-                                    },]} 
-                                />
-                                </View>
-                                
-                                <View style={{
-                                    height: '100%',
-                                    aspectRatio: 1
-                                }}>
-                                <Image //ref={image} //I think this is useless here, delete later
-                                    source={src} 
-                                    style={[{
-                                        width: '100%',//'imageHeight',
-                                        aspectRatio: 1,
-                                        borderRadius: 5
-                                    },]} 
-                                />
-                                </View>
-                            </ScrollView>
                         </View>
                     </Animated.View>
                     <Animated.View style={{
@@ -511,7 +486,12 @@ export const ViewIndividualPiece = ({ route }) => {
             </GestureRecognizer>
             
             <YesNoModal modalVisible={modalVisible} setModalVisible={setModalVisible} onPressFunc={() => ConfirmDelete()}/>
-            
+            <ImageScrollModal 
+                modalVisible={imageModal}
+                setModalVisible={setImageModal}
+                title={'Images'}
+                imageArray={item.images}
+            />
 
             <ThreeAttributeHeader brandsLength={item.brandName.length} price={item.price} pieceType={'t-shirt'} color={item.color}/>
             

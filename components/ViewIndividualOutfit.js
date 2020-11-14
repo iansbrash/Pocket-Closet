@@ -18,19 +18,15 @@ import {
     HeartIcon, 
     EditIcon, 
     DeleteIcon, 
-    ShareIcon, 
-    CheckIcon, 
-    XIcon,
     BagIcon,
     ShirtIcon,
     LegIcon,
     ShoeIcon,
-    ArrowBack,
  } from './GlobalComponents/GlobalIcons'
 import { itemFavoriteToggled, clothingDeletedFromCloset } from '../redux/reducers/closetSlice'
 import { outfitDeletedFromOutfits, outfitFavoriteToggled } from '../redux/reducers/outfitsSlice'
 import { useNavigation } from '@react-navigation/native'
-import { YesNoModal } from './GlobalComponents/GlobalModals'
+import { YesNoModal, ImageScrollModal } from './GlobalComponents/GlobalModals'
 import { TogglableDrawer } from './GlobalComponents/GlobalDrawers'
 
 const windowWidth = Dimensions.get('window').width;
@@ -99,7 +95,6 @@ const DisplayClothingTypeFour = ({fetchedOutfitObject, outfitObject, icon}) => {
                             width: 'auto',
                             height: 'auto'
                         }}>
-                            
                             <Image source={typeof clothingObject.images === 'object' && clothingObject.images.length !== 0 ? 
                                 {uri: clothingObject.images[0]} : dummySrc} style={{width: '100%', aspectRatio: 1, borderRadius: 5}}/>
                         </View>
@@ -449,6 +444,7 @@ const TopButtonsStyleTwo = ({outfitObject, setModalVisible}) => {
 export const ViewIndividualOutfit = ({ route }) => {
     
     const [modalVisible, setModalVisible] = useState(false);
+    const [imageModal, setImageModal] = useState(false);
     //const [previouslyIterated, setPreviouslyIterated] = useState(false)
 
     // we pass in the item we clicked on so we can display stats XDDDD
@@ -594,6 +590,11 @@ export const ViewIndividualOutfit = ({ route }) => {
                 modalVisible={modalVisible} 
                 setModalVisible={setModalVisible} 
                 onPressFunc={() => ConfirmDelete()}/>
+            <ImageScrollModal 
+                modalVisible={imageModal}
+                setModalVisible={setImageModal}
+                title={'Title XD'}
+                imageArray={['https://randomuser.me/api/portraits/men/1.jpg']}/>
             
             
             {/* GestureRecognizers allow us to swipe up/down to make the fitpic image big/small */}
@@ -619,16 +620,9 @@ export const ViewIndividualOutfit = ({ route }) => {
                             width: 'auto',
                             borderRadius: 5
                         }, GlobalStyles.shadowLightest]}>
-                            <ScrollView
-                            style={{
-                                height: 'auto',
-                                width: 'auto'
-                            }}
-                            horizontal={true}
-                            snapToInterval={30}
-                            decelerationRate="fast"
-                            bounces={false}
-                            >
+                        
+                            <Pressable
+                            onPress={() => setImageModal(true)}>
                                 <Image //ref={image} //I think this is useless here, delete later
                                     source={dummySrc} 
                                     style={[{
@@ -637,15 +631,8 @@ export const ViewIndividualOutfit = ({ route }) => {
                                         borderRadius: 5
                                     },]} 
                                 />
-                                <Image //ref={image} //I think this is useless here, delete later
-                                    source={dummySrc} 
-                                    style={[{
-                                        width: '100%',//'imageHeight',
-                                        aspectRatio: 1,
-                                        borderRadius: 5
-                                    },]} 
-                                />
-                            </ScrollView>
+                            </Pressable>
+                            
                             
                         </View>
                     </Animated.View>

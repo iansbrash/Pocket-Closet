@@ -181,8 +181,8 @@ export const FinalizeOutfit = () => {
             }}>
                 <Text>{`fitpic (if there is one): ${outfitInProgress.fitpic}`}</Text>
                 <ScrollView style={{padding: 10}}>
-
-                    {Object.keys(outfitInProgress).map(key => ( 
+                    {/* Notice we are compensating for our subpar redux structure by filtering out the fitpic key */}
+                    {Object.keys(outfitInProgress).filter(item => item !== 'fitpic').map(key => ( 
                         outfitInProgress[key].length !== 0 ?
                         <View>
                             <MiniScreenHeader 
