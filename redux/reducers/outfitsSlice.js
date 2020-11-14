@@ -26,7 +26,8 @@ const outfitsSlice = createSlice({
             ],
             otherArray: [
 
-            ]
+            ],
+            fitpic: ''
         },
         status: 'idle',
         error: null
@@ -80,6 +81,7 @@ const outfitsSlice = createSlice({
 
                 // resets outfit in progress
                 state.outfitInProgress = {
+                    fitpic: '',
                     topsArray: [],
                     bottomsArray: [],
                     footwearArray: [],
@@ -117,6 +119,25 @@ const outfitsSlice = createSlice({
                 console.log(action.payload)
                 state.outfitInProgress[action.payload.clothingType.toLowerCase() + "Array"] = 
                 state.outfitInProgress[action.payload.clothingType.toLowerCase() + "Array"].filter(obj => obj._id !== action.payload._id)   //.splice(delIndex, 1);
+            }
+        },
+        outfitInProgressFitpicAdded: {
+            reducer (state, action) {
+                //this should just be the fitpic url, given our prepare function
+                console.log(action.payload)
+
+                if (action.payload !== ''){
+                    state.outfitInProgress.fitpic = action.payload;
+                } else {
+                    console.log('no imgur url provided for fitpic')
+                }
+            },
+            prepare (fitpic) {
+                return {
+                    payload: {
+                        fitpic: fitpic
+                    }
+                }
             }
         },
         outfitInProgressCleansed: {
@@ -177,5 +198,6 @@ export const {
     outfitInProgressItemDeleted,
     outfitInProgressCleansed,
     outfitDeletedFromOutfits,
-    outfitFavoriteToggled
+    outfitFavoriteToggled,
+    outfitInProgressFitpicAdded
 } = outfitsSlice.actions

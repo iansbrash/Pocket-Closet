@@ -76,7 +76,7 @@ export const FinalizeClothing = () => {
     if (clothingPieceInProgress.images.length !== 0){
         src = clothingPieceInProgress.images
     }
-    console.log(clothingPieceInProgress.images[0])
+    console.log(clothingPieceInProgress.images)
 
     const navigation = useNavigation();
 
@@ -152,9 +152,11 @@ export const FinalizeClothing = () => {
                     }}>
                         <ScrollView
                         horizontal={true}
-                        style={{margin: -10}}
+                        style={{
+                            margin: -10,
+                        }}
                         contentContainerStyle={{
-                            width: '100%',//`${fileUri.length * 100}%`,
+                            width: `${src.length * 100}%`,
                             height: 'auto'
                         }}
                         >
@@ -163,7 +165,6 @@ export const FinalizeClothing = () => {
                                     height: '100%', 
                                     aspectRatio: 1, 
                                     borderRadius: 5,
-                                    width: '100%', //`${100/fileUri.length}%`,
                                     justifyContent: 'center',
                                     alignItems: 'center',}, 
                                     GlobalStyles.shadowLight]}>
@@ -174,7 +175,7 @@ export const FinalizeClothing = () => {
                                     borderRadius: 5,
                                     // height: imageHeight * (windowHeight / imageHeight),
                                     // width: imageWidth * (windowWidth / imageWidth)
-                                    }} source={src}/> 
+                                    }} source={{uri: uri}}/> 
                                 </View>
                             ))}
                         </ScrollView>

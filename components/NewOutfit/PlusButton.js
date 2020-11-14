@@ -1,11 +1,17 @@
-import React from 'react'
+import React, {useState} from 'react'
 import { View, TouchableOpacity, StyleSheet } from 'react-native'
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native'
-import { PlusIcon } from '../GlobalComponents/GlobalIcons'
+import { PlusIcon, EyeIcon } from '../GlobalComponents/GlobalIcons'
 import GlobalStyles from '../GlobalComponents/GlobalStyles'
 
 export const PlusButton = ({disabledHook, onPressFunc}) => {
+    const [eyeVisible, setEyeVisible] = useState(false)
+
+    const combinedFunc = () => {
+        onPressFunc();
+        setEyeVisible(!eyeVisible)
+    }
 
     return (
         <View style={{
@@ -16,9 +22,10 @@ export const PlusButton = ({disabledHook, onPressFunc}) => {
             { !disabledHook && (
                 <TouchableOpacity 
                 style={[styles.TOSuccess, GlobalStyles.bgColorMain]}
-                onPress={onPressFunc}>
-                    {/* <Icon style={{marginRight: 5, marginLeft: 5}} width='50' height='50' fill='white' name='plus'/> */}
-                    <PlusIcon style={[{marginRight: 5, marginLeft: 5, color: 'white'}]} size={50}/>
+                onPress={() => combinedFunc()}>
+                    {eyeVisible ? <PlusIcon style={[{marginRight: 5, marginLeft: 5, color: 'white'}]} size={50}/>
+                    : <EyeIcon style={[{marginRight: 5, marginLeft: 5, color: 'white'}]} size={40}/>}
+                    
                  </TouchableOpacity>
                  )
             }

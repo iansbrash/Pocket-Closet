@@ -119,3 +119,21 @@ export const MdClose = (props) => {
         <Ionicons style={props.style} name="md-close" size={props.size}/>
     )
 }
+
+export const EyeIcon = (props) => {
+    return (
+        <Feather style={props.style} name="eye" size={props.size} />
+    )
+}
+
+export const PhotoLibraryIcon = (props) => {
+    return (
+        <MaterialIcons style={props.style} name="photo-library" size={props.size} />
+    )
+}
+
+export const CameraIcon = (props) => {
+    return (
+        <MaterialIcons style={props.style} name="camera-alt" size={props.size} />
+    )
+}

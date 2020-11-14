@@ -6,7 +6,6 @@ import  {
     FlatList,
     Text,
     ScrollView } from 'react-native'
-import { Ionicons } from '@expo/vector-icons';
 import { useDispatch, useSelector } from 'react-redux'
 import { outfitCreatedFromHome, outfitInProgressItemDeleted } from '../../redux/reducers/outfitsSlice'
 
@@ -177,10 +176,10 @@ export const FinalizeOutfit = () => {
             backgroundColor: 'white'
         }}>
            <TopNavScreenHeader title={'Finalize Outfit'} exitDestination={'HOMESCREEN'} extraFunc={() => dispatch(outfitInProgressCleansed())}/>
-           {/* <ScreenHeader title={'Finalize Outfit'}/> */}
             <View style={{
                 flex: 1
             }}>
+                <Text>{`fitpic (if there is one): ${outfitInProgress.fitpic}`}</Text>
                 <ScrollView style={{padding: 10}}>
 
                     {Object.keys(outfitInProgress).map(key => ( 

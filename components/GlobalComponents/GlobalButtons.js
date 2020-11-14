@@ -16,7 +16,7 @@ export const MediumButton = ({title, icon, onPressFunc, buttonFunc, disabled}) =
             height: 75,
             width: '100%',
             marginTop: 5,
-            marginBottom: 5
+            marginBottom: 5,
         }}>
             <View style={[{
                 width: 'auto',

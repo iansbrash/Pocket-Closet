@@ -23,6 +23,7 @@ import { FinalizeClothing } from './NewClothing/FinalizeClothing'
 import { ViewIndividualOutfit } from './ViewIndividualOutfit'
 import { OutfitFrom } from './NewOutfit/OutfitFrom'
 import { HangerIcon, HomeIcon, CalendarIcon } from './GlobalComponents/GlobalIcons'
+import { UploadFitpic } from './NewOutfit/UploadFitpic'
 
 import GlobalStyles from './GlobalComponents/GlobalStyles'
 // Destructuring React Navigator import
@@ -101,6 +102,7 @@ const HomeNav = () => {
             <HomeStack.Screen name="RECORD" component={OutfitFrom} />
             <HomeStack.Screen name="FROMSCRATCH" component={FromScratch} />
             <HomeStack.Screen name="OUTFITSELECTION" component={OutfitSelection} />
+            <HomeStack.Screen name="UPLOADFITPIC" component={UploadFitpic} />
             <HomeStack.Screen name="FINALIZEOUTFIT" component={FinalizeOutfit} />
             <HomeStack.Screen name="FINALIZESUCCESS" component={FinalizeSuccess} />
         </HomeStack.Navigator>

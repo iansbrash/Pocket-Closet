@@ -152,7 +152,7 @@ const ClothingAddedIcon = (props) => {
 
 
 const DropDownViewTest = (props) => {
-    const [fadeAnim] = useState(useRef(new Animated.Value(props.hookValue ? 1 : 0)).current)
+    const [fadeAnim] = useState(useRef(new Animated.Value(!props.hookValue ? 1 : 0)).current)
 
     useEffect(() => {
         Animated.timing(
@@ -183,7 +183,7 @@ const DropDownViewTest = (props) => {
 }
 
 const FadeInViewTest = (props) => {
-    const [fadeAnim] = useState(useRef(new Animated.Value(props.hookValue ? 1 : 0)).current)
+    const [fadeAnim] = useState(useRef(new Animated.Value(!props.hookValue ? 1 : 0)).current)
 
     useEffect(() => {
         Animated.timing(
@@ -216,7 +216,7 @@ const FadeInViewTest = (props) => {
 }
 
 const FadeInViewTestTwo = (props) => {
-    const [fadeAnim] = useState(useRef(new Animated.Value(props.hookValue ? 0 : 1)).current)
+    const [fadeAnim] = useState(useRef(new Animated.Value(!props.hookValue ? 0 : 1)).current)
 
     useEffect(() => {
         Animated.timing(
@@ -249,7 +249,7 @@ const FadeInViewTestTwo = (props) => {
 }
 
 export const OutfitSelection = ({ route, navigation }) => {
-    const [modalVisible, setModalVisible] = useState(false);
+    const [modalVisible, setModalVisible] = useState(true);
     const { topNavTitle , arrayName} = route.params;
     const OutfitArray = useSelector(state => state.outfits.outfitInProgress[arrayName])
 
@@ -320,7 +320,11 @@ export const OutfitSelection = ({ route, navigation }) => {
                             marginTop: 8
                         }}>
                             <Text category='h4' 
-                            style={[{fontWeight: 'bold', marginLeft: 15}, GlobalStyles.h4]}>{item.clothingName}</Text>
+                            numberOfLines={1}
+                            style={[
+                                {fontWeight: 'bold', 
+                                marginLeft: 15,
+                                maxWidth: 290}, GlobalStyles.h4]}>{item.clothingName}</Text>
                             
                                 {/* <Icon  width='30' height='30' fill='black' name={'plus'}/> */}
                                 <PlusIcon size={30} style={GlobalStyles.colorMain} style={{marginRight: 10}}/>

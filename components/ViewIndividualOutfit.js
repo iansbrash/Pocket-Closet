@@ -66,7 +66,8 @@ const DisplayClothingTypeFour = ({fetchedOutfitObject, outfitObject, icon}) => {
             <View style={{width: '100%'}}>
                 <ScrollView
                 style={{height: 'auto', paddingTop: 5, paddingBottom: 5}}
-                horizontal={true}>
+                horizontal={true}
+                >
                         {fetchedOutfitObject.outfitArr[`${type}Array`].map(clothingObject => (
                             <ClothingIcon clothingObject={clothingObject}/>
                         ))}
@@ -98,6 +99,7 @@ const DisplayClothingTypeFour = ({fetchedOutfitObject, outfitObject, icon}) => {
                             width: 'auto',
                             height: 'auto'
                         }}>
+                            
                             <Image source={typeof clothingObject.images === 'object' && clothingObject.images.length !== 0 ? 
                                 {uri: clothingObject.images[0]} : dummySrc} style={{width: '100%', aspectRatio: 1, borderRadius: 5}}/>
                         </View>
@@ -617,13 +619,34 @@ export const ViewIndividualOutfit = ({ route }) => {
                             width: 'auto',
                             borderRadius: 5
                         }, GlobalStyles.shadowLightest]}>
-                            <Image //ref={image} //I think this is useless here, delete later
-                                source={dummySrc} 
-                                style={[{
-                                    width: '100%',//'imageHeight',
-                                    aspectRatio: 1,
-                                    borderRadius: 5
-                                },]} />
+                            <ScrollView
+                            style={{
+                                height: 'auto',
+                                width: 'auto'
+                            }}
+                            horizontal={true}
+                            snapToInterval={30}
+                            decelerationRate="fast"
+                            bounces={false}
+                            >
+                                <Image //ref={image} //I think this is useless here, delete later
+                                    source={dummySrc} 
+                                    style={[{
+                                        width: '100%',//'imageHeight',
+                                        aspectRatio: 1,
+                                        borderRadius: 5
+                                    },]} 
+                                />
+                                <Image //ref={image} //I think this is useless here, delete later
+                                    source={dummySrc} 
+                                    style={[{
+                                        width: '100%',//'imageHeight',
+                                        aspectRatio: 1,
+                                        borderRadius: 5
+                                    },]} 
+                                />
+                            </ScrollView>
+                            
                         </View>
                     </Animated.View>
                     <Animated.View style={{

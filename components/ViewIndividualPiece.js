@@ -454,15 +454,48 @@ export const ViewIndividualPiece = ({ route }) => {
                         <View style={{
                             margin: 5,
                             width: 'auto',
-                            borderRadius: 5
+                            borderRadius: 5,
+                            aspectRatio: 1
                         }}>
-                            <Image ref={image} //I think this is useless here, delete later
-                                source={src} 
-                                style={{
-                                    width: '100%',//'imageHeight',
-                                    aspectRatio: 1,
-                                    borderRadius: 5
-                                }} />
+                            <ScrollView
+                            contentContainerStyle={{
+                                width: `${item.images.length * 100}%`,
+                                height: 'auto'
+                            }}
+                            horizontal={true}
+                            
+                            snapToInterval={250}
+                            decelerationRate="fast"
+                            bounces={false}
+                            >
+                                <View style={{
+                                    height: '100%',
+                                    aspectRatio: 1
+                                }}>
+                                <Image //ref={image} //I think this is useless here, delete later
+                                    source={src} 
+                                    style={[{
+                                        width: '100%',//'imageHeight',
+                                        aspectRatio: 1,
+                                        borderRadius: 5
+                                    },]} 
+                                />
+                                </View>
+                                
+                                <View style={{
+                                    height: '100%',
+                                    aspectRatio: 1
+                                }}>
+                                <Image //ref={image} //I think this is useless here, delete later
+                                    source={src} 
+                                    style={[{
+                                        width: '100%',//'imageHeight',
+                                        aspectRatio: 1,
+                                        borderRadius: 5
+                                    },]} 
+                                />
+                                </View>
+                            </ScrollView>
                         </View>
                     </Animated.View>
                     <Animated.View style={{
