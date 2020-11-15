@@ -20,12 +20,15 @@ import { itemFavoriteToggled, clothingDeletedFromCloset } from '../redux/reducer
 import { useNavigation } from '@react-navigation/native'
 import { YesNoModal, ImageScrollModal } from './GlobalComponents/GlobalModals'
 import { TogglableDrawer } from './GlobalComponents/GlobalDrawers'
+import { makeSmallImage, makeMediumImage } from './GlobalFunctions/ImgurResize'
 
 const windowWidth = Dimensions.get('window').width;
 //edit these instead of numbers in handleScroll
 const maxImageHeight = windowWidth - 20; //accounts for margins
 const minImageHieght = maxImageHeight / 2;
 const desiredIconSizeTwo = 60;
+
+
 
 
 const ButtonsStyleTwo = ({imageHeight, item, setModalVisible}) => {
@@ -253,11 +256,11 @@ const ThreeAttributeHeader = ({pieceType, brandsLength, price, description, colo
                     {`${brandsLength} brand${brandsLength !== 1 ? 's' : ''}`}
                 </Text> */}
                 <Text style={[GlobalStyles.h5, {fontWeight: 'bold'}]}>
-                    {`${color}`}
+                    {`${color ? color : 'no color'}`}
                 </Text>
                 <Text style={[{fontWeight: 'bold', marginLeft: 5, marginRight: 5}, GlobalStyles.h3, GlobalStyles.lighterHint]}>•</Text>
                 <Text style={[GlobalStyles.h5, {fontWeight: 'bold'}]}>
-                    {`$${price}`} 
+                    {`$${price ? price : 0}`} 
                 </Text>
             </View>
             <TogglableDrawer minHeight={60}>
@@ -372,9 +375,9 @@ export const ViewIndividualPiece = ({ route }) => {
 
     //temp image
     if (item.images.length !== 0){
-        src = {uri: item.images[0]}
+        src = item.images[0]
     } else {
-        src = { uri: 'https://randomuser.me/api/portraits/men/1.jpg' }
+        src = null //'https://randomuser.me/api/portraits/men/1.jpg'
     }
 
     const image = useRef(null)
@@ -460,9 +463,10 @@ export const ViewIndividualPiece = ({ route }) => {
                             aspectRatio: 1
                         }}>
                             <Pressable
-                            onPress={() => setImageModal(true)}>
+                            onPress={() => setImageModal(true)}
+                            >
                                 <Image //ref={image} //I think this is useless here, delete later
-                                    source={src} 
+                                    source={src ? {uri: makeMediumImage(src)} : {uri: 'https://randomuser.me/api/portraits/men/1.jpg'}} 
                                     style={[{
                                         width: '100%',//'imageHeight',
                                         aspectRatio: 1,
@@ -493,7 +497,7 @@ export const ViewIndividualPiece = ({ route }) => {
                 imageArray={item.images}
             />
 
-            <ThreeAttributeHeader brandsLength={item.brandName.length} price={item.price} pieceType={'t-shirt'} color={item.color}/>
+            <ThreeAttributeHeader brandsLength={item.brandName.length} price={item.price} pieceType={item.pieceType} color={item.color}/>
             
             <View style={{
                 marginLeft: 10,

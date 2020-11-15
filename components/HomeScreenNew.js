@@ -1,10 +1,9 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import {
     View,
     Image,
     TouchableOpacity,
     Text,
-    StyleSheet
 } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
 import { ScreenHeader, MiniScreenHeader } from './GlobalComponents/ScreenHeader'
@@ -49,7 +48,25 @@ const StatContainer = (props) => {
     )
 }
 
-export const HomeScreenNew = () => {
+export const HomeScreenNew = ({route}) => {
+
+
+    //this is dumb... maybe use redux instead
+    const [status, setStatus] = useState(route.params ? route.params.status : 'idle')
+    console.log('route')
+    console.log(route)
+    console.log(`status: ${status}`)
+
+    if (status === 'success'){
+        console.log("Sucess!")
+        setStatus('idle')
+    }
+
+    // useEffect(() => {
+    //     console.log(`status: ${status}`)
+    //     status ? console.log("status was updated") : console.log("we got null but still lggging")
+    //     setStatus('idle')
+    // }, [status])
 
     let src = { uri: 'https://randomuser.me/api/portraits/men/1.jpg' }
     const navigation = useNavigation();

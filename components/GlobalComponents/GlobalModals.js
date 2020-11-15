@@ -12,6 +12,7 @@ import {
 import GlobalStyles from './GlobalStyles'
 import { CheckIcon, XIcon } from './GlobalIcons'
 import { BlurView } from 'expo-blur';
+import {makeHugeImage, makeLargeImage} from '../GlobalFunctions/ImgurResize'
 
 export const YesNoModal = ({setModalVisible, modalVisible, onPressFunc, title}) => {
 
@@ -347,7 +348,7 @@ export const ImageScrollModal = ({setModalVisible, modalVisible, imageArray, tit
               flex: 1,
               backgroundColor: 'black',
               justifyContent: 'center',
-              alignItems: 'center'}}>
+              alignItems: 'center',}}>
                   
                     <View style={{
                         position: 'absolute',
@@ -361,7 +362,7 @@ export const ImageScrollModal = ({setModalVisible, modalVisible, imageArray, tit
                         <TouchableOpacity style={{
                             marginLeft: 10
                         }}>
-                            <XIcon size={40} style={GlobalStyles.colorMain}/>
+                            <XIcon size={40} style={{backgroundColor: 'white'}}/>
                         </TouchableOpacity>
                         <TouchableOpacity style={{
                             marginRight: 10
@@ -372,7 +373,7 @@ export const ImageScrollModal = ({setModalVisible, modalVisible, imageArray, tit
                     </View>
                     <View style={{
                         width: '100%',
-                        aspectRatio: 1
+                        marginTop: 75
                     }}>
                         <ScrollView
                         contentContainerStyle={{
@@ -385,10 +386,19 @@ export const ImageScrollModal = ({setModalVisible, modalVisible, imageArray, tit
                         pagingEnabled
                         >
                             {imageArray.map(imageUrl => (
-                                <Image source={{uri: imageUrl}} style={{
-                                    height: '100%',
-                                    aspectRatio: 1
-                                }}/>
+                                <View style={{
+                                    width: `${100/imageArray.length}%`,
+                                    height: '90%'
+                                }}>
+                                    <Image 
+                                    source={{uri: makeHugeImage(imageUrl)}} 
+                                    resizeMode={'contain'} //this is exactly what i needed
+                                    style={{
+                                        width: `100%`,
+                                        height: '100%'
+                                    }}/>
+                                </View>
+                                
                             ))}
                         </ScrollView>
                     </View>

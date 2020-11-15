@@ -82,6 +82,7 @@ export const UploadFitpic = () => {
 
     const navigation = useNavigation();
     const dispatch = useDispatch();
+    
 
     
 

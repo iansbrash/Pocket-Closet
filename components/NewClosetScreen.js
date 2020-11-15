@@ -23,7 +23,20 @@ import { PlusIcon, HeartIcon } from './GlobalComponents/GlobalIcons'
 
 
 
+//90 x 90
+const makeSmallImage = (imgurUrl) => {
+    //adds an s after the image filename (not including jpeg/jpg/etc)
+    //i.e. https://i.imgur.com/btOmlNRs.jpg (small) vs https://i.imgur.com/btOmlNR.jpg (normal size)
+    return imgurUrl.substr(0, 20) + imgurUrl.substr(20, 7) + 's' + imgurUrl.substr(27)
+}
 
+//320 x 320
+const makeMediumImage = (imgurUrl) => {
+    console.log(`Making medium: ${imgurUrl}`)
+    //adds an s after the image filename (not including jpeg/jpg/etc)
+    //i.e. https://i.imgur.com/btOmlNRs.jpg (small) vs https://i.imgur.com/btOmlNR.jpg (normal size)
+    return imgurUrl.substr(0, 20) + imgurUrl.substr(20, 7) + 'm' + imgurUrl.substr(27)
+}
 
 // used as render method for FlatList in ClosetListOneCol
 function RenderSingleLineClosetItem ({item})  {
@@ -34,7 +47,7 @@ function RenderSingleLineClosetItem ({item})  {
         //very important function
         src = { uri: `https://randomuser.me/api/portraits/men/${Math.floor(Math.random() * 100 % 100 + 1)}.jpg` } //default replacement image
     } else {
-        src = {uri: item.images[0]}
+        src = {uri: makeSmallImage(item.images[0])}
     }
     
 
@@ -319,7 +332,7 @@ const OutfitList = ({searchInput}) => {
                                             backgroundColor: 'white',
                                             borderRadius: 10
                                         }, GlobalStyles.shadowLight]}>
-                                            <Image source={{ uri: `https://randomuser.me/api/portraits/men/${Math.floor(Math.random() * 100 % 100 + 1)}.jpg` }}
+                                            <Image source={item.fitpic && item.fitpic !== '' ? {uri: makeMediumImage(item.fitpic)} : null}
                                                 style={{height: '100%', width: '100%', borderRadius: 10}}/>
                                         </View>
                                     </View>

@@ -1,4 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit'
+import { ActivityIndicatorComponent } from 'react-native';
 
 
 
@@ -29,7 +30,7 @@ const outfitsSlice = createSlice({
             ],
             fitpic: ''
         },
-        status: 'idle',
+        status: 'idle', // idle, success, or error. call 'success' on creating an outfit to prompt animation
         error: null
     },
     reducers: {
@@ -51,6 +52,8 @@ const outfitsSlice = createSlice({
                 //then we can retrieve the date info by doing new Date(outfitObject.date)
                 action.payload.item.date = Date.parse(date);
 
+
+                action.payload.item.fitpic = state.outfitInProgress.fitpic
                 /** the object we push into the outfitsArray SHOULD (and hopefully will) look like this:
                  *  {
                  *      fitpic: '',             //not yet implemented
@@ -126,8 +129,8 @@ const outfitsSlice = createSlice({
                 //this should just be the fitpic url, given our prepare function
                 console.log(action.payload)
 
-                if (action.payload !== ''){
-                    state.outfitInProgress.fitpic = action.payload;
+                if (action.payload.fitpic !== ''){
+                    state.outfitInProgress.fitpic = action.payload.fitpic;
                 } else {
                     console.log('no imgur url provided for fitpic')
                 }

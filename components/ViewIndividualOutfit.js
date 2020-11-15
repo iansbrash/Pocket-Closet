@@ -28,6 +28,7 @@ import { outfitDeletedFromOutfits, outfitFavoriteToggled } from '../redux/reduce
 import { useNavigation } from '@react-navigation/native'
 import { YesNoModal, ImageScrollModal } from './GlobalComponents/GlobalModals'
 import { TogglableDrawer } from './GlobalComponents/GlobalDrawers'
+import { makeSmallImage, makeMediumImage, makeMediumSmallImage } from './GlobalFunctions/ImgurResize'
 
 const windowWidth = Dimensions.get('window').width;
 //edit these instead of numbers in handleScroll
@@ -96,10 +97,14 @@ const DisplayClothingTypeFour = ({fetchedOutfitObject, outfitObject, icon}) => {
                             height: 'auto'
                         }}>
                             <Image source={typeof clothingObject.images === 'object' && clothingObject.images.length !== 0 ? 
-                                {uri: clothingObject.images[0]} : dummySrc} style={{width: '100%', aspectRatio: 1, borderRadius: 5}}/>
+                                {uri: makeMediumSmallImage(clothingObject.images[0])} : dummySrc} style={{width: '100%', aspectRatio: 1, borderRadius: 5}}/>
                         </View>
                         <View style={{marginLeft: 5, marginBottom: 5}}>
-                            <Text style={[{fontWeight: 'bold'}, GlobalStyles.h7]}>{clothingObject.clothingName}</Text>
+                            <Text 
+                            numberOfLines={1}
+                            style={[{fontWeight: 'bold'}, GlobalStyles.h7]}>
+                                {clothingObject.clothingName}
+                                </Text>
                             <Text style={GlobalStyles.h7}>{clothingObject.pieceType}</Text>
                         </View>
                         <View style={{
@@ -594,7 +599,7 @@ export const ViewIndividualOutfit = ({ route }) => {
                 modalVisible={imageModal}
                 setModalVisible={setImageModal}
                 title={'Title XD'}
-                imageArray={['https://randomuser.me/api/portraits/men/1.jpg']}/>
+                imageArray={[outfitObject.fitpic]}/>
             
             
             {/* GestureRecognizers allow us to swipe up/down to make the fitpic image big/small */}
@@ -624,7 +629,7 @@ export const ViewIndividualOutfit = ({ route }) => {
                             <Pressable
                             onPress={() => setImageModal(true)}>
                                 <Image //ref={image} //I think this is useless here, delete later
-                                    source={dummySrc} 
+                                    source={outfitObject.fitpic? {uri: makeMediumImage(outfitObject.fitpic)} : dummySrc} 
                                     style={[{
                                         width: '100%',//'imageHeight',
                                         aspectRatio: 1,

@@ -159,7 +159,8 @@ export const FinalizeOutfit = () => {
         dispatch(outfitCreatedFromHome(idArrayObject, await nanoid()
         ))
         // dispatch(outfitCreatedFromHome(outfitInProgress))
-        navigation.navigate("FINALIZESUCCESS")
+        // navigation.navigate("FINALIZESUCCESS")
+        navigation.navigate("HOMESCREEN", {status: 'success'})
     }
 
     const testArray = [];

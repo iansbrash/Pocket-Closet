@@ -194,11 +194,54 @@ export const ItemDescription = () => {
                         hookFunc={setColorInput}
                         hookVaue={colorInput}/>
                     <Divider style={{width: 'auto', margin: 5}}/>
-                    <DescriptionComponent 
+
+                    <View style={{
+                        flexDirection: 'row',
+                        justifyContent: 'flex-start',
+                        alignItems: 'center',
+                        height: 30
+
+                    }}>
+                        <Text style={[{
+                            width: 'auto',
+                            fontWeight: 'bold'
+
+                        }, GlobalStyles.h5]}>{'Price'}: </Text>
+                        <View style={{
+                            width: '100%',
+                            marginTop: -4,
+                            justifyContent: 'center',
+                            marginLeft: 5,
+                            flexDirection: 'row',
+                            
+                        }}>
+                            <View style={{
+                                
+                                marginTop:8,
+                            }}>
+                                <Text style={[GlobalStyles.h7, GlobalStyles.hint]}>
+                                    $
+                                </Text>
+                            </View>
+                            <TextInput style={{
+                                borderColor: 'white',
+                                backgroundColor: 'white',
+                                width: '100%',
+                                height: '100%',
+                                marginTop:8,
+                            }}
+                            
+                            value={priceInput}
+                            onChangeText={nextValue => setPriceInput(nextValue)}
+                            textStyle={{marginLeft: -7}}
+                            placeholder={'79'} />
+                        </View>
+                    </View>
+                    {/* <DescriptionComponent 
                         title={'Price'} 
-                        placeholder={'$79'}
+                        placeholder={'79'}
                         hookFunc={setPriceInput}
-                        hookVaue={priceInput}/>
+                        hookVaue={priceInput}/> */}
 
                     <Divider style={{width: 'auto', margin: 5}}/>
 
