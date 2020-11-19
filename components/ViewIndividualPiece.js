@@ -20,7 +20,7 @@ import { itemFavoriteToggled, clothingDeletedFromCloset } from '../redux/reducer
 import { useNavigation } from '@react-navigation/native'
 import { YesNoModal, ImageScrollModal } from './GlobalComponents/GlobalModals'
 import { TogglableDrawer } from './GlobalComponents/GlobalDrawers'
-import { makeSmallImage, makeMediumImage } from './GlobalFunctions/ImgurResize'
+import { makeSmallImage, makeMediumImage, makeMediumSmallImage } from './GlobalFunctions/ImgurResize'
 
 const windowWidth = Dimensions.get('window').width;
 //edit these instead of numbers in handleScroll
@@ -360,6 +360,90 @@ const ClothingTags = ({tagsArray}) => {
     )
 }
 
+//we need to fetch / store the list of outfits this clothing is in somehow
+const OutfitScroll = () => {
+    
+    const dummySrc = {uri: 'https://randomuser.me/api/portraits/men/1.jpg'}
+
+    const mockOutfitsThisClothingIsUsedInArray = [
+        {
+            date: '11/20/20',
+            fitpic: 'https://randomuser.me/api/portraits/men/1.jpg',
+            //outfitArr: {
+            // we really don't need this part because we're just displaying the image
+            //}
+        },
+        {
+            date: '11/20/21',
+            fitpic: 'https://randomuser.me/api/portraits/men/1.jpg',
+            //outfitArr: {
+            // we really don't need this part because we're just displaying the image
+            //} //nm we do need this to navigate to the outfit lol
+        }
+    ]
+
+    const ClothingIcon = ({outfitObject}) => {
+
+
+        return (
+            <View style={{
+                width: 150, // might just have to do this
+                height: 'auto',
+            }}>
+                <TouchableOpacity
+                onPress={() => navigation.navigate('VIEWINDIVIDUALOUTFIT', {item: outfitObject})}>
+                    <View style={[{
+                        margin: 5,
+                        height: 'auto',
+                        width: 'auto',
+                        borderRadius: 5,
+                        backgroundColor: 'white',
+                    }, GlobalStyles.shadowLight]}>
+                        <View style={[GlobalStyles.bgColorMain, {width: '100%', borderTopLeftRadius: 5, borderTopRightRadius: 5, height: 5}]}></View>
+                        <View style={{
+                            margin: 5,
+                            width: 'auto',
+                            height: 'auto'
+                        }}>
+                            <Image source={outfitObject.fitpic !== '' ? 
+                                {uri:  outfitObject.fitpic} : dummySrc} //{/** makeMediumSmallImage(outfitObject.fitpic)*/}
+                                style={{width: '100%', aspectRatio: 1, borderRadius: 5}}/>
+                        </View>
+                        <View style={{marginLeft: 5, marginBottom: 5}}>
+                            <Text 
+                            numberOfLines={1}
+                            style={[{fontWeight: 'bold'}, GlobalStyles.h7]}>
+                                {outfitObject.date}
+                                </Text>
+                            <Text style={GlobalStyles.h7}>{outfitObject.date}</Text>
+                        </View>
+                        <View style={{
+                            position: 'absolute',
+                            bottom: 5,
+                            right: 5
+                        }}>
+                            {/* <HeartIcon style={{color: clothingObject.favorite ? 'red' : 'black'}} size={20}/> */}
+                        </View>
+                    </View>
+                </TouchableOpacity>
+            </View>
+        )
+    }
+
+    return (
+        <View style={{width: '100%'}}>
+            <ScrollView
+            style={{height: 'auto', paddingTop: 5, paddingBottom: 5}}
+            horizontal={true}
+            >
+                    {mockOutfitsThisClothingIsUsedInArray.map(outfitObject => (
+                        <ClothingIcon outfitObject={outfitObject}/>
+                    ))}
+            </ScrollView>
+        </View>
+    )
+}
+
 
 export const ViewIndividualPiece = ({ route }) => {
 
@@ -500,12 +584,12 @@ export const ViewIndividualPiece = ({ route }) => {
             <ThreeAttributeHeader brandsLength={item.brandName.length} price={item.price} pieceType={item.pieceType} color={item.color}/>
             
             <View style={{
-                marginLeft: 10,
+                marginLeft: 20,
             }}>
                 <Text style={
                     [GlobalStyles.h6, {fontWeight :'bold'}]
                 }>
-                    {`${item.timesWorn && item.timesWorn !== 0 ? `Worn ${item.timesWorn}x` : 'Never worn. Try it on!'}`}
+                    {`${item.timesWorn && item.timesWorn !== 0 ? `Worn ${item.timesWorn}x` : 'Never worn'}`}
                 </Text>
             </View>
             
@@ -516,7 +600,18 @@ export const ViewIndividualPiece = ({ route }) => {
                 width: '100%',
                 height: 300
             }}>
-
+                <View style={{
+                marginLeft: 10,
+                marginTop: 20,
+                }}>
+                    <Text style={
+                        [GlobalStyles.h4, {fontWeight :'bold'}]
+                    }>
+                        {`${item.timesWorn && item.timesWorn !== 0 ? `Worn ${item.timesWorn}x` : 'Never worn. Try it on!'}`}
+                    </Text>
+                </View>
+                {/* Need to pass array of all outfitObj that include this piece to this component eventually */}
+                <OutfitScroll />
             </View>
             
             

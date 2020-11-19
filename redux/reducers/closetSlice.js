@@ -1,7 +1,33 @@
 import { DrawerActions } from '@react-navigation/native'
-import { createSlice } from '@reduxjs/toolkit'
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import { ActivityIndicatorComponent } from 'react-native';
  
+
+// TODO
+/**
+ * I think I'm trying to dispatch 2 actions at once
+ *      one to increment the timesWorn attribute on each piece of clothing
+ *      one to push the outfitObject into our state.outfits.outfitArray
+ * Possible solutions:
+ *      Directly install thunk (it seems like rn doesn't like what I'm doing rn?)
+ */
+export const clothingInOutfitWornThunk = createAsyncThunk(
+    'closet/clothingInOutfitWorn',
+    async (arg, thunkAPI) => {
+        // console.log('arg')
+        // console.log(arg)
+        // Object.keys(arg).forEach(key => {
+        //     arg[key].forEach(id => {
+        //         thunkAPI.getState().closetObject[key].find(clothingObject => {
+        //             clothingObject._id === id
+        //         }).timesWorn++;
+        //     })
+        // })
+        // return arg;
+        console.log('in think XD')
+        thunkAPI.dispatch(clothingInOutfitWorn(arg))
+    }
+)
 
 const closetSlice = createSlice({
     name: 'closet',
@@ -257,6 +283,24 @@ const closetSlice = createSlice({
                 console.log(state.clothingPieceInProgress);
             }
         },
+        clothingInOutfitWorn: {
+            state (action, payload){
+                Object.keys(action.payload).forEach(key => {
+                    action.payload[key].forEach(id => {
+                        state.closetObject[key].find(clothingObject => {
+                            clothingObject._id === id
+                        }).timesWorn++;
+                    })
+                })
+            },
+            prepare(idObjectArray) {
+                return {
+                    payload: {
+                        ...idObjectArray
+                    }
+                }
+            }
+        }
     },
 })
 
@@ -273,5 +317,6 @@ export const {
     sizeDeleted,
     brandAdded,
     brandDeleted,
-    clothingInProgressCleansed
+    clothingInProgressCleansed,
+    //clothingInOutfitWorn
 } = closetSlice.actions;

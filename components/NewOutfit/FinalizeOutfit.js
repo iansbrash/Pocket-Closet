@@ -18,6 +18,7 @@ import { XIcon } from '../GlobalComponents/GlobalIcons'
 import { MediumButton } from '../GlobalComponents/GlobalButtons'
 import { outfitInProgressCleansed } from '../../redux/reducers/outfitsSlice'
 import { nanoid } from 'nanoid/async/index.native'
+import { clothingInOutfitWornThunk } from '../../redux/reducers/closetSlice'
 
 
 
@@ -130,7 +131,7 @@ export const FinalizeOutfit = () => {
     const dispatch = useDispatch();
     
     
-    const FinalizeClicked = async () => {
+    const FinalizeClicked = /** async */ () => {
 
 
 
@@ -155,9 +156,12 @@ export const FinalizeOutfit = () => {
             idArrayObject[`${outfitObj.clothingType.toLowerCase()}Array`].push(outfitObj._id)
         })
 
+        dispatch(clothingInOutfitWornThunk(idArrayObject))
+
         //we have a prepare: statement in our action, so we just need to pass in these 2 arguments
-        dispatch(outfitCreatedFromHome(idArrayObject, await nanoid()
-        ))
+        // dispatch(outfitCreatedFromHome(idArrayObject, await nanoid()
+        // ))
+
         // dispatch(outfitCreatedFromHome(outfitInProgress))
         // navigation.navigate("FINALIZESUCCESS")
         navigation.navigate("HOMESCREEN", {status: 'success'})
@@ -181,6 +185,11 @@ export const FinalizeOutfit = () => {
                 flex: 1
             }}>
                 <Text>{`fitpic (if there is one): ${outfitInProgress.fitpic}`}</Text>
+                <View style={{
+                    
+                }}>
+
+                </View>
                 <ScrollView style={{padding: 10}}>
                     {/* Notice we are compensating for our subpar redux structure by filtering out the fitpic key */}
                     {Object.keys(outfitInProgress).filter(item => item !== 'fitpic').map(key => ( 

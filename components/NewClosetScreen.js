@@ -20,23 +20,10 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 import { PlusButton } from './NewOutfit/PlusButton'
 import GlobalStyles from './GlobalComponents/GlobalStyles'
 import { PlusIcon, HeartIcon } from './GlobalComponents/GlobalIcons'
+import { makeSmallImage, makeMediumImage } from './GlobalFunctions/ImgurResize'
 
 
 
-//90 x 90
-const makeSmallImage = (imgurUrl) => {
-    //adds an s after the image filename (not including jpeg/jpg/etc)
-    //i.e. https://i.imgur.com/btOmlNRs.jpg (small) vs https://i.imgur.com/btOmlNR.jpg (normal size)
-    return imgurUrl.substr(0, 20) + imgurUrl.substr(20, 7) + 's' + imgurUrl.substr(27)
-}
-
-//320 x 320
-const makeMediumImage = (imgurUrl) => {
-    console.log(`Making medium: ${imgurUrl}`)
-    //adds an s after the image filename (not including jpeg/jpg/etc)
-    //i.e. https://i.imgur.com/btOmlNRs.jpg (small) vs https://i.imgur.com/btOmlNR.jpg (normal size)
-    return imgurUrl.substr(0, 20) + imgurUrl.substr(20, 7) + 'm' + imgurUrl.substr(27)
-}
 
 // used as render method for FlatList in ClosetListOneCol
 function RenderSingleLineClosetItem ({item})  {
@@ -362,10 +349,9 @@ const OutfitList = ({searchInput}) => {
                                                     backgroundColor: 'white'
                                                 }, GlobalStyles.shadowLight]}>
                                                     <Image  
-                                                        source={{uri:imageArrayFromIds[index]}} 
+                                                        source={{uri: makeSmallImage(imageArrayFromIds[index])}} 
                                                         style={{height: '100%', aspectRatio: 1, borderRadius: 10}} />
                                                 </View>
-                                                
                                             </View>
                                             )
                                         )}
