@@ -67,7 +67,7 @@ export const FinalizeClothing = () => {
 
 
 
-    let src = [{ uri: 'https://randomuser.me/api/portraits/men/1.jpg' }]
+    let src = ['https://randomuser.me/api/portraits/men/1.jpg' ]
 
     // this fucking works bby
     const clothingPieceInProgress = useSelector(state => state.closet.clothingPieceInProgress)

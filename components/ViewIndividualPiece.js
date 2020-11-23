@@ -361,9 +361,14 @@ const ClothingTags = ({tagsArray}) => {
 }
 
 //we need to fetch / store the list of outfits this clothing is in somehow
-const OutfitScroll = () => {
+const OutfitScroll = ({outfitsWornIn}) => {
     
     const dummySrc = {uri: 'https://randomuser.me/api/portraits/men/1.jpg'}
+
+    const outfitsArray = useSelector(state => state.outfits.outfitsArray)
+    const navigation = useNavigation();
+
+    console.log(outfitsWornIn)
 
     const mockOutfitsThisClothingIsUsedInArray = [
         {
@@ -405,7 +410,7 @@ const OutfitScroll = () => {
                             width: 'auto',
                             height: 'auto'
                         }}>
-                            <Image source={outfitObject.fitpic !== '' ? 
+                            <Image source={outfitObject.fitpic && outfitObject.fitpic !== '' ? 
                                 {uri:  outfitObject.fitpic} : dummySrc} //{/** makeMediumSmallImage(outfitObject.fitpic)*/}
                                 style={{width: '100%', aspectRatio: 1, borderRadius: 5}}/>
                         </View>
@@ -413,9 +418,9 @@ const OutfitScroll = () => {
                             <Text 
                             numberOfLines={1}
                             style={[{fontWeight: 'bold'}, GlobalStyles.h7]}>
-                                {outfitObject.date}
+                                {outfitObject._id}
                                 </Text>
-                            <Text style={GlobalStyles.h7}>{outfitObject.date}</Text>
+                            <Text style={GlobalStyles.h7}>{Date(outfitObject.date)}</Text>
                         </View>
                         <View style={{
                             position: 'absolute',
@@ -436,9 +441,17 @@ const OutfitScroll = () => {
             style={{height: 'auto', paddingTop: 5, paddingBottom: 5}}
             horizontal={true}
             >
-                    {mockOutfitsThisClothingIsUsedInArray.map(outfitObject => (
-                        <ClothingIcon outfitObject={outfitObject}/>
-                    ))}
+
+                {outfitsWornIn ? 
+                outfitsWornIn.map(outfitId => (
+                    
+                    <ClothingIcon outfitObject={outfitsArray.find(outfitObj => outfitObj._id === outfitId)} />
+                )) 
+                    :
+                (mockOutfitsThisClothingIsUsedInArray.map(outfitObject => (
+                    <ClothingIcon outfitObject={outfitObject}/>
+                )))
+                }
             </ScrollView>
         </View>
     )
@@ -611,7 +624,7 @@ export const ViewIndividualPiece = ({ route }) => {
                     </Text>
                 </View>
                 {/* Need to pass array of all outfitObj that include this piece to this component eventually */}
-                <OutfitScroll />
+                <OutfitScroll outfitsWornIn={item.outfitsWornIn}/>
             </View>
             
             

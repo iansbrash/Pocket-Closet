@@ -160,11 +160,12 @@ export const FinalizeOutfit = () => {
         //dispatch(clothingInOutfitWornThunk(idArrayObject))
 
         let nid = await nanoid();
+        let date = Date.parse(new Date());
 
         dispatch(batchActions([
-            clothingInOutfitWorn(idArrayObject),
-            outfitCreatedFromHome(idArrayObject, nid),
-            ]))
+            clothingInOutfitWorn(idArrayObject, nid),
+            outfitCreatedFromHome(idArrayObject, nid, date),]
+        ))
 
         //we have a prepare: statement in our action, so we just need to pass in these 2 arguments
         // dispatch(outfitCreatedFromHome(idArrayObject, await nanoid()
@@ -188,7 +189,9 @@ export const FinalizeOutfit = () => {
             flex: 1,
             backgroundColor: 'white'
         }}>
-           <TopNavScreenHeader title={'Finalize Outfit'} exitDestination={'HOMESCREEN'} extraFunc={() => dispatch(outfitInProgressCleansed())}/>
+           <TopNavScreenHeader title={'Finalize Outfit'} exitDestination={'HOMESCREEN'} 
+                extraFunc={() => dispatch(outfitInProgressCleansed())}
+                />
             <View style={{
                 flex: 1
             }}>

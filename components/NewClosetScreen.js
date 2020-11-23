@@ -219,7 +219,11 @@ const OutfitList = ({searchInput}) => {
             for (const id of outfitArray[key]){
                 //the clothingObject we find using the ID
                 const temp = closetObject[key].find(clothingObj => clothingObj._id === id);
-                if (!temp.images){
+                if (!temp){
+                    console.log('temp not found... so descriptive')
+                    console.log('this means we cant find the clothing Objecy were searching for? ')
+                }
+                else if (!temp.images){
                     imageArrayFromIds.push(`https://randomuser.me/api/portraits/men/${Math.floor(Math.random() * 100 % 100 + 1)}.jpg`)
 
                 } else if (temp.images.length === 0){

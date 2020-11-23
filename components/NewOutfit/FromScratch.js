@@ -170,7 +170,8 @@ export const FromScratch = () => {
         style={{flex: 1, backgroundColor: 'white'}}>
             {/* <TopNav title={'From Scratch!'} exitDestination={'HOMESCREEN'}/> */}
             {/* <ScreenHeader title={'Select Clothing'}/> */}
-            <TopNavScreenHeader title={'Select Clothing'} exitDestination={'HOMESCREEN'} extraFunc={() => dispatch(outfitInProgressCleansed())}/>
+            <TopNavScreenHeader title={'Select Clothing'} exitDestination={'HOMESCREEN'} 
+            extraFunc={() => dispatch(outfitInProgressCleansed())}/>
             <View style={{
                 height: 'auto',
                 width: '100%',

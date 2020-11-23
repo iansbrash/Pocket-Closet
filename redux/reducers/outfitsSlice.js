@@ -45,15 +45,18 @@ const outfitsSlice = createSlice({
                 //fetch the corresponding items when we need them, or else we don't
                 //have dynamic items that can be edited once we put them in
                 //the outfits store
-                let date = new Date();
+                //let date = new Date();
 
                 //parse the date into ms after 1970... so it looks like
                 //48916294801235
                 //then we can retrieve the date info by doing new Date(outfitObject.date)
-                action.payload.item.date = Date.parse(date);
+                //we might need to do this directly outside of this slice..
+                //cuz this is bad practice?
+                //action.payload.date = date;//Date.parse(date);
+                
 
 
-                action.payload.item.fitpic = state.outfitInProgress.fitpic
+                action.payload.fitpic = state.outfitInProgress.fitpic
                 /** the object we push into the outfitsArray SHOULD (and hopefully will) look like this:
                  *  {
                  *      fitpic: '',             //not yet implemented
@@ -74,8 +77,7 @@ const outfitsSlice = createSlice({
                   // we previously used push, trying spread operator to get rid off:
                  //assign to read-only property' error
                 // state.outfitsArray.push(action.payload);
-                //this did not doa nything lmao
-                state.outfitsArray = [...state.outfitsArray, action.payload.item]
+                state.outfitsArray = [...state.outfitsArray, action.payload]
 
 
                 //turns out outfitArr is an object... holding the 4 ararys... kill me
@@ -91,14 +93,12 @@ const outfitsSlice = createSlice({
                     otherArray: []
                 }
             },
-            prepare( outfitArr, _id ) {
+            prepare( outfitArr, _id, date ) {
                 return {
                     payload: {
-                        item: {
-                            outfitArr,
-                            _id
-                        }
-                        
+                        outfitArr,
+                        _id,
+                        date
                     }
                 }
             }

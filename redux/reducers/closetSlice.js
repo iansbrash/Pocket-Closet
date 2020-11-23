@@ -297,6 +297,7 @@ const closetSlice = createSlice({
                         []
                     ], // array of names and nicknames
                     timesWorn: 0, //defaults to zero, user can't control this
+                    outfitsWornIn: [], //defaults to empty array
                     tags: [],
                     images: [],
                     favorite: false,
@@ -307,20 +308,30 @@ const closetSlice = createSlice({
         },
         clothingInOutfitWorn: {
             reducer (state, action){
+                //increment timesWorn,
+                //add the outfitObject _id to an "outfitsWornIn" array
+                //this requires some restructuring of our redux logic
+                //  --needs _id in each outfitObject... could alternatively use the 'date' attrute
+                //  --deleting an outfit means deleting that outfitId from each clothing with it saved in outfitsWornIn
+                //  --deleting a clothing means retracing to each outfit it is worn in, and deleting its ID to not cause errors
                 console.log("In clothingInOutfitWorn")
-                Object.keys(action.payload).forEach(key => {
-                    action.payload[key].forEach(id => {
+                Object.keys(action.payload.idObjectArray).forEach(key => {
+                    action.payload.idObjectArray[key].forEach(id => {
                         console.log(`id we're finding: ${id}`)
-                        state.closetObject[key].find(clothingObject => 
+                        let toInc = state.closetObject[key].find(clothingObject => 
                             clothingObject._id === id
-                        ).timesWorn++;
+                        )
+                        toInc.timesWorn++;
+                        //adds the _id of the outfit this clothing is worn in to the outfitsWornIn array
+                        toInc.outfitsWornIn = [...toInc.outfitsWornIn, action.payload._id]
                     })
                 })
             },
-            prepare(idObjectArray) {
+            prepare(idObjectArray, _id) {
                 return {
                     payload: {
-                        ...idObjectArray
+                        idObjectArray,
+                        _id
                     }
                 }
             }
