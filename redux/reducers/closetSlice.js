@@ -10,24 +10,24 @@ import { ActivityIndicatorComponent } from 'react-native';
  *      one to push the outfitObject into our state.outfits.outfitArray
  * Possible solutions:
  *      Directly install thunk (it seems like rn doesn't like what I'm doing rn?)
- */
-export const clothingInOutfitWornThunk = createAsyncThunk(
-    'closet/clothingInOutfitWorn',
-    async (arg, thunkAPI) => {
-        // console.log('arg')
-        // console.log(arg)
-        // Object.keys(arg).forEach(key => {
-        //     arg[key].forEach(id => {
-        //         thunkAPI.getState().closetObject[key].find(clothingObject => {
-        //             clothingObject._id === id
-        //         }).timesWorn++;
-        //     })
-        // })
-        // return arg;
-        console.log('in think XD')
-        thunkAPI.dispatch(clothingInOutfitWorn(arg))
-    }
-)
+ */ //Gonna use redux-batched-actions instead
+// export const clothingInOutfitWornThunk = createAsyncThunk(
+//     'closet/clothingInOutfitWorn',
+//     async (arg, thunkAPI) => {
+//         // console.log('arg')
+//         // console.log(arg)
+//         // Object.keys(arg).forEach(key => {
+//         //     arg[key].forEach(id => {
+//         //         thunkAPI.getState().closetObject[key].find(clothingObject => {
+//         //             clothingObject._id === id
+//         //         }).timesWorn++;
+//         //     })
+//         // })
+//         // return arg;
+//         console.log('in think XD')
+//         thunkAPI.dispatch(clothingInOutfitWorn(arg))
+//     }
+// )
 
 const closetSlice = createSlice({
     name: 'closet',
@@ -45,7 +45,8 @@ const closetSlice = createSlice({
                     color: 'black',
                     tags: ['hype', 'casual', 'stolen', 'retail', 'ugly'],
                     images: [],
-                    pieceType: 'T-Shirt'
+                    pieceType: 'T-Shirt',
+                    oufitsInArray: []
                 },{
                     _id: 70,
                     clothingType: 'tops',
@@ -57,7 +58,8 @@ const closetSlice = createSlice({
                     color: 'black',
                     images: [],
                     tags: ['hype', 'casual'],
-                    pieceType: 'T-Shirt'
+                    pieceType: 'T-Shirt',
+                    oufitsInArray: []
                 },{
                     _id: 71,
                     clothingType: 'tops',
@@ -70,7 +72,8 @@ const closetSlice = createSlice({
                     color: 'black',
                     tags: ['hype', 'casual'],
                     images: [],
-                    pieceType: 'coat'
+                    pieceType: 'coat',
+                    oufitsInArray: []
                     
                 },{
                     _id: 72,
@@ -83,7 +86,8 @@ const closetSlice = createSlice({
                     color: 'black',
                     tags: ['hype', 'casual'],
                     images: [],
-                    pieceType: 'T-Shirt'
+                    pieceType: 'T-Shirt',
+                    oufitsInArray: []
                     
                 },
             ],
@@ -114,7 +118,8 @@ const closetSlice = createSlice({
                     color: 'brown',
                     tags: ['casual'],
                     images: [],
-                    pieceType: 'Sneakers'
+                    pieceType: 'Sneakers',
+                    oufitsInArray: []
                 },
             ],
             otherArray: [
@@ -129,7 +134,8 @@ const closetSlice = createSlice({
                     color: 'silver',
                     tags: ['luxury'],
                     images: [],
-                    pieceType: 'ring'
+                    pieceType: 'ring',
+                    oufitsInArray: []
                 },
             ]
         },
@@ -191,6 +197,22 @@ const closetSlice = createSlice({
         },
         clothingAddedToCloset: {
             reducer(state, action) {
+
+
+                /**
+                 * _id: 72,
+                    clothingType: 'tops',
+                    clothingName: 'baby milo shirt',
+                    brandName: ['Bape', 'A Bathing Ape'],
+                    timesWorn: 0, //defaults to zero, user can't control this
+                    favorite: false,
+                    price: '$98',
+                    color: 'black',
+                    tags: ['hype', 'casual'],
+                    images: [],
+                    pieceType: 'T-Shirt'
+                    oufitsInArray: []
+                 */
                 state.closetObject[action.payload.clothingType.toLowerCase() + 'Array'] =
                 [...state.closetObject[action.payload.clothingType.toLowerCase() + 'Array'], action.payload]
             }
@@ -284,12 +306,14 @@ const closetSlice = createSlice({
             }
         },
         clothingInOutfitWorn: {
-            state (action, payload){
+            reducer (state, action){
+                console.log("In clothingInOutfitWorn")
                 Object.keys(action.payload).forEach(key => {
                     action.payload[key].forEach(id => {
-                        state.closetObject[key].find(clothingObject => {
+                        console.log(`id we're finding: ${id}`)
+                        state.closetObject[key].find(clothingObject => 
                             clothingObject._id === id
-                        }).timesWorn++;
+                        ).timesWorn++;
                     })
                 })
             },
@@ -318,5 +342,5 @@ export const {
     brandAdded,
     brandDeleted,
     clothingInProgressCleansed,
-    //clothingInOutfitWorn
+    clothingInOutfitWorn
 } = closetSlice.actions;

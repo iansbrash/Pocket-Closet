@@ -2,7 +2,7 @@ import { configureStore, getDefaultMiddleware } from '@reduxjs/toolkit'
 import closetReducer from './reducers/closetSlice'
 import outfitsReducer from './reducers/outfitsSlice'
 import { combineReducers } from 'redux';
-import { createStore } from 'redux'
+import { createStore, applyMiddleware } from 'redux'
 import {
     persistStore,
     persistReducer,
@@ -10,6 +10,7 @@ import {
   } from 'redux-persist'
 import AsyncStorage from '@react-native-community/async-storage';
 // import { AsyncStorage } from 'react-native'
+import {enableBatching, batchDispatchMiddleware} from 'redux-batched-actions';
 
 
 /** Persist Starts Here */
@@ -24,10 +25,10 @@ const rootReducer = combineReducers({
     outfits: outfitsReducer
 })
 
-const persistedReducer = persistReducer(persistConfig, rootReducer);
+const persistedReducer = persistReducer(persistConfig, rootReducer)
 
 
-const store = createStore(persistedReducer)
+const store = createStore(persistedReducer, undefined, applyMiddleware(batchDispatchMiddleware))
 /** Persist Ends Here */
 
 

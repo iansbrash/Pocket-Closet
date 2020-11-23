@@ -36,7 +36,7 @@ const outfitsSlice = createSlice({
     reducers: {
         outfitCreatedFromHome: {
             reducer (state, action) {
-                console.log(action.payload);
+                console.log("In outfitCreatedFromHome")
 
                 //adds outfit to our state
                 //date is tentative

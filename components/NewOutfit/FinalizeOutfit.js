@@ -18,8 +18,9 @@ import { XIcon } from '../GlobalComponents/GlobalIcons'
 import { MediumButton } from '../GlobalComponents/GlobalButtons'
 import { outfitInProgressCleansed } from '../../redux/reducers/outfitsSlice'
 import { nanoid } from 'nanoid/async/index.native'
-import { clothingInOutfitWornThunk } from '../../redux/reducers/closetSlice'
-
+import { clothingInOutfitWorn } from '../../redux/reducers/closetSlice'
+///
+import {batchActions} from 'redux-batched-actions';
 
 
 
@@ -131,7 +132,7 @@ export const FinalizeOutfit = () => {
     const dispatch = useDispatch();
     
     
-    const FinalizeClicked = /** async */ () => {
+    const FinalizeClicked = async () => {
 
 
 
@@ -156,7 +157,14 @@ export const FinalizeOutfit = () => {
             idArrayObject[`${outfitObj.clothingType.toLowerCase()}Array`].push(outfitObj._id)
         })
 
-        dispatch(clothingInOutfitWornThunk(idArrayObject))
+        //dispatch(clothingInOutfitWornThunk(idArrayObject))
+
+        let nid = await nanoid();
+
+        dispatch(batchActions([
+            clothingInOutfitWorn(idArrayObject),
+            outfitCreatedFromHome(idArrayObject, nid),
+            ]))
 
         //we have a prepare: statement in our action, so we just need to pass in these 2 arguments
         // dispatch(outfitCreatedFromHome(idArrayObject, await nanoid()
