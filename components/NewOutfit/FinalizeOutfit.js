@@ -201,26 +201,59 @@ export const FinalizeOutfit = () => {
                 }}>
 
                 </View>
-                <ScrollView style={{padding: 10}}>
+                {/* <ScrollView style={{padding: 10}}> */}
+                <View style={{
+                    padding: 10
+                }}>
+                    <FlatList 
+                        renderItem={key => ( 
+                            // <Text>{key.item}</Text>) this is weird af.... why key.item...
+                            outfitInProgress[key.item].length !== 0 ?
+                            <>
+                                <MiniScreenHeader 
+                                title={outfitInProgress[key.item][0].clothingType.charAt(0).toUpperCase() 
+                                    + outfitInProgress[key.item][0].clothingType.slice(1)}/>
+                                <FlatList 
+                                    data={outfitInProgress[key.item]}
+                                    bounces={false}
+                                    keyExtractor={item => item._id.toString()}
+                                    renderItem={item => (
+                                        <MediumButton 
+                                            title={item.item.clothingName}
+                                            onPressFunc={null}
+                                            buttonFunc={() => dispatch(outfitInProgressItemDeleted(item.item))}
+                                            icon={<XIcon size={30} style={[{marginRight: 10}, GlobalStyles.colorMain]}/>}
+                                        />
+                                    )}
+                                />
+                            </> : null)
+                        }
+                        data={Object.keys(outfitInProgress).filter(item => item !== 'fitpic')}
+                        //
+                        //['topsArray', 'bottomsArray', 'footwearArray', 'otherArray']
+                    
+                    />
                     {/* Notice we are compensating for our subpar redux structure by filtering out the fitpic key */}
-                    {Object.keys(outfitInProgress).filter(item => item !== 'fitpic').map(key => ( 
+                    {/* {Object.keys(outfitInProgress).filter(item => item !== 'fitpic').map(key => ( 
                         outfitInProgress[key].length !== 0 ?
-                        <View>
+                        <>
                             <MiniScreenHeader 
                             title={outfitInProgress[key][0].clothingType.charAt(0).toUpperCase() 
                                 + outfitInProgress[key][0].clothingType.slice(1)}/>
                             <FlatList 
                             data={outfitInProgress[key]}
+                            bounces={false}
+                            keyExtractor={item => item._id.toString()}
                             renderItem={item => (
-                                
                             <MediumButton 
                                 title={item.item.clothingName}
                                 onPressFunc={null}
                                 buttonFunc={() => dispatch(outfitInProgressItemDeleted(item.item))}
                                 icon={<XIcon size={30} style={[{marginRight: 10}, GlobalStyles.colorMain]}/>}/>)}/>
-                        </View> : null
-                    ))}
-                </ScrollView>
+                        </> : null
+                    ))} */}
+                </View>
+                {/* </ScrollView> */}
                 
 
                 <FinalizeButton 

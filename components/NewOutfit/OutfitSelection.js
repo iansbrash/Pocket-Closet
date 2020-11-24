@@ -159,7 +159,7 @@ const DropDownViewTest = (props) => {
             fadeAnim, {
                 toValue: props.hookValue ? 0 : 1,
                 duration: 250,
-                useNativeDriver: true
+                useNativeDriver: false
             }
         ).start();
     }, [props.hookValue])
@@ -190,7 +190,7 @@ const FadeInViewTest = (props) => {
             fadeAnim, {
                 toValue: props.hookValue ? 0 : 1,
                 duration: 250,
-                useNativeDriver: true
+                useNativeDriver: false
             }
         ).start();
     }, [props.hookValue])
@@ -223,7 +223,7 @@ const FadeInViewTestTwo = (props) => {
             fadeAnim, {
                 toValue: props.hookValue ? 1 : 0,
                 duration: 250,
-                useNativeDriver: true
+                useNativeDriver: false
             }
         ).start();
     }, [props.hookValue])
@@ -364,6 +364,7 @@ export const OutfitSelection = ({ route, navigation }) => {
                     }} hookValue={modalVisible}>
                     <FlatList 
                         data={ClosetArray.filter(item => item.clothingName.toLowerCase().includes(searchInput.toLowerCase()))}
+                        keyExtractor={item => item._id.toString()}
                         renderItem={renderItem}
                         />
                 </FadeInViewTestTwo>
@@ -384,7 +385,9 @@ export const OutfitSelection = ({ route, navigation }) => {
                 hookValue={modalVisible}>
                         <FlatList style={{maxHeight: '100%'}}
                             data={OutfitArray}
-                            renderItem={(item) => (<ClothingAddedIcon {...item}/>)}/>
+                            renderItem={(item) => (<ClothingAddedIcon {...item}/>)}
+                            keyExtractor={item => item._id.toString()}
+                            />
                 </FadeInViewTest>
             </View>
             <PlusButton disabledHook={false} onPressFunc={() => setModalVisible(!modalVisible)}/>
@@ -400,14 +403,16 @@ const TestSearchInput = ({searchInput, setSearchInput}) => {
     const onBlur = () => {
         Animated.timing(inputLength, {
             toValue: 1,
-            duration: 250
+            duration: 250,
+            useNativeDriver: false
         }).start();
     }
 
     const onFocus = () => {
         Animated.timing(inputLength, {
             toValue: 0,
-            duration: 250
+            duration: 250,
+            useNativeDriver: false
         }).start();
     }
     

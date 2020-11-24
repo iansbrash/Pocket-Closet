@@ -303,7 +303,7 @@ const OutfitTags = ({fetchedOutfitObject}) => {
                         flexWrap: 'wrap'
                     }}>
                         {fetchedOutfitObject.tags.map(tag => (
-                            <IndividualTags title={tag}/>
+                            <IndividualTags key={tag} title={tag}/>
                         ))}
                     </View>
                 </View>
@@ -336,7 +336,7 @@ const BrandTags = ({fetchedOutfitObject, brandsSet}) => {
 
     return (
         <TogglableDrawer minHeight={88}>
-            {[...brandsSet].map(tag => <IndividualTags title={tag}/>)}
+            {[...brandsSet].map(tag => <IndividualTags key={tag} title={tag}/>)}
         </TogglableDrawer>   
     )
 }

@@ -79,13 +79,13 @@ export const TypeOfClothing = () => {
         setDeleteModal(false)
     }
 
-    const SpecificTypeOfButton = ({title, key}) => {
+    const SpecificTypeOfButton = ({title}) => {
 
         return (
             <View style={{
                 height: 'auto',
                 width: '50%',
-            }} key={key}>
+            }}>
                 <TouchableOpacity style={[{
                     width: 'auto',
                     height: 50,
@@ -113,12 +113,12 @@ export const TypeOfClothing = () => {
         )
     }
 
-    const TypeOfButton = ({title, key}) => {
+    const TypeOfButton = ({title}) => {
         return (
             <View style={{
                 height: 'auto',
                 width: '50%',
-            }} key={key}>
+            }}>
                 <TouchableOpacity style={[{
                     width: 'auto',
                     height: 50,
@@ -206,7 +206,7 @@ export const TypeOfClothing = () => {
                 }}>
                     
                     {typesOfClothingArray.map(item => (
-                        <TypeOfButton title={item.charAt(0).toUpperCase() + item.slice(1)}/>
+                        <TypeOfButton key={item} title={item.charAt(0).toUpperCase() + item.slice(1)}/>
                     ))}
                     
                 </View>
@@ -223,7 +223,7 @@ export const TypeOfClothing = () => {
                     alignItems: 'center',
                 }}>
                     {typeSelected !== '' ? typesOfClothingObject[typeSelected.toLowerCase()].map(item => (
-                        <SpecificTypeOfButton title={item}/>
+                        <SpecificTypeOfButton key={item} title={item}/>
                     )) : null}
                     {typeSelected !== '' ? <AddNewCategoryButton arrayName={'type'} onPressFunc={() => setModalVisible(true)}/> : null}
                 </View>

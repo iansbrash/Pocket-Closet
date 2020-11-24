@@ -123,7 +123,7 @@ function RenderSingleLineClosetItem ({item})  {
 
                                 }}>
                                     {item.brandName.slice(0, 4).map((brand, index) => (
-                                        <View>
+                                        <View key={brand}>
                                             <Text category='h5' appearance='hint' 
                                             style={[{fontWeight: 'bold', marginLeft: 10, marginTop: -5, flexShrink: 1}, 
                                             GlobalStyles.h6, GlobalStyles.hint]}
@@ -340,25 +340,28 @@ const OutfitList = ({searchInput}) => {
                                         flexWrap: 'wrap',
                                         alignItems: 'center'
                                     }}>
-                                        {combinedClothingItemsArray.map((clothingObject, index) => (
+                                        {/* {combinedClothingItemsArray.map((clothingObject, index) => (
                                             <View style={[{
                                                     width: '50%', 
                                                     aspectRatio: 1,
-                                                }]}> 
+                                                }]} 
+                                                key={index}> 
                                                 <View style={[{
                                                     margin: 5,
                                                     width: 'auto',
                                                     height: 'auto',
                                                     borderRadius: 10,
                                                     backgroundColor: 'white'
-                                                }, GlobalStyles.shadowLight]}>
+                                                }, GlobalStyles.shadowLight]}
+                                                key={index}>
                                                     <Image  
+                                                        key={index}
                                                         source={{uri: makeSmallImage(imageArrayFromIds[index])}} 
                                                         style={{height: '100%', aspectRatio: 1, borderRadius: 10}} />
                                                 </View>
                                             </View>
                                             )
-                                        )}
+                                        )} */}
                                         {needsCrop ? (
                                             <View style={[{
                                                 height: 'auto', 
@@ -399,9 +402,11 @@ const OutfitList = ({searchInput}) => {
         }}>
             
             <FlatList
-            data={outfitsArray}
-            renderItem={object => <RenderOutfit {...object}/>
-            /** HOW THE FUCK DOES THE ABOVE WORK... WTF */}
+                data={outfitsArray}
+                renderItem={(object, index) => <RenderOutfit  {...object}
+                />}
+                                                //TEMP
+                keyExtractor={(obj, index) => Math.random().toString()} //obj._id.. not all obj has _id rn
             />
             
         </View>
@@ -487,6 +492,7 @@ const ClosetListOneCol = ({searchInput, filtersEnabled, heartToggleChecked}) => 
                     )  //this might be a little innefficent.\ xdddd
                 )
             )}
+            keyExtractor={obj => obj._id.toString()}
             renderItem={object => <RenderSingleLineClosetItem {...object}/>
             /** HOW THE FUCK DOES THE ABOVE WORK... WTF */}
             />
@@ -523,6 +529,7 @@ const ClosetListTwoCol = ({searchInput, filtersEnabled, heartToggleChecked}) => 
             <FlatList
             columnWrapperStyle={{justifyContent:'space-between', }}
             numColumns={2}
+            keyExtractor={obj => obj._id.toString()}
             data={combinedArrays.filter((item, index) => 
                 (
                     item.clothingName.toLowerCase().includes(searchInput.toLowerCase()) ||

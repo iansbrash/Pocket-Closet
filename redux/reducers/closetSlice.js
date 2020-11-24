@@ -323,6 +323,9 @@ const closetSlice = createSlice({
                         )
                         toInc.timesWorn++;
                         //adds the _id of the outfit this clothing is worn in to the outfitsWornIn array
+                        if (!toInc.outfitsWornIn){
+                            toInc.outfitsWornIn = [];
+                        }
                         toInc.outfitsWornIn = [...toInc.outfitsWornIn, action.payload._id]
                     })
                 })

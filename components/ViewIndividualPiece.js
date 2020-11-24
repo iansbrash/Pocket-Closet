@@ -203,15 +203,17 @@ const TopButtonsStyleTwo = ({item, setModalVisible}) => {
                     title={'Favorite'} 
                     icon={<HeartIcon 
                         style={[isFavorited ? {color: 'red'} : GlobalStyles.colorMain]} 
-                        size={'35%'} />}
+                        size={35} />}
                     onPressFunc={() => ToggleFavorite()}/>
                 <IndividualThirdButton 
                     title={'Edit'} 
-                    icon={<EditIcon style={[GlobalStyles.colorMain]} size={'35%'} />}
+                    icon={<EditIcon style={[GlobalStyles.colorMain]} 
+                    size={35} />}
                     onPressFunc={() => EditOutfit()}/>
                 <IndividualThirdButton 
                     title={'Delete'} 
-                    icon={<DeleteIcon style={[GlobalStyles.colorMain]} size={'35%'} />}
+                    icon={<DeleteIcon style={[GlobalStyles.colorMain]} 
+                    size={35} />}
                     onPressFunc={() => DeleteOutfitButtonPressed()}/>
             </View>
         </View>
@@ -303,7 +305,7 @@ const BrandTags = ({brandsArray}) => {
                         alignItems: 'center',
                         flexWrap: 'wrap'
                     }}>
-                        {brandsArray.map(tag => <IndividualTags title={tag}/>)}
+                        {brandsArray.map(tag => <IndividualTags key={tag} title={tag}/>)}
                     </View>
                 </View>
             </View>
@@ -351,7 +353,7 @@ const ClothingTags = ({tagsArray}) => {
                         flexWrap: 'wrap'
                     }}>
                         {tagsArray.map(tag => (
-                            <IndividualTags title={tag}/>
+                            <IndividualTags key={tag} title={tag}/>
                         ))}
                     </View>
                 </View>
@@ -445,11 +447,11 @@ const OutfitScroll = ({outfitsWornIn}) => {
                 {outfitsWornIn ? 
                 outfitsWornIn.map(outfitId => (
                     
-                    <ClothingIcon outfitObject={outfitsArray.find(outfitObj => outfitObj._id === outfitId)} />
+                    <ClothingIcon key={outfitId} outfitObject={outfitsArray.find(outfitObj => outfitObj._id === outfitId)} />
                 )) 
                     :
                 (mockOutfitsThisClothingIsUsedInArray.map(outfitObject => (
-                    <ClothingIcon outfitObject={outfitObject}/>
+                    <ClothingIcon key={outfitObject._id} outfitObject={outfitObject}/>
                 )))
                 }
             </ScrollView>
@@ -517,7 +519,8 @@ export const ViewIndividualPiece = ({ route }) => {
         setImageIsSmall(true);
         Animated.timing(imageWidth, {
             toValue: Number(false),
-            duration: 250
+            duration: 250,
+            useNativeDriver: false
         }).start();
     }
     //makes image big
@@ -525,7 +528,8 @@ export const ViewIndividualPiece = ({ route }) => {
         setImageIsSmall(false);
         Animated.timing(imageWidth, {
             toValue: Number(true),
-            duration: 250
+            duration: 250,
+            useNativeDriver: false
         }).start();
     }
 
