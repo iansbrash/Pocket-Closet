@@ -287,7 +287,7 @@ export const ItemDescription = () => {
                         alignItems: 'center'
                     }}>
                         {tagsArray.map((item, index) => (
-                            <IndividualTag title={item} deleteFunc={deleteTag}/>
+                            <IndividualTag title={item} key={item} deleteFunc={deleteTag}/>
                         ))}
                     </View>
 

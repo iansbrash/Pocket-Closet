@@ -13,13 +13,14 @@ import axios from 'axios'
 import { useNavigation } from '@react-navigation/native'
 import { TopNavScreenHeader } from '../GlobalComponents/TopNav'
 import { NextButton } from './NextButton'
-import { MediumButton } from '../GlobalComponents/GlobalButtons'
+import { MediumButton, MediumCheckButton } from '../GlobalComponents/GlobalButtons'
 import { PlusIcon, CameraIcon, PhotoLibraryIcon } from '../GlobalComponents/GlobalIcons'
 import GlobalStyles from '../GlobalComponents/GlobalStyles'
 import { clothingInProgressAttributeAdded } from '../../redux/reducers/closetSlice'
 import { Dimensions } from 'react-native';
 import { useDispatch } from 'react-redux'
 import { clothingInProgressCleansed } from '../../redux/reducers/closetSlice'
+import { DescriptionModal } from '../GlobalComponents/GlobalModals'
 
 
 
@@ -107,6 +108,7 @@ export const UploadImage = () => {
     const [uploadTypeDropdown, setUploadTypeDropdown] = useState(false)
 
     const [dropdownPosition] = useState(new Animated.Value(0))
+    const [descriptionModal, setDescriptionModal] = useState(false)
 
     const toggleDropDown = () => {
         uploadTypeDropdown ? pullUp() : dropDown()
@@ -116,7 +118,8 @@ export const UploadImage = () => {
         setUploadTypeDropdown(true)
         Animated.timing(dropdownPosition, {
             toValue: 1,
-            duration: 250
+            duration: 250,
+            useNativeDriver: true
         }).start();
     }
 
@@ -124,7 +127,8 @@ export const UploadImage = () => {
         setUploadTypeDropdown(false)
         Animated.timing(dropdownPosition, {
             toValue: 0,
-            duration: 250
+            duration: 250,
+            useNativeDriver: true
         }).start();
     }
 
@@ -303,6 +307,7 @@ export const UploadImage = () => {
                         width: `${fileUri.length * 100}%`,
                         height: 'auto'
                     }}
+                    pagingEnabled={true}
                     >
                         {fileUri.map((uri, index) => (
                             <View style={[{
@@ -312,7 +317,8 @@ export const UploadImage = () => {
                                 width: `${100/fileUri.length}%`,
                                 justifyContent: 'center',
                                 alignItems: 'center',}, 
-                                GlobalStyles.shadowLight]}>
+                                GlobalStyles.shadowLight]}
+                                key={index}>
                                 
                                 <Image style={{
                                 width: '90%',
@@ -323,15 +329,86 @@ export const UploadImage = () => {
                         ))}
                     </ScrollView>
                 </View>
-                <MediumButton 
-                    title={awaitingResponse ? 'Uploading...' : `Upload to Imgur`}
-                    onPressFunc={async () => sendRequestAndWait()}
-                    disabled={fileUri.length === 0 || awaitingResponse || uploadSuccess}
-                    icon={!awaitingResponse ? 
-                    <PlusIcon style={{marginRight: 15, marginLeft: 5, 
-                        color: imgurUrl.length !== 0 || fileUri.length === 3 || awaitingResponse ? 'lightgray' : 'black'}} name="plus" size={30} 
-                /> : 
-                <View style={{marginRight: 15}}><ActivityIndicator size="small" color="lightgray"/></View>}/>
+                {fileUri.length !== 0 ?
+                <>
+                    <MediumCheckButton 
+                        defaultChecked={false}
+                        title={awaitingResponse ? 'Uploading...' : `Upload to Imgur`}
+                        onPressFunc={async () => sendRequestAndWait()}
+                        disabled={fileUri.length === 0 || awaitingResponse || uploadSuccess}
+                        icon={!awaitingResponse ? 
+                        <PlusIcon style={{marginRight: 15, marginLeft: 5, 
+                            color: imgurUrl.length !== 0 || fileUri.length === 3 || awaitingResponse ? 'lightgray' : 'black'}} name="plus" size={30} 
+                        /> : 
+                        <View style={{marginRight: 15}}><ActivityIndicator size="small" color="lightgray"/></View>}
+                    />
+                    <View style={[{
+                        height: 30, 
+                        aspectRatio: 1, 
+                        borderRadius: 5, 
+                        borderColor: 'lightgray', 
+                        borderWidth: 1,
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        backgroundColor: 'white',
+                        marginLeft: 10
+                    }]}>
+                        <TouchableOpacity
+                        onPress={() => setDescriptionModal(true)}
+                        >
+                            <Text style={[{fontWeight: 'bold', color: 'lightgray'}, GlobalStyles.h5]}>
+                                ?
+                            </Text>
+                        </TouchableOpacity>
+                    </View>
+                </> : null}
+                <DescriptionModal setModalVisible={setDescriptionModal} modalVisible={descriptionModal}>
+                    <View style={{
+                        justifyContent: 'flex-start',
+                        alignItems: 'center',
+                        flexDirection: 'column',
+                        width: '100%'
+                    }}>
+                        <Text 
+                            style={[GlobalStyles.h5, {fontWeight: 'bold', margin: 5}]}>
+                            Imgur vs Local
+                        </Text>
+                        <View style={{
+                            width: 'auto',
+                            justifyContent: 'flex-start',
+                            margin: 5
+                        }}>
+                            <Text style={[
+                                GlobalStyles.h6,
+                            ]}>
+                                {/* You have the option to either upload images of your clothing to Imgur (and not take up space
+                                on your device), or just use your device's storage to store these images. */}
+                                You can either upload to Imgur or use your device's storage.
+                            </Text>
+                            <Text style={[
+                                GlobalStyles.h6,
+                                {marginTop: 10}
+                            ]}>
+                                Uploading to Imgur takes a few seconds, but lets you delete the photos you took after (if you want).
+                            </Text>
+                            <Text style={[
+                                GlobalStyles.h6,
+                                {marginTop: 10}
+                            ]}>
+                                Local storage takes up your devices memory, but lets you skip the Imgur upload process (a few seconds).
+                            </Text>
+                            <Text style={[
+                                GlobalStyles.h6,
+                                {marginTop: 10}
+                            ]}>
+                                Keep in mind uploading to Imgur will use your data, so please connect to WiFi instead.
+                            </Text>
+                        </View>
+                        
+                    </View>
+                </DescriptionModal>
+                
+
                 <Text category='h3' style={{
                     fontWeight: 'bold'
                 }}>{imgurUrl}</Text>

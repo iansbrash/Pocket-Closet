@@ -43,7 +43,8 @@ export const HistoryScreen = () => {
 
         
         <View style={{
-            flex: 1
+            flex: 1,
+            backgroundColor: 'white'
         }}>
             <View style={{
                 margin: 35

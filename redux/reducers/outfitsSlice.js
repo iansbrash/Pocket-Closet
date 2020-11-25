@@ -105,8 +105,10 @@ const outfitsSlice = createSlice({
         },
         outfitInProgressItemAdded: {
             reducer (state, action) {
-                console.log(action.payload);
-                state.outfitInProgress[action.payload.itemType].push(action.payload.item)
+                if (!state.outfitInProgress[action.payload.itemType]
+                        .find(clothingObj => clothingObj._id === action.payload.item._id)){
+                    state.outfitInProgress[action.payload.itemType].push(action.payload.item)
+                }
             },
             prepare (item, itemType) {
                 return {

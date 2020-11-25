@@ -18,7 +18,7 @@ export const FinalizeButton = ({disabledHook, onPressFunc}) => {
         }}>
             { !disabledHook && (
                 <TouchableOpacity 
-                style={styles.TOSuccess}
+                style={[styles.TOSuccess, GlobalStyles.bgColorMain]}
                 onPress={onPressFunc}>
                     {/* <Icon style={{marginRight: 5, marginLeft: 5}} width='50' height='50' fill='white' name='checkmark-outline'/> */}
                     <CheckIcon size={50} style={{marginRight: 5, marginLeft: 5, color: 'white'}}/>
@@ -38,8 +38,8 @@ export const NextButton = ({disabledHook, navpath, extraFunc}) => {
         if (typeof extraFunc === "function") {
             extraFunc();
         }
-
-        navigation.navigate(navpath);
+        //changed to push
+        navigation.push(navpath);
     }
 
 
@@ -80,7 +80,7 @@ const styles = StyleSheet.create({
         width: 70,
         margin: 20,
         borderRadius: 5,
-        backgroundColor: '#3366ff',
+        // backgroundColor: '#3366ff',
         justifyContent: 'center',
         alignItems:'center',
         elevation: 10

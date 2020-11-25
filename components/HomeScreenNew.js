@@ -161,7 +161,7 @@ export const HomeScreenNew = ({route}) => {
                 onPressFunc={() => navigation.navigate('RECORD')}/>
             </View>
             <View style={{height: 10 /** Spacer */ }}></View> 
-            <MiniScreenHeader title={'Recent Stats'}/>
+            <MiniScreenHeader title={'Recent Stats / Recently Worn'}/>
             <View style={{
                 width: '100%',
                 height: 120

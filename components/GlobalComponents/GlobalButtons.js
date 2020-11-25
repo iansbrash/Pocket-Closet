@@ -5,7 +5,80 @@ import {
     Text,
     StyleSheet
 } from 'react-native'
+import { FromScratch } from '../NewOutfit/FromScratch'
 import GlobalStyles from './GlobalStyles'
+import { CheckIcon } from './GlobalIcons'
+
+export const MediumCheckButton = ({title, icon, onPressFunc, buttonFunc, disabled, defaultChecked}) => {
+
+    const [pressed, setPressed] = useState(false)
+    const [checked, setChecked] = useState(defaultChecked);
+
+    
+    
+    return (
+        <View style={{
+            height: 75,
+            width: '100%',
+            marginTop: 5,
+            marginBottom: 5,
+        }}>
+            <View style={[{
+                width: 'auto',
+                marginLeft: 10,
+                marginRight: 10,
+                marginTop: 5,
+                marginBottom: 5,
+                height: 'auto',
+                backgroundColor: 'white',
+                elevation: 10,
+                borderRadius: 10,
+            }, GlobalStyles.shadowHeavy]}>
+                <Pressable style={{
+                    height: '100%',
+                    width: '100%',
+                    justifyContent: 'flex-start',
+                    alignItems: 'center',
+                    flexDirection: 'column',
+                    opacity: pressed ? 0.5 : 1.0
+                }}
+                disabled={!checked || disabled}
+                onPress={onPressFunc}
+                onPressIn={() => setPressed(true)}
+                onPressOut={() => setPressed(false)}>
+                    <View 
+                    style={!checked || disabled ? styles.barInactive : styles.barActive}></View>
+                    <View style={{
+                        height: 'auto',
+                        width: '100%',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                        flexDirection: 'row',
+                    }}>
+                        <View style={{height: '100%', justifyContent: 'center', alignItems: 'center', flexDirection: 'row'}}>
+                            <Pressable
+                                hitSlop={20}
+                                style={checked ? styles.checkboxActive : styles.checkbox}
+                                onPress={() => setChecked(!checked)}>
+                                <CheckIcon size={25} style={{color: 'white'}}/>
+                            </Pressable>
+                            <Text category='h4' 
+                                style={[{fontWeight: 'bold', height: 'auto'}, 
+                                !checked || disabled ? styles.textInactive : GlobalStyles.colorMain, 
+                                GlobalStyles.h5]}>
+                                    {title}
+                            </Text>
+                        </View>
+                        <Pressable style={{height: '100%', justifyContent: 'center', alignItems: 'center'}}
+                        onPress={checked || disabled ? (buttonFunc ? buttonFunc : onPressFunc) : null}>
+                            {icon}
+                        </Pressable>
+                    </View>
+                </Pressable>
+            </View>
+        </View>
+    )
+}
 
 export const MediumButton = ({title, icon, onPressFunc, buttonFunc, disabled}) => {
 
@@ -61,7 +134,6 @@ export const MediumButton = ({title, icon, onPressFunc, buttonFunc, disabled}) =
                         <Pressable style={{height: '100%', justifyContent: 'center', alignItems: 'center'}}
                         onPress={!disabled ? (buttonFunc ? buttonFunc : onPressFunc) : null}>
                             {icon}
-                            {/* <Entypo style={{marginRight: 15, marginLeft: 5}} name="plus" size={30} color="black" /> */}
                         </Pressable>
                     </View>
                 </Pressable>
@@ -116,5 +188,29 @@ const styles = StyleSheet.create({
     }, textInactive: {
         fontWeight: 'bold',
         color: '#b7bcc7'
+    },
+    checkboxActive: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: 30,
+        width: 30,
+        marginLeft: 15,
+        marginRight: 15,
+        borderRadius: 5,
+        backgroundColor: '#09122b',
+        borderWidth: 1,
+        borderColor: '#09122b'
+    },
+    checkbox: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: 30,
+        width: 30,
+        marginLeft: 15,
+        marginRight: 15,
+        borderRadius: 5,
+        backgroundColor: 'white',
+        borderWidth: 1,
+        borderColor: '#6c7280'
     },
 })

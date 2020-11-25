@@ -276,10 +276,11 @@ export const TypeOfBrands = () => {
 
             
             <FlatList 
-                    style={{maxHeight: '100%', width: '100%'}}
-                    data={brandsArray}
-                    renderItem={item => <IndividualBrand {...item}/>}
-                     /> 
+                style={{maxHeight: '100%', width: '100%'}}
+                data={brandsArray}
+                renderItem={item => <IndividualBrand {...item}/>}
+                keyExtractor={item => item[0]}
+            /> 
             
             <NextButton 
             navpath={"ITEMDESCRIPTION"} 

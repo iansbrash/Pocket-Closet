@@ -407,3 +407,117 @@ export const ImageScrollModal = ({setModalVisible, modalVisible, imageArray, tit
       </Modal>
     )
 }
+
+
+export const DescriptionModal = ({setModalVisible, modalVisible, children}) => {
+
+    const [viewBlur] = useState(new Animated.Value(0))
+
+    const onShow = () => {
+        Animated.timing(viewBlur, {
+            toValue: .95,
+            duration: 250,
+            useNativeDriver: true
+        }).start();
+    }
+
+    const onDismiss = () => {
+        Animated.timing(viewBlur, {
+            toValue: 0,
+            duration: 250,
+            useNativeDriver: true
+        }).start();
+    }
+
+    useEffect(() => {
+        if (modalVisible){
+            onShow()
+        } else {
+            onDismiss()
+        }
+    },[modalVisible])
+
+    return (
+        <Animated.View style={{
+            position: 'absolute',
+            height: '100%',
+            width: '100%',
+            opacity: viewBlur,
+            zIndex: 2
+        }}
+        pointerEvents={'none'}>
+        <BlurView 
+        intensity={100} style={{
+            height: '100%',
+            width: '100%'
+        }}>
+        <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => {
+          Alert.alert("Modal has been closed.");
+        }}
+      >
+          <View style={{
+              width: '100%',
+              height: '100%',
+              justifyContent: 'center', alignItems: 'center'}}>
+                  <View style={[{
+                      justifyContent: 'center', 
+                      alignItems: 'center',
+                      flexDirection: 'column',
+                      width: '75%',
+                      height: 'auto',
+                      borderRadius: 10,
+
+                  }, GlobalStyles.shadowLight]}>
+                          <View 
+                          style={[{
+                            height: 10, 
+                            borderTopLeftRadius: 10, 
+                            borderTopRightRadius: 10,
+                            width: '100%'
+                        }, GlobalStyles.bgColorMain]}></View>
+                        <View style={[
+                      {
+                          height: 'auto', 
+                          width: '100%',
+                          backgroundColor: 'white',
+                          borderBottomLeftRadius: 10,
+                          borderBottomRightRadius: 10,
+                          flexDirection: 'column',
+                          justifyContent: 'space-between',
+                          alignItems: 'center'}]}>
+                              <View style={{
+                                  justifyContent: 'center',alignItems: 'flex-start',
+                              }}>
+                                {children}
+                              </View>
+                              
+                              <View style={{
+                                    width: '100%',
+                                    justifyContent: 'space-between',
+                                    alignItems: 'center', 
+                                    flexDirection: 'row',
+                                }}>
+                                    <View style={{width: '100%'}}>
+                                        <TouchableOpacity style={{
+                                        width: '100%',
+                                        flexDirection: 'row',
+                                        justifyContent: 'center',
+                                        alignItems: 'center'
+                                        }}
+                                        onPress={() => setModalVisible(false)}>
+                                            <CheckIcon size={40} style={GlobalStyles.colorMain}/>
+                                    </TouchableOpacity>
+                                    </View>
+                                </View>
+                            </View>
+                        </View>
+                    </View>
+                </Modal>
+            </BlurView>
+        </Animated.View>
+    )
+}

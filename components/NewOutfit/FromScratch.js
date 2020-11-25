@@ -61,7 +61,7 @@ const SelectClothingButton = ({title, navpath, iconName, defaultChecked, navprop
                 disabled={!checked} 
                 onPress={() => navigation.navigate(navpath, navprops)}>
                     <View 
-                    style={checked ? styles.barActive : styles.barInactive}></View>
+                        style={checked ? styles.barActive : styles.barInactive}></View>
                     <View style={{
                         height: 'auto',
                         width: '100%',

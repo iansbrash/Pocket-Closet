@@ -276,8 +276,17 @@ const OutfitList = ({searchInput}) => {
                             top: 0,
                             right: 0,
                             zIndex: 3,
-                            padding: 5
+                            padding: 5,
+                            flexDirection: 'row'
                         }, GlobalStyles.bgColorMain]}>
+                            <View style={{
+                                justifyContent: 'center',
+                                alignItems: 'center'
+                            }}>
+                                {
+                                    item.favorite ? <HeartIcon size={22} style={{color: '#ff4040', marginRight: 2}}/> : null
+                                }
+                            </View>
                             <Text style={[{color: 'white', fontWeight: 'bold'}, GlobalStyles.h5]}>
                                 {`${new Date(item.date).toLocaleString('en-GB').substr(0, 10)}`}
                             </Text>
@@ -340,7 +349,7 @@ const OutfitList = ({searchInput}) => {
                                         flexWrap: 'wrap',
                                         alignItems: 'center'
                                     }}>
-                                        {/* {combinedClothingItemsArray.map((clothingObject, index) => (
+                                        {combinedClothingItemsArray.map((clothingObject, index) => (
                                             <View style={[{
                                                     width: '50%', 
                                                     aspectRatio: 1,
@@ -361,7 +370,7 @@ const OutfitList = ({searchInput}) => {
                                                 </View>
                                             </View>
                                             )
-                                        )} */}
+                                        )}
                                         {needsCrop ? (
                                             <View style={[{
                                                 height: 'auto', 
@@ -405,7 +414,7 @@ const OutfitList = ({searchInput}) => {
                 data={outfitsArray}
                 renderItem={(object, index) => <RenderOutfit  {...object}
                 />}
-                                                //TEMP
+                //TEMP
                 keyExtractor={(obj, index) => Math.random().toString()} //obj._id.. not all obj has _id rn
             />
             
@@ -717,14 +726,16 @@ const ClosetSearch = ({searchInput, setSearchInput}) => {
     const onBlur = () => {
         Animated.timing(inputLength, {
             toValue: 1,
-            duration: 250
+            duration: 250,
+            useNativeDriver: false
         }).start();
     }
 
     const onFocus = () => {
         Animated.timing(inputLength, {
             toValue: 0,
-            duration: 250
+            duration: 250,
+            useNativeDriver: false
         }).start();
     }
 

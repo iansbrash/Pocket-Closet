@@ -145,7 +145,7 @@ export const SizeOfClothing = () => {
                     flexWrap: 'wrap'
                 }}>
                     {letterSizeArray.map(size => (
-                        <SizeButton size={size} parent={'letter'}/>
+                        <SizeButton size={size} key={size.toString()} parent={'letter'}/>
                     ))}
                     <AddSizeButton type={'letter'}/>
                 </View>
@@ -171,7 +171,7 @@ export const SizeOfClothing = () => {
                     flexWrap: 'wrap'
                 }}>
                     {numberSizeArray.map(size => (
-                        <SizeButton size={size} parent={'number'}/>
+                        <SizeButton size={size} key={size.toString()} parent={'number'}/>
                     ))}
                     <AddSizeButton type={'number'}/>
                 </View>
@@ -196,7 +196,7 @@ export const SizeOfClothing = () => {
                     flexWrap: 'wrap'
                 }}>
                     {otherSizeArray.map(size => (
-                        <SizeButton size={size} parent={'other'}/>
+                        <SizeButton size={size} key={size.toString()} parent={'other'}/>
                     ))}
                     <AddSizeButton type={'other'} />
                 </View>
