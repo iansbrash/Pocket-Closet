@@ -1,14 +1,12 @@
 import React, {useState, useEffect, useRef} from 'react'
 import { 
     TouchableOpacity, 
-    ScrollView, 
-    StyleSheet,
     TextInput,
     Text,
     Animated,
     Pressable, 
     View, 
-    Image  } from 'react-native'
+} from 'react-native'
 import { useNavigation } from '@react-navigation/native'
 import { TopNavScreenHeader } from '../GlobalComponents/TopNav'
 import { useSelector } from 'react-redux'
@@ -25,7 +23,8 @@ import { clothingInProgressCleansed } from '../../redux/reducers/closetSlice'
 const IndividualDescription = ({
         title, numLines, placeholder, thisRef, 
         nextFocusRef, index, setIndex, specialOnCheck, 
-        multiline}) => {
+        multiline, textInput, setTextInput, keyboardType,
+        isPrice}) => {
 
     const [checkPos] = useState(new Animated.Value(1))
 
@@ -98,6 +97,7 @@ const IndividualDescription = ({
                         </Text>
                         <View style={{
                             width: '100%',
+                            flexDirection: 'row'
                         }}>
                             <Animated.View style={{
                                 position: 'absolute',
@@ -118,25 +118,61 @@ const IndividualDescription = ({
                                     <CheckIcon size={35} style={[GlobalStyles.colorMain]}/>
                                 </Pressable>
                             </Animated.View>
+                            {isPrice ? 
+                            <>
+                                <Text style={[GlobalStyles.h4, GlobalStyles.hint, {marginTop: 3}]}>$</Text>
+                            </>
+                            : null}
                             <TextInput style={[{
                                 borderColor: 'white',
                                 backgroundColor: 'white',
                                 height: 'auto',
-                                width: '100%',
+                                width: 'auto',
                                 marginTop: 3,
                             }, GlobalStyles.h4]}
                             onFocus={() => onFocus()}
                             onBlur={() => onBlur()}
                             multiline={multiline}
                             ref={thisRef}
-                            // value={descriptionInput}
-                            // onChangeText={nextValue => setDescriptionInput(nextValue)}
+                            value={textInput}
+                            onChangeText={nextValue => setTextInput(nextValue)}
                             textStyle={{marginLeft: -12}}
-                            placeholder={placeholder} />
+                            placeholder={placeholder}
+                            keyboardType={keyboardType ? keyboardType : 'default'} />
                         </View>
                     </View>
                 </Pressable>
             </Animated.View>
+        </View>
+    )
+}
+
+const IndividualTag = ({title, deleteFunc}) => {
+    return (
+        <View style={{
+            width: 'auto',
+            height: 30,
+            margin: 5,
+            borderRadius: 5,
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            backgroundColor: 'black',
+            flexDirection: 'row',
+            elevation: 5
+        }}>
+            <Text category='h5' style={[{
+                color: 'white',
+                fontWeight: 'bold',
+                marginLeft: 10,
+                marginBottom: 0
+            }, GlobalStyles.h5]}>
+                {title}
+            </Text>
+            <TouchableOpacity
+            onPress={() => deleteFunc(title)}
+            style={{height: 25, width: 25, justifyContent: 'center', alignItems: 'center'}}>
+                <XIcon size={20} style={{color: 'white'}}/>
+            </TouchableOpacity>
         </View>
     )
 }
@@ -149,16 +185,49 @@ export const NewItemDescription = () => {
     const priceRef = useRef(null)
     const tagsRef = useRef(null)
 
+    const dispatch = useDispatch()
+
+    const [nameInput, setNameInput] = useState('');
+    const [descriptionInput, setDescriptionInput] = useState('');
+    const [colorInput, setColorInput] = useState('');
+    const [priceInput, setPriceInput] = useState('');
+    const [tagsInput, setTagsInput] = useState('');
+    const [tagsArray, setTagsArray] = useState([]);
+
     const [index, setIndex] = useState(0);
     const [scrollPos] = useState(new Animated.Value(0))
 
     useEffect(() => {
         Animated.timing(scrollPos, {
-            toValue: index > 1 ? -1 * (index - 1) * 115 : 0,
+            toValue: index > 1 ? -1 * (index - 1) * 112 : 0,
             duration: 250,
             useNativeDriver: false
         }).start();
     }, [index])
+
+    useEffect(() => {
+        nameRef.current.focus();
+    }, [])
+
+    const tagsChange = newValue => {
+        // end of tag detected
+        if (newValue[newValue.length - 1] === ','){
+            console.log("Found a fuckin comma")
+            let tagNameToAdd = newValue.substring(0, newValue.length - 1);
+            if (!tagsArray.includes(tagNameToAdd) && tagNameToAdd !== ''){
+                setTagsArray([...tagsArray, tagNameToAdd]);
+            }
+            console.log(tagsArray);
+            setTagsInput('');
+        } else {
+            setTagsInput(newValue);
+        }
+    }
+
+    const deleteTag = (title) => {
+        console.log(`Trying to delete ${title} from the state`)
+        setTagsArray(tagsArray.filter(item => item !== title));
+    }
 
 
 
@@ -187,6 +256,8 @@ export const NewItemDescription = () => {
                         setIndex={setIndex}
                         index={0}
                         multiline={false}
+                        textInput={nameInput}
+                        setTextInput={setNameInput}
                     />
                     <IndividualDescription 
                         title={'Description'} 
@@ -196,6 +267,8 @@ export const NewItemDescription = () => {
                         setIndex={setIndex}
                         multiline={false}
                         index={1}
+                        textInput={descriptionInput}
+                        setTextInput={setDescriptionInput}
                     />
                     <IndividualDescription 
                         title={'Color'} 
@@ -205,15 +278,21 @@ export const NewItemDescription = () => {
                         multiline={false}
                         index={2}
                         nextFocusRef={priceRef}
+                        textInput={colorInput}
+                        setTextInput={setColorInput}
                     />
                     <IndividualDescription 
                         title={'Price'} 
-                        placeholder={'$79'} 
+                        placeholder={'79'} 
                         thisRef={priceRef} 
                         setIndex={setIndex}
                         multiline={false}
                         index={3}
                         nextFocusRef={tagsRef}
+                        textInput={priceInput}
+                        setTextInput={setPriceInput}
+                        keyboardType={'number-pad'}
+                        isPrice={true}
                     />
                     <IndividualDescription 
                         title={'Tags'} 
@@ -223,11 +302,36 @@ export const NewItemDescription = () => {
                         index={4}
                         thisRef={tagsRef} 
                         specialOnCheck={() => setIndex(0)}
+                        textInput={tagsInput}
+                        setTextInput={tagsChange}
                         // nextFocusRef={colorRef}
                     />
+                    {/** Tags */}
+                    <View style={{
+                        width: '100%',
+                        height: 'auto',
+                        flexDirection: 'row',
+                        flexWrap: 'wrap',
+                        justifyContent: 'flex-start',
+                        alignItems: 'center'
+                    }}>
+                        {tagsArray.map((item, index) => (
+                            <IndividualTag title={item} key={item} deleteFunc={deleteTag}/>
+                        ))}
+                    </View>
+                    
                 </Animated.View>
-                
             </View>
+            <NextButton 
+            navpath={"UPLOADIMAGE"} 
+            disabledHook={nameInput === ''} 
+            extraFunc={dispatch(clothingInProgressAttributeAdded({
+                clothingName: nameInput,
+                color: colorInput,
+                description: descriptionInput,
+                price: priceInput,
+                tags: tagsArray
+            }))}/> 
         </View>
     )
 }
