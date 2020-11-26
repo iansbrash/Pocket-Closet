@@ -24,6 +24,7 @@ import { ViewIndividualOutfit } from './ViewIndividualOutfit'
 import { OutfitFrom } from './NewOutfit/OutfitFrom'
 import { HangerIcon, HomeIcon, CalendarIcon } from './GlobalComponents/GlobalIcons'
 import { UploadFitpic } from './NewOutfit/UploadFitpic'
+import { NewItemDescription } from './NewClothing/NewItemDescription'
 
 import GlobalStyles from './GlobalComponents/GlobalStyles'
 // Destructuring React Navigator import
@@ -78,7 +79,7 @@ const ClosetNav = () => {
             <ClosetStack.Screen name="NEWCLOTHING" component={TypeOfClothing}/>
             <ClosetStack.Screen name="SIZEOFCLOTHING" component={SizeOfClothing}/>
             <ClosetStack.Screen name="TYPEOFBRANDS" component={TypeOfBrands}/>
-            <ClosetStack.Screen name="ITEMDESCRIPTION" component={ItemDescription}/>
+            <ClosetStack.Screen name="ITEMDESCRIPTION" component={NewItemDescription}/>
             <ClosetStack.Screen name="UPLOADIMAGE" component={UploadImage}/>
             <ClosetStack.Screen name="FINALIZECLOTHING" component={FinalizeClothing} />
             <ClosetStack.Screen name="VIEWINDIVIDUALOUTFIT" component={ViewIndividualOutfit} />

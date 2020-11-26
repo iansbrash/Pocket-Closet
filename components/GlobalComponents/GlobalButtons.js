@@ -5,13 +5,12 @@ import {
     Text,
     StyleSheet
 } from 'react-native'
-import { FromScratch } from '../NewOutfit/FromScratch'
 import GlobalStyles from './GlobalStyles'
 import { CheckIcon } from './GlobalIcons'
 
-export const MediumCheckButton = ({title, icon, onPressFunc, buttonFunc, disabled, defaultChecked, checked, setChecked}) => {
+export const MediumCheckButton = ({title, icon, onPressFunc, buttonFunc, disabled, checked, setChecked}) => {
 
-    // const [pressed, setPressed] = useState(false)
+    const [pressed, setPressed] = useState(false)
     // const [checked, setChecked] = useState(defaultChecked);
 
     

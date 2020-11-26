@@ -28,7 +28,10 @@ const outfitsSlice = createSlice({
             otherArray: [
 
             ],
-            fitpic: ''
+            fitpic: {
+                fitpic: '',
+                type: ''
+            }
         },
         status: 'idle', // idle, success, or error. call 'success' on creating an outfit to prompt animation
         error: null
@@ -138,15 +141,19 @@ const outfitsSlice = createSlice({
                 console.log(action.payload)
 
                 if (action.payload.fitpic !== ''){
-                    state.outfitInProgress.fitpic = action.payload.fitpic;
+                    state.outfitInProgress.fitpic = {
+                        fitpic: action.payload.fitpic,
+                        type: action.payload.type
+                    };
                 } else {
                     console.log('no imgur url provided for fitpic')
                 }
             },
-            prepare (fitpic) {
+            prepare (fitpic, type) {
                 return {
                     payload: {
-                        fitpic: fitpic
+                        fitpic,
+                        type
                     }
                 }
             }
