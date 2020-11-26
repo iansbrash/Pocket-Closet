@@ -30,11 +30,13 @@ function RenderSingleLineClosetItem ({item})  {
 
     let src;
 
-    if (!item.images || item.images.length === 0){
+    if (item.images.type === '' || item.images.images.length === 0){
         //very important function
         src = { uri: `https://randomuser.me/api/portraits/men/${Math.floor(Math.random() * 100 % 100 + 1)}.jpg` } //default replacement image
+    } else if (item.images.type === 'imgur'){
+        src = {uri: makeSmallImage(item.images.images[0])}
     } else {
-        src = {uri: makeSmallImage(item.images[0])}
+        src = {uri: item.images.images[0]}
     }
     
 

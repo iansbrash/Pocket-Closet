@@ -44,7 +44,10 @@ const closetSlice = createSlice({
                     price: '$98',
                     color: 'black',
                     tags: ['hype', 'casual', 'stolen', 'retail', 'ugly'],
-                    images: [],
+                    images: {
+                        images: [],
+                        type: ''
+                    },
                     pieceType: 'T-Shirt',
                     oufitsInArray: []
                 },{
@@ -56,7 +59,10 @@ const closetSlice = createSlice({
                     favorite: false,
                     price: '$98',
                     color: 'black',
-                    images: [],
+                    images: {
+                        images: [],
+                        type: ''
+                    },
                     tags: ['hype', 'casual'],
                     pieceType: 'T-Shirt',
                     oufitsInArray: []
@@ -71,7 +77,10 @@ const closetSlice = createSlice({
                     price: '$98',
                     color: 'black',
                     tags: ['hype', 'casual'],
-                    images: [],
+                    images: {
+                        images: [],
+                        type: ''
+                    },
                     pieceType: 'coat',
                     oufitsInArray: []
                     
@@ -85,7 +94,10 @@ const closetSlice = createSlice({
                     price: '$98',
                     color: 'black',
                     tags: ['hype', 'casual'],
-                    images: [],
+                    images: {
+                        images: [],
+                        type: ''
+                    },
                     pieceType: 'T-Shirt',
                     oufitsInArray: []
                     
@@ -102,7 +114,10 @@ const closetSlice = createSlice({
                 price: '$198',
                 color: 'blue',
                 tags: ['casual'],
-                images: [],
+                images: {
+                    images: [],
+                    type: ''
+                },
                 pieceType: 'Jeans'
             },
         ],
@@ -117,7 +132,10 @@ const closetSlice = createSlice({
                     price: '$170',
                     color: 'brown',
                     tags: ['casual'],
-                    images: [],
+                    images: {
+                        images: [],
+                        type: ''
+                    },
                     pieceType: 'Sneakers',
                     oufitsInArray: []
                 },
@@ -133,7 +151,10 @@ const closetSlice = createSlice({
                     price: '$500',
                     color: 'silver',
                     tags: ['luxury'],
-                    images: [],
+                    images: {
+                        images: [],
+                        type: ''
+                    },
                     pieceType: 'ring',
                     oufitsInArray: []
                 },
@@ -209,7 +230,10 @@ const closetSlice = createSlice({
                     price: '$98',
                     color: 'black',
                     tags: ['hype', 'casual'],
-                    images: [],
+                    images: {
+                        images: [],
+                        type: "imgur" or "local"
+                    }
                     pieceType: 'T-Shirt'
                     oufitsInArray: []
                  */
@@ -299,7 +323,10 @@ const closetSlice = createSlice({
                     timesWorn: 0, //defaults to zero, user can't control this
                     outfitsWornIn: [], //defaults to empty array
                     tags: [],
-                    images: [],
+                    images: {
+                        images: [],
+                        type: ''
+                    },
                     favorite: false,
                 }
                 console.log('cleansed clothingPieceInProgress')

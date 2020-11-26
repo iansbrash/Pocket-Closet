@@ -110,6 +110,8 @@ export const UploadImage = () => {
     const [dropdownPosition] = useState(new Animated.Value(0))
     const [descriptionModal, setDescriptionModal] = useState(false)
 
+    const [checked, setChecked] = useState(false)
+
     const toggleDropDown = () => {
         uploadTypeDropdown ? pullUp() : dropDown()
     }
@@ -185,7 +187,23 @@ export const UploadImage = () => {
 
     const pushImages = () => {
         console.log(imgurUrl)
-        dispatch(clothingInProgressAttributeAdded({images: imgurUrl}))
+        dispatch(clothingInProgressAttributeAdded(
+            {
+                images: 
+                fileUri.length !== 0 ? (
+                    checked ? {
+                        images: imgurUrl,
+                        type: 'imgur'
+                    } : {
+                        images: fileUri,
+                        type: 'local'
+                    })
+                : {
+                    images: imgurUrl,
+                    type: ''
+                }
+            }
+        )) //{images: imgurUrl}
     }
 
     const sendRequestAndWait = async () => {
@@ -332,7 +350,8 @@ export const UploadImage = () => {
                 {fileUri.length !== 0 ?
                 <>
                     <MediumCheckButton 
-                        defaultChecked={false}
+                        checked={checked}
+                        setChecked={setChecked}
                         title={awaitingResponse ? 'Uploading...' : `Upload to Imgur`}
                         onPressFunc={async () => sendRequestAndWait()}
                         disabled={fileUri.length === 0 || awaitingResponse || uploadSuccess}

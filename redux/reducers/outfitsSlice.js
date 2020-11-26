@@ -59,7 +59,10 @@ const outfitsSlice = createSlice({
                 action.payload.fitpic = state.outfitInProgress.fitpic
                 /** the object we push into the outfitsArray SHOULD (and hopefully will) look like this:
                  *  {
-                 *      fitpic: '',             //not yet implemented
+                 *      fitpic: {
+                 *          fitpic: '',
+                 *          type: 'imgur' or 'local', default ''
+                 *      },             //not yet implemented
                  *      date: new Date(),
                  *      favorite: false,        //not yet implemented
                  *      description: ''         //not yet implemented
@@ -86,7 +89,10 @@ const outfitsSlice = createSlice({
 
                 // resets outfit in progress
                 state.outfitInProgress = {
-                    fitpic: '',
+                    fitpic: {
+                        fitpic: '',
+                        type: ''
+                    },
                     topsArray: [],
                     bottomsArray: [],
                     footwearArray: [],

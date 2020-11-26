@@ -73,8 +73,8 @@ export const FinalizeClothing = () => {
     const clothingPieceInProgress = useSelector(state => state.closet.clothingPieceInProgress)
     console.log(clothingPieceInProgress)
 
-    if (clothingPieceInProgress.images.length !== 0){
-        src = clothingPieceInProgress.images
+    if (clothingPieceInProgress.images.images.length !== 0){
+        src = clothingPieceInProgress.images.images
     }
     console.log(clothingPieceInProgress.images)
 

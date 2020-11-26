@@ -307,7 +307,7 @@ export const TextInputModal = ({setModalVisible, modalVisible, onPressFunc, titl
     )
 }
 
-export const ImageScrollModal = ({setModalVisible, modalVisible, imageArray, title}) => {
+export const ImageScrollModal = ({setModalVisible, modalVisible, imageArray, imageType}) => {
     const [viewBlur] = useState(new Animated.Value(0))
 
     const onShow = () => {
@@ -391,7 +391,7 @@ export const ImageScrollModal = ({setModalVisible, modalVisible, imageArray, tit
                                     height: '90%'
                                 }}>
                                     <Image 
-                                    source={{uri: makeHugeImage(imageUrl)}} 
+                                    source={{uri: imageType === 'imgur' ? makeHugeImage(imageUrl) : imageUrl}} 
                                     resizeMode={'contain'} //this is exactly what i needed
                                     style={{
                                         width: `100%`,

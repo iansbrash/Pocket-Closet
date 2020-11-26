@@ -472,11 +472,14 @@ export const ViewIndividualPiece = ({ route }) => {
 
     let src
 
-    //temp image
-    if (item.images.length !== 0){
-        src = item.images[0]
+    if (item.images.images.length === 0 || item.images.type === ''){
+        src = {uri: 'https://randomuser.me/api/portraits/men/1.jpg'}
+    } else if (item.images.type === 'imgur'){
+        src = {uri: makeMediumImage(item.images.images[0])}
+    } else if (item.images.type === 'local'){
+        src = {uri: item.images.images[0]}
     } else {
-        src = null //'https://randomuser.me/api/portraits/men/1.jpg'
+        console.log('this wasn`t supposed to happen...')
     }
 
     const image = useRef(null)
@@ -561,21 +564,24 @@ export const ViewIndividualPiece = ({ route }) => {
                             margin: 5,
                             width: 'auto',
                             borderRadius: 5,
-                            aspectRatio: 1
                         }}>
-                            <Pressable
-                            onPress={() => setImageModal(true)}
-                            >
-                                <Image //ref={image} //I think this is useless here, delete later
-                                    source={src ? {uri: makeMediumImage(src)} : {uri: 'https://randomuser.me/api/portraits/men/1.jpg'}} 
-                                    style={[{
-                                        width: '100%',//'imageHeight',
-                                        aspectRatio: 1,
-                                        borderRadius: 5
-                                    },]} 
-                                />
-                            </Pressable>
-                            
+                            <View style={{
+                                width: '100%',
+                                aspectRatio: 1
+                            }}>
+                                <Pressable
+                                onPress={() => setImageModal(true)}
+                                >
+                                    <Image //ref={image} //I think this is useless here, delete later
+                                        source={src}
+                                        style={[{
+                                            width: '100%',//'imageHeight',
+                                            aspectRatio: 1,
+                                            borderRadius: 5
+                                        },]} 
+                                    />
+                                </Pressable>
+                            </View>
                         </View>
                     </Animated.View>
                     <Animated.View style={{
@@ -595,7 +601,8 @@ export const ViewIndividualPiece = ({ route }) => {
                 modalVisible={imageModal}
                 setModalVisible={setImageModal}
                 title={'Images'}
-                imageArray={item.images}
+                imageType={item.images.type}
+                imageArray={item.images.images}
             />
 
             <ThreeAttributeHeader brandsLength={item.brandName.length} price={item.price} pieceType={item.pieceType} color={item.color}/>
