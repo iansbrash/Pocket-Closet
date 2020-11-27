@@ -8,11 +8,13 @@ import { TopNavScreenHeader } from '../GlobalComponents/TopNav'
 import { useSelector, useDispatch } from 'react-redux'
 import { FinalizeButton } from './NextButton'
 import { ScreenHeader } from '../GlobalComponents/ScreenHeader'
-import { clothingAddedToCloset } from '../../redux/reducers/closetSlice'
+import { clothingAddedToCloset, pushTagsToTaggedClothing } from '../../redux/reducers/closetSlice'
 import GlobalStyles from '../GlobalComponents/GlobalStyles'
 import { XIcon } from '../GlobalComponents/GlobalIcons'
 import { clothingInProgressCleansed } from '../../redux/reducers/closetSlice'
 import { nanoid } from 'nanoid/async/index.native'
+import {batchActions} from 'redux-batched-actions';
+
 
 const FinalizeDescription = ({title, value}) => {
     return (
@@ -91,10 +93,18 @@ export const FinalizeClothing = () => {
 
     const saveItem = async () => {
         //send item to redux store
-        dispatch(clothingAddedToCloset({
-            ...clothingPieceInProgress,
-            _id: await nanoid()
-        }))
+        let _id = await nanoid();
+        dispatch(batchActions([
+            clothingAddedToCloset({
+                ...clothingPieceInProgress,
+                _id: _id
+            }),
+            pushTagsToTaggedClothing(tags, _id, clothingPieceInProgress.clothingType)
+        ]))
+        // dispatch(batchActions([
+        //     clothingInOutfitWorn(idArrayObject, nid),
+        //     outfitCreatedFromHome(idArrayObject, nid, date),]
+        // ))
         navigation.navigate('CLOSETSCREEN');
         //alternatively have  a'success' page like when u create an outfit
         

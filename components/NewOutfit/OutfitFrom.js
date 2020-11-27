@@ -39,10 +39,13 @@ export const OutfitFrom = () => {
                 <MediumButton title={'Saved'} icon={
                     <PlusIcon size={30} style={[GlobalStyles.colorMain, {marginRight: 10}]}/>
                 } onPressFunc={() => navigation.navigate('FROMSCRATCH')}/>
-                <MediumButton title={'History'} icon={
+                <MediumButton title={'Tags'} icon={
                     <PlusIcon size={30} style={[GlobalStyles.colorMain, {marginRight: 10}]}/>
                 } onPressFunc={() => navigation.navigate('FROMSCRATCH')}/>
                 <MediumButton title={'History'} icon={
+                    <PlusIcon size={30} style={[GlobalStyles.colorMain, {marginRight: 10}]}/>
+                } onPressFunc={() => navigation.navigate('FROMSCRATCH')}/>
+                <MediumButton title={'Random'} icon={
                     <PlusIcon size={30} style={[GlobalStyles.colorMain, {marginRight: 10}]}/>
                 } onPressFunc={() => navigation.navigate('FROMSCRATCH')}/>
             </View>

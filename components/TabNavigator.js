@@ -25,6 +25,8 @@ import { OutfitFrom } from './NewOutfit/OutfitFrom'
 import { HangerIcon, HomeIcon, CalendarIcon } from './GlobalComponents/GlobalIcons'
 import { UploadFitpic } from './NewOutfit/UploadFitpic'
 import { NewItemDescription } from './NewClothing/NewItemDescription'
+import { OutfitDescription } from './NewOutfit/OutfitDescription'
+import { ViewIndividualTag } from './ViewIndividualTag'
 
 import GlobalStyles from './GlobalComponents/GlobalStyles'
 // Destructuring React Navigator import
@@ -76,6 +78,7 @@ const ClosetNav = () => {
             cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS}}>
             <ClosetStack.Screen name="CLOSETSCREEN" component={NewClosetScreen}/>
             <ClosetStack.Screen name="VIEWINDIVIDUALPIECE" component={ViewIndividualPiece}/>
+            <ClosetStack.Screen name="VIEWINDIVIDUALTAG" component={ViewIndividualTag}/>
             <ClosetStack.Screen name="NEWCLOTHING" component={TypeOfClothing}/>
             <ClosetStack.Screen name="SIZEOFCLOTHING" component={SizeOfClothing}/>
             <ClosetStack.Screen name="TYPEOFBRANDS" component={TypeOfBrands}/>
@@ -103,6 +106,7 @@ const HomeNav = () => {
             <HomeStack.Screen name="RECORD" component={OutfitFrom} />
             <HomeStack.Screen name="FROMSCRATCH" component={FromScratch} />
             <HomeStack.Screen name="OUTFITSELECTION" component={OutfitSelection} />
+            <HomeStack.Screen name="OUTFITDESCRIPTION" component={OutfitDescription} />
             <HomeStack.Screen name="UPLOADFITPIC" component={UploadFitpic} />
             <HomeStack.Screen name="FINALIZEOUTFIT" component={FinalizeOutfit} />
             <HomeStack.Screen name="FINALIZESUCCESS" component={FinalizeSuccess} />

@@ -33,6 +33,10 @@ const outfitsSlice = createSlice({
                 type: ''
             }
         },
+        taggedOutfits: { //each property contains the IDs of outfits that have used that tag
+            tag1: [],
+            tag2: [], //etc... we don't need these tags to contain objects that contain arrays unlike taggedClothing
+        },
         status: 'idle', // idle, success, or error. call 'success' on creating an outfit to prompt animation
         error: null
     },
@@ -69,6 +73,7 @@ const outfitsSlice = createSlice({
                  *      date: new Date(),
                  *      favorite: false,        //not yet implemented
                  *      description: ''         //not yet implemented
+                 *      tags: []                //not yet implemented
                  *      _id: 'ms892-sdj3ds'
                  *      outfitArr: {            //each of these arrays only hold string _id's     
                  *          topsArray: [],

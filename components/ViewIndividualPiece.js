@@ -274,8 +274,11 @@ const ThreeAttributeHeader = ({pieceType, brandsLength, price, description, colo
 
 const BrandTags = ({brandsArray}) => {
 
+    const navigation = useNavigation();
+
     const IndividualTags = ({title}) => {
         return (
+            
             <View style={[{
                 width: 'auto',
                 padding: 5,
@@ -288,6 +291,7 @@ const BrandTags = ({brandsArray}) => {
             }, GlobalStyles.shadowLight, ]}>
                 <Text style={[{fontWeight: 'bold',}, GlobalStyles.h5, GlobalStyles.colorMain ]}>{title}</Text>
             </View>
+            
         )
     }
 
@@ -318,23 +322,27 @@ const ClothingTags = ({tagsArray}) => {
 
     //const tagsArray = ['Temp', 'Tags', 'Go', 'Here', 'Please', 'Replace']
 
+    const navigation = useNavigation()
 
     // testing plz delete 
     if (tagsArray.length === 0) tagsArray.push('i pushed this tag for sanity')
 
     const IndividualTags = ({title}) => {
         return (
-            <View style={[{
-                width: 'auto',
-                padding: 3,
-                margin: 3,
-                height: 'auto',
-                justifyContent: 'center',
-                alignItems:'center',
-                borderRadius: 5,
-            }, GlobalStyles.shadowLight, GlobalStyles.bgColorMain]}>
-                <Text style={[{fontWeight: 'bold', color: 'white'}, GlobalStyles.h6, ]}>{title}</Text>
-            </View>
+            <Pressable
+            onPressIn={() => navigation.navigate("VIEWINDIVIDUALTAG", {tag: title, type: 'clothing'})}>
+                <View style={[{
+                    width: 'auto',
+                    padding: 3,
+                    margin: 3,
+                    height: 'auto',
+                    justifyContent: 'center',
+                    alignItems:'center',
+                    borderRadius: 5,
+                }, GlobalStyles.shadowLight, GlobalStyles.bgColorMain]}>
+                    <Text style={[{fontWeight: 'bold', color: 'white'}, GlobalStyles.h6, ]}>{title}</Text>
+                </View>
+            </Pressable>
         )
     }
 

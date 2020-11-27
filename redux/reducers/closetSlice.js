@@ -201,6 +201,14 @@ const closetSlice = createSlice({
             number: [4, 4.5, 5, 5.5, 6, 6.5, 7, 7.5, 8, 8.5, 9, 9.5, 10, 10.5, 11, 11.5, 12, 12.5, 13],
             other: []
         },
+        taggedClothing: {
+            tag1: {
+                footwearArray: [],
+                topsArray: [],
+                bottomsArray: [],
+                otherArray: []
+            },//same premise as taggedOutfits -- contains _ids of clothing w that tag
+        },
         status: 'idle',
         error: null
     },
@@ -365,6 +373,79 @@ const closetSlice = createSlice({
                     }
                 }
             }
+        },
+        pushTagsToTaggedClothing: {
+            reducer (state, action) {
+
+                /**Each item in the array for the tag will look like
+                 *  {
+                 *      clothingType: 'tops',
+                 *      _id: 'najsbfsdf81kjas'
+                 *  }
+                 *  or maybe each tag in the array will look like
+                 *   tag1: {
+                 *      topsArray: [],
+                 *      bottomsArray: [],
+                 *      footwearArray: [],
+                 *      otherArray: []
+                 *  }
+                 *  and tags will not be case sensitive
+                 * ^^ I think we're going to go with this. Sacraficing extra storage for faster time
+                 */
+
+                action.payload.tagsArray.forEach(tag => {
+                    if (!state.taggedClothing[tag]){
+                        console.log(`No tag found for [${tag}], creating new tag object.`)
+                        state.taggedClothing[tag.toLowerCase()] = {
+                            topsArray: [],
+                            bottomsArray: [],
+                            footwearArray: [],
+                            otherArray: []
+                        }
+                    }
+                    console.log(`Adding tag[${tag}] to id[${action.payload._id}]`)
+                    console.log(action.payload.clothingType.toLowerCase())
+                    state.taggedClothing[tag.toLowerCase()][`${action.payload.clothingType.toLowerCase()}Array`].push(action.payload._id)
+                })
+            },
+            prepare(tagsArray, _id, clothingType) {
+                return {
+                    payload: {
+                        tagsArray,
+                        _id,
+                        clothingType
+                    }
+                }
+            }
+        },
+        removeTagsFromTaggedClothing: {
+            reducer(state, action) {
+                action.payload.tagsArray.forEach(tag => {
+
+                    //i am the master of naming variables
+                    let whatWeWant = state.taggedClothing[tag]
+
+                    whatWeWant[`${action.payload.clothingType}Array`] = 
+                    whatWeWant[`${action.payload.clothingType}Array`].filter(item => item !== _id)
+
+                    if (whatWeWant.topsArray.length === 0 && 
+                        whatWeWant.bottomsArray.length === 0 && 
+                        whatWeWant.footwearArray.length === 0 && 
+                        whatWeWant.otherArray.length === 0){
+                        //remove this tag frome xistence
+                        delete state.taggedClothing[tag];
+                    }
+                })
+            },
+            prepare(tagsArray, _id, clothingType){
+                return {
+                    payload: {
+                        _id,
+                        clothingType,
+                        tagsArray
+                    }
+                }
+            }
         }
     },
 })
@@ -383,5 +464,7 @@ export const {
     brandAdded,
     brandDeleted,
     clothingInProgressCleansed,
-    clothingInOutfitWorn
+    clothingInOutfitWorn,
+    pushTagsToTaggedClothing,
+    removeTagsFromTaggedClothing
 } = closetSlice.actions;

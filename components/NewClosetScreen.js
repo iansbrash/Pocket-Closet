@@ -26,7 +26,7 @@ import { makeSmallImage, makeMediumImage } from './GlobalFunctions/ImgurResize'
 
 
 // used as render method for FlatList in ClosetListOneCol
-function RenderSingleLineClosetItem ({item})  {
+export const RenderSingleLineClosetItem = ({item}) => {
 
     let src;
 

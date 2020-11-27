@@ -212,7 +212,7 @@ export const FromScratch = () => {
                     topNavTitle: 'Other',
                     arrayName: 'otherArray'}}/>
             </View>
-            <NextButton disabledHook={false} navpath={'UPLOADFITPIC'} />
+            <NextButton disabledHook={false} navpath={'OUTFITDESCRIPTION'} />
 
         </View>
     )
