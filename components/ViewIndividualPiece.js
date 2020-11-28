@@ -383,14 +383,20 @@ const OutfitScroll = ({outfitsWornIn}) => {
     const mockOutfitsThisClothingIsUsedInArray = [
         {
             date: '11/20/20',
-            fitpic: 'https://randomuser.me/api/portraits/men/1.jpg',
+            fitpic: {
+                fitpic: 'https://randomuser.me/api/portraits/men/1.jpg',
+                type: 'local'
+            },
             //outfitArr: {
             // we really don't need this part because we're just displaying the image
             //}
         },
         {
             date: '11/20/21',
-            fitpic: 'https://randomuser.me/api/portraits/men/1.jpg',
+            fitpic: {
+                fitpic: 'https://randomuser.me/api/portraits/men/1.jpg',
+                type: 'local'
+            },
             //outfitArr: {
             // we really don't need this part because we're just displaying the image
             //} //nm we do need this to navigate to the outfit lol
@@ -420,8 +426,14 @@ const OutfitScroll = ({outfitsWornIn}) => {
                             width: 'auto',
                             height: 'auto'
                         }}>
-                            <Image source={outfitObject.fitpic && outfitObject.fitpic !== '' ? 
-                                {uri:  outfitObject.fitpic} : dummySrc} //{/** makeMediumSmallImage(outfitObject.fitpic)*/}
+                            <Image source={
+                                outfitObject.fitpic.fitpic !== '' ? 
+                                    (outfitObject.fitpic.type === 'imgur' ? 
+                                        {uri: makeMediumSmallImage(outfitObject.fitpic.fitpic)} : 
+                                        {uri: outfitObject.fitpic.fitpic}
+                                    ) 
+                                : dummySrc}
+                                
                                 style={{width: '100%', aspectRatio: 1, borderRadius: 5}}/>
                         </View>
                         <View style={{marginLeft: 5, marginBottom: 5}}>

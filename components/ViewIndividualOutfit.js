@@ -96,8 +96,13 @@ const DisplayClothingTypeFour = ({fetchedOutfitObject, outfitObject, icon}) => {
                             width: 'auto',
                             height: 'auto'
                         }}>
-                            <Image source={typeof clothingObject.images === 'object' && clothingObject.images.length !== 0 ? 
-                                {uri: makeMediumSmallImage(clothingObject.images[0])} : dummySrc} style={{width: '100%', aspectRatio: 1, borderRadius: 5}}/>
+                            <Image source={clothingObject.images.images.length !== 0 ? (
+                                clothingObject.images.type === 'imgur' ?
+                                    {uri: makeMediumSmallImage(clothingObject.images.images[0])} :
+                                    {uri: clothingObject.images.images[0]}
+                                )
+                                : dummySrc} 
+                                style={{width: '100%', aspectRatio: 1, borderRadius: 5}}/>
                         </View>
                         <View style={{marginLeft: 5, marginBottom: 5}}>
                             <Text 
@@ -629,7 +634,12 @@ export const ViewIndividualOutfit = ({ route }) => {
                             <Pressable
                             onPress={() => setImageModal(true)}>
                                 <Image //ref={image} //I think this is useless here, delete later
-                                    source={outfitObject.fitpic? {uri: makeMediumImage(outfitObject.fitpic)} : dummySrc} 
+                                    source={outfitObject.fitpic !== ''
+                                            && outfitObject.fitpic.fitpic !== '' ? (
+                                                outfitObject.fitpic.type === 'imgur' ?
+                                                {uri: makeMediumImage(outfitObject.fitpic.fitpic)} 
+                                                : {uri: outfitObject.fitpic.fitpic}
+                                            ) : dummySrc} 
                                     style={[{
                                         width: '100%',//'imageHeight',
                                         aspectRatio: 1,

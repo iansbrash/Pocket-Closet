@@ -213,6 +213,10 @@ const OutfitList = ({searchInput}) => {
 
         //this used to be const but we are pushing to it
         let imageArrayFromIds = [];
+        let dummySrc = {
+            type: '',
+            images: `https://randomuser.me/api/portraits/men/${Math.floor(Math.random() * 100 % 100 + 1)}.jpg`
+        }
 
 
         //what is this spaghettii...
@@ -225,13 +229,16 @@ const OutfitList = ({searchInput}) => {
                     console.log('temp not found... so descriptive')
                     console.log('this means we cant find the clothing Objecy were searching for? ')
                 }
-                else if (!temp.images){
-                    imageArrayFromIds.push(`https://randomuser.me/api/portraits/men/${Math.floor(Math.random() * 100 % 100 + 1)}.jpg`)
+                else if (Array.isArray(temp.images)){
+                    imageArrayFromIds.push(dummySrc)
 
-                } else if (temp.images.length === 0){
-                    imageArrayFromIds.push(`https://randomuser.me/api/portraits/men/${Math.floor(Math.random() * 100 % 100 + 1)}.jpg`)
+                } else if (temp.images.images.length === 0){
+                    imageArrayFromIds.push(dummySrc)
                 } else {
-                    imageArrayFromIds.push(temp.images[0])
+                    imageArrayFromIds.push({
+                        type: temp.images.type,
+                        images: temp.images.images[0]
+                    })
                 }
                 
                 if (imageArrayFromIds.length >= combinedClothingItemsArray.length){
@@ -334,7 +341,8 @@ const OutfitList = ({searchInput}) => {
                                             backgroundColor: 'white',
                                             borderRadius: 10
                                         }, GlobalStyles.shadowLight]}>
-                                            <Image source={item.fitpic && item.fitpic !== '' ? {uri: makeMediumImage(item.fitpic)} : null}
+                                            <Image source={item.fitpic !== '' && item.fitpic.fitpic !== '' ? (item.fitpic.type === 'imgur' ?
+                                            { uri: makeMediumImage(item.fitpic.fitpic)} : {uri: item.fitpic.fitpic}) : null}
                                                 style={{height: '100%', width: '100%', borderRadius: 10}}/>
                                         </View>
                                     </View>
@@ -367,7 +375,12 @@ const OutfitList = ({searchInput}) => {
                                                 key={index}>
                                                     <Image  
                                                         key={index}
-                                                        source={{uri: makeSmallImage(imageArrayFromIds[index])}} 
+                                                        source={
+                                                            imageArrayFromIds[index].type === 'imgur' ? 
+                                                            {uri: makeSmallImage(imageArrayFromIds[index].images)} :
+                                                            {uri: imageArrayFromIds[index].images}
+
+                                                        } 
                                                         style={{height: '100%', aspectRatio: 1, borderRadius: 10}} />
                                                 </View>
                                             </View>
