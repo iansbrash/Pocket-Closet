@@ -392,9 +392,10 @@ const closetSlice = createSlice({
                  *  and tags will not be case sensitive
                  * ^^ I think we're going to go with this. Sacraficing extra storage for faster time
                  */
+                console.log(state.taggedClothing)
 
                 action.payload.tagsArray.forEach(tag => {
-                    if (!state.taggedClothing[tag]){
+                    if (!state.taggedClothing[tag.toLowerCase()]){
                         console.log(`No tag found for [${tag}], creating new tag object.`)
                         state.taggedClothing[tag.toLowerCase()] = {
                             topsArray: [],
@@ -405,7 +406,8 @@ const closetSlice = createSlice({
                     }
                     console.log(`Adding tag[${tag}] to id[${action.payload._id}]`)
                     console.log(action.payload.clothingType.toLowerCase())
-                    state.taggedClothing[tag.toLowerCase()][`${action.payload.clothingType.toLowerCase()}Array`].push(action.payload._id)
+                    state.taggedClothing[tag.toLowerCase()][`${action.payload.clothingType.toLowerCase()}Array`] =
+                    [...state.taggedClothing[tag.toLowerCase()][`${action.payload.clothingType.toLowerCase()}Array`], action.payload._id ]
                 })
             },
             prepare(tagsArray, _id, clothingType) {
