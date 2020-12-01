@@ -604,7 +604,7 @@ export const ViewIndividualOutfit = ({ route }) => {
                 modalVisible={imageModal}
                 setModalVisible={setImageModal}
                 title={'Title XD'}
-                imageArray={[outfitObject.fitpic]}/>
+                imageArray={[outfitObject.fitpic.fitpic]}/>
             
             
             {/* GestureRecognizers allow us to swipe up/down to make the fitpic image big/small */}

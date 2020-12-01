@@ -13,10 +13,11 @@ import { NextButton } from '../NewClothing/NextButton'
 import { MediumButton } from '../GlobalComponents/GlobalButtons'
 import { PlusIcon } from '../GlobalComponents/GlobalIcons'
 import GlobalStyles from '../GlobalComponents/GlobalStyles'
-import { Dimensions } from 'react-native';
 import { useDispatch } from 'react-redux'
 import { outfitInProgressCleansed } from '../../redux/reducers/closetSlice'
 import { outfitInProgressFitpicAdded } from '../../redux/reducers/outfitsSlice'
+
+import { GlobalUpload } from '../GlobalComponents/GlobalUpload'
 
 
 
@@ -73,9 +74,8 @@ const sendRequest = async (fileData, setImgurUrl, imgurUrl) => {
 
 export const UploadFitpic = () => {
     //we aren't working with arrays here (only 1 fitpic per outfit)
-    const [fileUri, setFileUri] = useState('')
-    const [fileData, setFileData] = useState('');
-    const [imgurUrl, setImgurUrl] = useState('');
+    // const [fileData, setFileData] = useState('');
+    
 
     const [awaitingResponse, setAwaitingResponse] = useState(false)
     const [uploadSuccess, setUploadSuccess] = useState(false)
@@ -83,8 +83,10 @@ export const UploadFitpic = () => {
     const navigation = useNavigation();
     const dispatch = useDispatch();
     
-
-    
+    //we pass these to GlobalUpload
+    const [fileUri, setFileUri] = useState([]); //should optimally be a string, but needs to be array
+    const [imgurUrl, setImgurUrl] = useState([]); // because that is how GlobalUpload handles the hooks
+    const [checked, setChecked] = useState(false)
 
     useEffect(() => {
         (async () => {
@@ -124,7 +126,9 @@ export const UploadFitpic = () => {
         console.log(`pushing images... imgurUrl: ${imgurUrl}`)
         //dispatch to redux store to store fitpic
         //dispatch(clothingInProgressAttributeAdded({images: imgurUrl}))
-        dispatch(outfitInProgressFitpicAdded(imgurUrl));
+        dispatch(outfitInProgressFitpicAdded(
+            imgurUrl.length !== 0 ? imgurUrl[0] : fileUri[0], 
+            imgurUrl.length !== 0 ? 'imgur' : 'local'));
     }
 
     const sendRequestAndWait = async () => {
@@ -143,64 +147,11 @@ export const UploadFitpic = () => {
                 () => dispatch(outfitInProgressCleansed())
             } />
             
-            <View style={{
-                margin: 10,
-                flex: 1
-            }}>
-                <MediumButton 
-                    title={`Choose Images (${fileUri === '' ? 1 : 0} left)`}
-                    onPressFunc={pickImage}
-                    disabled={fileUri !== ''}
-                    icon={<PlusIcon style={{marginRight: 15, marginLeft: 5, color: fileUri.length === 3 ? 'lightgray' : 'black'}} name="plus" size={30} 
-                    />}/>
-
-                
-                    <View style={{
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        width: '100%',
-                        aspectRatio: 1
-                    }}>
-                        <ScrollView
-                        horizontal={true}
-                        style={{margin: -10}}
-                        contentContainerStyle={{
-                            width: `100%`,
-                            height: 'auto'
-                        }}
-                        >
-                            {fileUri !== '' ? 
-                                <View style={[{
-                                    height: '100%', 
-                                    aspectRatio: 1, 
-                                    borderRadius: 5,
-                                    width: `100%`,
-                                    justifyContent: 'center',
-                                    alignItems: 'center',}, 
-                                    GlobalStyles.shadowLight]}>
-                                    
-                                    <Image style={{
-                                    width: '90%',
-                                    aspectRatio: 1,
-                                    borderRadius: 5,
-                                    }} source={{ uri: fileUri }}/> 
-                                </View>
-                            : null }
-                        </ScrollView>
-                    </View>
-                    <MediumButton 
-                        title={awaitingResponse ? 'Uploading...' : `Upload to Imgur`}
-                        onPressFunc={async () => sendRequestAndWait()}
-                        disabled={fileUri === '' || awaitingResponse || uploadSuccess}
-                        icon={imgurUrl === '' || !awaitingResponse ? 
-                        <PlusIcon style={{marginRight: 15, marginLeft: 5, 
-                            color: imgurUrl !== '' || fileUri !== '' || awaitingResponse ? 'lightgray' : 'black'}} name="plus" size={30} 
-                    /> : 
-                    <View style={{marginRight: 15}}><ActivityIndicator size="small" color="lightgray"/></View>}/>
-                    <Text category='h3' style={{
-                        fontWeight: 'bold'
-                    }}>{imgurUrl}</Text>
-            </View>
+            <GlobalUpload 
+                fileUri={fileUri} setFileUri={setFileUri}
+                imgurUrl={imgurUrl} setImgurUrl={setImgurUrl}
+                checked={checked} setChecked={setChecked}
+                maxUploadAmount={1}/>
             <NextButton 
             navpath={'FINALIZEOUTFIT'} 
             disabledHook={false}

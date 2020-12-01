@@ -98,15 +98,17 @@ const sendRequest = async (fileData, setImgurUrl) => {
 
 
 export const GlobalUpload = (
-    // imgurUrl, setImgurUrl,
-    // fileUri, setFileUri, 
-    // checked, setChecked
+    {imgurUrl, setImgurUrl,
+    fileUri, setFileUri, 
+    checked, setChecked,
+    maxUploadAmount}
+    // {setNextFunction}
     ) => {
 
     // passed in as arguements
-    const [fileUri, setFileUri] = useState([])
-    const [imgurUrl, setImgurUrl] = useState([]);
-    const [checked, setChecked] = useState(false)
+    // const [fileUri, setFileUri] = useState([])
+    // const [imgurUrl, setImgurUrl] = useState([]);
+    // const [checked, setChecked] = useState(false)
 
     //gray area
     const [fileData, setFileData] = useState([]);
@@ -190,26 +192,28 @@ export const GlobalUpload = (
         }
       };
 
-    const pushImages = () => {
-        console.log(imgurUrl)
-        dispatch(clothingInProgressAttributeAdded(
-            {
-                images: 
-                fileUri.length !== 0 ? (
-                    checked ? {
-                        images: imgurUrl,
-                        type: 'imgur'
-                    } : {
-                        images: fileUri,
-                        type: 'local'
-                    })
-                : {
-                    images: imgurUrl,
-                    type: ''
-                }
-            }
-        )) //{images: imgurUrl}
-    }
+    // const pushImages = () => {
+    //     console.log('pushImages called...')
+    //     console.log(imgurUrl)
+    //     dispatch(clothingInProgressAttributeAdded(
+    //         {
+    //             images: 
+    //             fileUri.length !== 0 ? (
+    //                 checked ? {
+    //                     images: imgurUrl,
+    //                     type: 'imgur'
+    //                 } : {
+    //                     images: fileUri,
+    //                     type: 'local'
+    //                 })
+    //             : {
+    //                 images: imgurUrl,
+    //                 type: ''
+    //             }
+    //         }
+    //     )) //{images: imgurUrl}
+    // }
+
 
     const sendRequestAndWait = async () => {
         setAwaitingResponse(true)
@@ -225,227 +229,208 @@ export const GlobalUpload = (
 
     return (
         <View style={{
-            flex: 1,
-            backgroundColor: 'white'
+            margin: 10,
+            flex: 1
         }}>
-            <TopNavScreenHeader title={'Upload Image'} exitDestination={'CLOSETSCREEN'} extraFunc={
-                () => dispatch(clothingInProgressCleansed())
-            } />
-            
-            <View style={{
-                margin: 10,
-                flex: 1
+            <MediumButton 
+                title={`Choose asdImages (${maxUploadAmount - fileUri.length} left)`}
+                onPressFunc={() => toggleDropDown()}
+                disabled={fileUri.length === maxUploadAmount}
+                icon={<PlusIcon style={{marginRight: 15, marginLeft: 5, color: fileUri.length === maxUploadAmount ? 'lightgray' : 'black'}} name="plus" size={30} 
+                />}
+            />
+            <Animated.View style={{
+                position: 'absolute',
+                width: '100%',
+                height: 60,
+                zIndex: -1,
+                transform: [{
+                    translateY: dropdownPosition.interpolate({
+                        inputRange: [0, 1],
+                        outputRange: [0, 45]  // Edit this to change absolute position of textinput
+                    }),
+                    }]
             }}>
-                <MediumButton 
-                    title={`Choose Images (${3 - fileUri.length} left)`}
-                    onPressFunc={() => toggleDropDown()}
-                    disabled={fileUri.length === 3}
-                    icon={<PlusIcon style={{marginRight: 15, marginLeft: 5, color: fileUri.length === 3 ? 'lightgray' : 'black'}} name="plus" size={30} 
-                    />}
-                />
-                <Animated.View style={{
-                    position: 'absolute',
-                    width: '100%',
-                    height: 60,
-                    zIndex: -1,
-                    transform: [{
-                        translateY: dropdownPosition.interpolate({
-                          inputRange: [0, 1],
-                          outputRange: [0, 45]  // Edit this to change absolute position of textinput
-                        }),
-                      }]
-                }}>
-                    <View style={{
-                        margin: 10,
-                        height: 'auto',
-                        width: 'auto'
-                    }}>
-                        <View style={[{
-                            marginTop: 10,
-                            height: '100%',
-                            width: '100%',
-                            backgroundColor: 'white',
-                            borderBottomRightRadius: 10,
-                            borderBottomLeftRadius: 10,
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                            flexDirection: 'row'
-                        }, GlobalStyles.shadowLight]}>
-                                <TouchableOpacity style={{
-                                    height: '100%',
-                                    width: '50%',
-                                    zIndex: 1
-                                }}
-                                onPress={() => launchAndPull('camera')}>
-                                    <View style={{
-                                        marginTop: 15,
-                                        justifyContent: 'center',
-                                        alignItems: 'center',
-                                        flexDirection: 'row'
-                                    }}>
-                                        <Text style={[{
-                                            fontWeight: 'bold',
-                                            marginRight: 5,
-                                        }, GlobalStyles.h4]}>
-                                            Camera
-                                        </Text>
-                                        <CameraIcon size={30} style={GlobalStyles.colorMain}/>
-                                    </View>
-                                </TouchableOpacity>
-                                <TouchableOpacity style={{
-                                    height: '100%',
-                                    width: '50%',
-                                    zIndex: 1
-                                }}
-                                onPress={() => launchAndPull('library')}>
-                                    <View style={{
-                                        marginTop: 15,
-                                        justifyContent: 'center',
-                                        alignItems: 'center',
-                                        flexDirection: 'row'
-                                    }}>
-                                        <Text style={[{
-                                            fontWeight: 'bold',
-                                            marginRight: 5,
-                                        }, GlobalStyles.h4]}>
-                                            Library
-                                        </Text>
-                                        <PhotoLibraryIcon size={30} style={GlobalStyles.colorMain}/>
-                                    </View>
-                                </TouchableOpacity>
-                        </View>
-                    </View>
-                </Animated.View>
                 <View style={{
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    width: '100%',
-                    aspectRatio: 1,
-                    zIndex: -2
+                    margin: 10,
+                    height: 'auto',
+                    width: 'auto'
                 }}>
-                    <ScrollView
-                    horizontal={true}
-                    style={{margin: -10}}
-                    contentContainerStyle={{
-                        width: `${fileUri.length * 100}%`,
-                        height: 'auto'
-                    }}
-                    pagingEnabled={true}
-                    >
-                        {fileUri.map((uri, index) => (
-                            <View style={[{
-                                height: '100%', 
-                                aspectRatio: 1, 
-                                borderRadius: 5,
-                                width: `${100/fileUri.length}%`,
-                                justifyContent: 'center',
-                                alignItems: 'center',}, 
-                                GlobalStyles.shadowLight]}
-                                key={index}>
-                                
-                                <Image style={{
-                                width: '90%',
-                                aspectRatio: 1,
-                                borderRadius: 5,
-                                }} source={{ uri: uri }}/> 
-                            </View>
-                        ))}
-                    </ScrollView>
-                </View>
-                {fileUri.length !== 0 ?
-                <>
-                    <MediumCheckButton 
-                        checked={checked}
-                        setChecked={setChecked}
-                        title={awaitingResponse ? 'Uploading...' : `Upload to Imgur`}
-                        onPressFunc={async () => sendRequestAndWait()}
-                        disabled={fileUri.length === 0 || awaitingResponse || uploadSuccess}
-                        icon={!awaitingResponse ? 
-                        <PlusIcon style={{marginRight: 15, marginLeft: 5, 
-                            color: imgurUrl.length !== 0 || fileUri.length === 3 || awaitingResponse ? 'lightgray' : 'black'}} name="plus" size={30} 
-                        /> : 
-                        <View style={{marginRight: 15}}><ActivityIndicator size="small" color="lightgray"/></View>}
-                    />
                     <View style={[{
-                        height: 30, 
-                        aspectRatio: 1, 
-                        borderRadius: 5, 
-                        borderColor: 'lightgray', 
-                        borderWidth: 1,
+                        marginTop: 10,
+                        height: '100%',
+                        width: '100%',
+                        backgroundColor: 'white',
+                        borderBottomRightRadius: 10,
+                        borderBottomLeftRadius: 10,
                         justifyContent: 'center',
                         alignItems: 'center',
-                        backgroundColor: 'white',
-                        marginLeft: 10
-                    }]}>
-                        <TouchableOpacity
-                        onPress={() => setDescriptionModal(true)}
-                        >
-                            <Text style={[{fontWeight: 'bold', color: 'lightgray'}, GlobalStyles.h5]}>
-                                ?
-                            </Text>
-                        </TouchableOpacity>
+                        flexDirection: 'row'
+                    }, GlobalStyles.shadowLight]}>
+                            <TouchableOpacity style={{
+                                height: '100%',
+                                width: '50%',
+                                zIndex: 1
+                            }}
+                            onPress={() => launchAndPull('camera')}>
+                                <View style={{
+                                    marginTop: 15,
+                                    justifyContent: 'center',
+                                    alignItems: 'center',
+                                    flexDirection: 'row'
+                                }}>
+                                    <Text style={[{
+                                        fontWeight: 'bold',
+                                        marginRight: 5,
+                                    }, GlobalStyles.h4]}>
+                                        Camera
+                                    </Text>
+                                    <CameraIcon size={30} style={GlobalStyles.colorMain}/>
+                                </View>
+                            </TouchableOpacity>
+                            <TouchableOpacity style={{
+                                height: '100%',
+                                width: '50%',
+                                zIndex: 1
+                            }}
+                            onPress={() => launchAndPull('library')}>
+                                <View style={{
+                                    marginTop: 15,
+                                    justifyContent: 'center',
+                                    alignItems: 'center',
+                                    flexDirection: 'row'
+                                }}>
+                                    <Text style={[{
+                                        fontWeight: 'bold',
+                                        marginRight: 5,
+                                    }, GlobalStyles.h4]}>
+                                        Library
+                                    </Text>
+                                    <PhotoLibraryIcon size={30} style={GlobalStyles.colorMain}/>
+                                </View>
+                            </TouchableOpacity>
                     </View>
-                </> : null}
-                <DescriptionModal setModalVisible={setDescriptionModal} modalVisible={descriptionModal}>
-                    <View style={{
-                        justifyContent: 'flex-start',
-                        alignItems: 'center',
-                        flexDirection: 'column',
-                        width: '100%'
-                    }}>
-                        <Text 
-                            style={[GlobalStyles.h5, {fontWeight: 'bold', margin: 5}]}>
-                            Imgur vs Local
-                        </Text>
-                        <View style={{
-                            width: 'auto',
-                            justifyContent: 'flex-start',
-                            margin: 5
-                        }}>
-                            <Text style={[
-                                GlobalStyles.h6,
-                            ]}>
-                                {/* You have the option to either upload images of your clothing to Imgur (and not take up space
-                                on your device), or just use your device's storage to store these images. */}
-                                You can either upload to Imgur or use your device's storage.
-                            </Text>
-                            <Text style={[
-                                GlobalStyles.h6,
-                                {marginTop: 10}
-                            ]}>
-                                Uploading to Imgur takes a few seconds, but lets you delete the photos you took after (if you want).
-                            </Text>
-                            <Text style={[
-                                GlobalStyles.h6,
-                                {marginTop: 10}
-                            ]}>
-                                Local storage takes up your devices memory, but lets you skip the Imgur upload process (a few seconds).
-                            </Text>
-                            <Text style={[
-                                GlobalStyles.h6,
-                                {marginTop: 10}
-                            ]}>
-                                Keep in mind uploading to Imgur will use your data, so please connect to WiFi instead.
-                            </Text>
-                        </View>
-                        
-                    </View>
-                </DescriptionModal>
-                
-
-                <Text category='h3' style={{
-                    fontWeight: 'bold'
-                }}>{imgurUrl}</Text>
                 </View>
-            <NextButton 
-            navpath={'FINALIZECLOTHING'} 
-            disabledHook={false}
-            extraFunc={() => pushImages()}/>
+            </Animated.View>
             <View style={{
-                    width: '100%',
+                alignItems: 'center',
+                justifyContent: 'center',
+                width: '100%',
+                aspectRatio: 1,
+                zIndex: -2
+            }}>
+                <ScrollView
+                horizontal={true}
+                style={{margin: -10}}
+                contentContainerStyle={{
+                    width: `${fileUri.length * 100}%`,
                     height: 'auto'
-                }}>
+                }}
+                pagingEnabled={true}
+                >
+                    {fileUri.map((uri, index) => (
+                        <View style={[{
+                            height: '100%', 
+                            aspectRatio: 1, 
+                            borderRadius: 5,
+                            width: `${100/fileUri.length}%`,
+                            justifyContent: 'center',
+                            alignItems: 'center',}, 
+                            GlobalStyles.shadowLight]}
+                            key={index}>
+                            
+                            <Image style={{
+                            width: '90%',
+                            aspectRatio: 1,
+                            borderRadius: 5,
+                            }} source={{ uri: uri }}/> 
+                        </View>
+                    ))}
+                </ScrollView>
             </View>
+            {fileUri.length !== 0 ?
+            <>
+                <MediumCheckButton 
+                    checked={checked}
+                    setChecked={setChecked}
+                    title={awaitingResponse ? 'Uploading...' : `Upload to Imgur`}
+                    onPressFunc={async () => sendRequestAndWait()}
+                    disabled={fileUri.length === 0 || awaitingResponse || uploadSuccess}
+                    icon={!awaitingResponse ? 
+                    <PlusIcon style={{marginRight: 15, marginLeft: 5, 
+                        color: imgurUrl.length !== 0 || fileUri.length === maxUploadAmount || awaitingResponse ? 'lightgray' : 'black'}} name="plus" size={30} 
+                    /> : 
+                    <View style={{marginRight: 15}}><ActivityIndicator size="small" color="lightgray"/></View>}
+                />
+                <View style={[{
+                    height: 30, 
+                    aspectRatio: 1, 
+                    borderRadius: 5, 
+                    borderColor: 'lightgray', 
+                    borderWidth: 1,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    backgroundColor: 'white',
+                    marginLeft: 10
+                }]}>
+                    <TouchableOpacity
+                    onPress={() => setDescriptionModal(true)}
+                    >
+                        <Text style={[{fontWeight: 'bold', color: 'lightgray'}, GlobalStyles.h5]}>
+                            ?
+                        </Text>
+                    </TouchableOpacity>
+                </View>
+            </> : null}
+            <DescriptionModal setModalVisible={setDescriptionModal} modalVisible={descriptionModal}>
+                <View style={{
+                    justifyContent: 'flex-start',
+                    alignItems: 'center',
+                    flexDirection: 'column',
+                    width: '100%'
+                }}>
+                    <Text 
+                        style={[GlobalStyles.h5, {fontWeight: 'bold', margin: 5}]}>
+                        Imgur vs Local
+                    </Text>
+                    <View style={{
+                        width: 'auto',
+                        justifyContent: 'flex-start',
+                        margin: 5
+                    }}>
+                        <Text style={[
+                            GlobalStyles.h6,
+                        ]}>
+                            {/* You have the option to either upload images of your clothing to Imgur (and not take up space
+                            on your device), or just use your device's storage to store these images. */}
+                            You can either upload to Imgur or use your device's storage.
+                        </Text>
+                        <Text style={[
+                            GlobalStyles.h6,
+                            {marginTop: 10}
+                        ]}>
+                            Uploading to Imgur takes a few seconds, but lets you delete the photos you took after (if you want).
+                        </Text>
+                        <Text style={[
+                            GlobalStyles.h6,
+                            {marginTop: 10}
+                        ]}>
+                            Local storage takes up your devices memory, but lets you skip the Imgur upload process (a few seconds).
+                        </Text>
+                        <Text style={[
+                            GlobalStyles.h6,
+                            {marginTop: 10}
+                        ]}>
+                            Keep in mind uploading to Imgur will use your data, so please connect to WiFi instead.
+                        </Text>
+                    </View>
+                    
+                </View>
+            </DescriptionModal>
+        {/* <NextButton 
+        navpath={'FINALIZECLOTHING'} 
+        disabledHook={false}
+        extraFunc={() => pushImages()}/> */}
         </View>
     )
 

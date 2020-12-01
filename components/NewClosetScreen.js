@@ -430,7 +430,7 @@ const OutfitList = ({searchInput}) => {
                 renderItem={(object, index) => <RenderOutfit  {...object}
                 />}
                 //TEMP
-                keyExtractor={(obj, index) => Math.random().toString()} //obj._id.. not all obj has _id rn
+                keyExtractor={(obj, index) => obj._id.toString()} //obj._id.. not all obj has _id rn
             />
             
         </View>

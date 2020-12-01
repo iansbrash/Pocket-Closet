@@ -325,7 +325,7 @@ const ClothingTags = ({tagsArray}) => {
     const navigation = useNavigation()
 
     // testing plz delete 
-    if (tagsArray.length === 0) tagsArray.push('i pushed this tag for sanity')
+    if (tagsArray.length === 0) console.log('i aint pushing nun now')//tagsArray.push('i pushed this tag for sanity')
 
     const IndividualTags = ({title}) => {
         return (
@@ -504,6 +504,7 @@ export const ViewIndividualPiece = ({ route }) => {
 
     const image = useRef(null)
 
+
     const [imageHeight, setImageHeight] = useState(350);
 
  
@@ -625,7 +626,12 @@ export const ViewIndividualPiece = ({ route }) => {
                 imageArray={item.images.images}
             />
 
-            <ThreeAttributeHeader brandsLength={item.brandName.length} price={item.price} pieceType={item.pieceType} color={item.color}/>
+            <ThreeAttributeHeader 
+                brandsLength={item.brandName.length} 
+                price={item.price} 
+                pieceType={item.pieceType} 
+                color={item.color}
+                description={item.description}/>
             
             <View style={{
                 marginLeft: 20,
