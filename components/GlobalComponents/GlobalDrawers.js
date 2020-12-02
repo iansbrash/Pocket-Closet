@@ -75,7 +75,8 @@ export const TogglableDrawer = ({minHeight, children}) => {
                         : null}
                     </View>
                     <View 
-                    onLayout={event => !viewHeight ? setViewHeight(event.nativeEvent.layout.height) : null}>
+                    onLayout={event => !viewHeight ? setViewHeight(event.nativeEvent.layout.height) : null}
+                    style={{width: '90%'}}>
                         <Animated.View style={{
                             height: viewHeight ? brandTagsArrowRotation.interpolate({
                                 inputRange: [0, 1],

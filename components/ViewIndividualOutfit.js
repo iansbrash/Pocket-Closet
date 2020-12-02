@@ -117,7 +117,7 @@ const DisplayClothingTypeFour = ({fetchedOutfitObject, outfitObject, icon}) => {
                             bottom: 5,
                             right: 5
                         }}>
-                            <HeartIcon style={{color: clothingObject.favorite ? 'red' : 'black'}} size={20}/>
+                            {clothingObject.favorite ? <HeartIcon style={{color: 'red'}} size={20}/> : null}
                         </View>
                     </View>
                 </TouchableOpacity>
@@ -292,7 +292,7 @@ const OutfitTags = ({fetchedOutfitObject}) => {
     }
 
     return (
-        <TogglableDrawer minHeight={30}>
+        <TogglableDrawer minHeight={35}>
             <View style={{width: '100%', height: 'auto'}}>
                 <View style={{
                     marginLeft: 2,

@@ -257,10 +257,10 @@ const ThreeAttributeHeader = ({pieceType, brandsLength, price, description, colo
                 {/* <Text style={[GlobalStyles.h5, {fontWeight: 'bold'}]}>
                     {`${brandsLength} brand${brandsLength !== 1 ? 's' : ''}`}
                 </Text> */}
-                <Text style={[GlobalStyles.h5, {fontWeight: 'bold'}]}>
+                {/* <Text style={[GlobalStyles.h5, {fontWeight: 'bold'}]}>
                     {`${color ? color : 'no color'}`}
-                </Text>
-                <Text style={[{fontWeight: 'bold', marginLeft: 5, marginRight: 5}, GlobalStyles.h3, GlobalStyles.lighterHint]}>•</Text>
+                </Text> */}
+                {/* <Text style={[{fontWeight: 'bold', marginLeft: 5, marginRight: 5}, GlobalStyles.h3, GlobalStyles.lighterHint]}>•</Text> */}
                 <Text style={[GlobalStyles.h5, {fontWeight: 'bold'}]}>
                     {`$${price ? price : 0}`} 
                 </Text>
@@ -362,6 +362,68 @@ const ClothingTags = ({tagsArray}) => {
                     }}>
                         {tagsArray.map(tag => (
                             <IndividualTags key={tag} title={tag}/>
+                        ))}
+                    </View>
+                </View>
+            </View>
+        </TogglableDrawer>
+    )
+}
+
+const ColorTags = ({colorArray}) => {
+
+    //const tagsArray = ['Temp', 'Tags', 'Go', 'Here', 'Please', 'Replace']
+
+    const navigation = useNavigation()
+
+    // testing plz delete 
+    if (colorArray.length === 0) console.log('i aint pushing nun now')//tagsArray.push('i pushed this tag for sanity')
+
+    const IndividualTags = ({title}) => {
+        return (
+            <View style={[{
+                margin: 3,
+                borderRadius: 6,
+            }, GlobalStyles.bgColorMain,]}>
+                <Pressable
+                onPressIn={() => console.log('plz add functionality')}>
+                    <View style={[{
+                        width: 'auto',
+                        padding: 3,
+                        height: 'auto',
+                        justifyContent: 'center',
+                        alignItems:'center',
+                        borderRadius: 5,
+                    }, GlobalStyles.shadowLight,{backgroundColor: title.toLowerCase()}]}>
+                        <Text style={[
+                            {fontWeight: 'bold'}, 
+                            GlobalStyles.h6, 
+                            title.toLowerCase() === 'white' ? GlobalStyles.colorMain : {color: 'white'}]}>
+                            {title}
+                        </Text>
+                    </View>
+                </Pressable>
+            </View>
+            
+        )
+    }
+
+    return (
+        <TogglableDrawer minHeight={35}>
+            <View style={{width: '100%', height: 'auto'}}>
+                <View style={{
+                    width: 'auto'
+                }}>
+                    <View style={{
+                        width: '100%',
+                        height: 'auto',
+                        flexDirection: 'row',
+                        justifyContent: 'flex-start',
+                        alignItems: 'center',
+                        flexWrap: 'wrap'
+                    }}>
+                        {colorArray.map(color => (
+                            <IndividualTags key={color} title={color}/>
                         ))}
                     </View>
                 </View>
@@ -656,13 +718,14 @@ export const ViewIndividualPiece = ({ route }) => {
             <View style={{
                 marginLeft: 20,
             }}>
-                <Text style={
+                {/* <Text style={
                     [GlobalStyles.h6, {fontWeight :'bold'}]
                 }>
                     {`${item.timesWorn && item.timesWorn !== 0 ? `Worn ${item.timesWorn}x` : 'Never worn'}`}
-                </Text>
+                </Text> */}
             </View>
             
+            <ColorTags colorArray={item.color}/>
             <ClothingTags tagsArray={item.tags}/>
             <BrandTags brandsArray={item.brandName}/>
             <View style={{
@@ -672,7 +735,7 @@ export const ViewIndividualPiece = ({ route }) => {
             }}>
                 <View style={{
                 marginLeft: 10,
-                marginTop: 20,
+                // marginTop: 20,
                 }}>
                     <Text style={
                         [GlobalStyles.h4, {fontWeight :'bold'}]

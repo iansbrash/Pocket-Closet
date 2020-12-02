@@ -32,133 +32,11 @@ import { ActivityIndicatorComponent } from 'react-native';
 const closetSlice = createSlice({
     name: 'closet',
     initialState: {
-        closetObject: {
-            topsArray: [
-                {
-                    _id: 69,
-                    clothingType: 'tops',
-                    clothingName: 'shirt',
-                    brandName: ['Comme Des Garcons', 'CDG'],
-                    timesWorn: 0, //defaults to zero, user can't control this
-                    favorite: false,
-                    price: '$98',
-                    color: 'black',
-                    tags: ['hype', 'casual', 'stolen', 'retail', 'ugly'],
-                    images: {
-                        images: [],
-                        type: ''
-                    },
-                    pieceType: 'T-Shirt',
-                    oufitsInArray: []
-                },{
-                    _id: 70,
-                    clothingType: 'tops',
-                    clothingName: 'white shirt',
-                    brandName: ['Supreme'],
-                    timesWorn: 0, //defaults to zero, user can't control this
-                    favorite: false,
-                    price: '$98',
-                    color: 'black',
-                    images: {
-                        images: [],
-                        type: ''
-                    },
-                    tags: ['hype', 'casual'],
-                    pieceType: 'T-Shirt',
-                    oufitsInArray: []
-                },{
-                    _id: 71,
-                    clothingType: 'tops',
-                    clothingName: 'tan coat',
-                    brandName: ['UNDFTD', 'Undefeated'],
-                    timesWorn: 0, //defaults to zero, user can't control this
-                    favorite: false,
-                    
-                    price: '$98',
-                    color: 'black',
-                    tags: ['hype', 'casual'],
-                    images: {
-                        images: [],
-                        type: ''
-                    },
-                    pieceType: 'coat',
-                    oufitsInArray: []
-                    
-                },{
-                    _id: 72,
-                    clothingType: 'tops',
-                    clothingName: 'baby milo shirt',
-                    brandName: ['Bape', 'A Bathing Ape'],
-                    timesWorn: 0, //defaults to zero, user can't control this
-                    favorite: false,
-                    price: '$98',
-                    color: 'black',
-                    tags: ['hype', 'casual'],
-                    images: {
-                        images: [],
-                        type: ''
-                    },
-                    pieceType: 'T-Shirt',
-                    oufitsInArray: []
-                    
-                },
-            ],
-            bottomsArray: [
-                {
-                _id: 333,
-                clothingType: 'bottoms',
-                clothingName: 'Light Wash Jeans',
-                brandName: ['Acne', 'Acne Studios'],
-                timesWorn: 0, //defaults to zero, user can't control this
-                favorite: true,
-                price: '$198',
-                color: 'blue',
-                tags: ['casual'],
-                images: {
-                    images: [],
-                    type: ''
-                },
-                pieceType: 'Jeans'
-            },
-        ],
-            footwearArray: [
-                {
-                    _id: 3123,
-                    clothingType: 'footwear',
-                    clothingName: 'Air Jordan 1 Mocha',
-                    brandName: ['Nike', 'Jordan'],
-                    timesWorn: 0, //defaults to zero, user can't control this
-                    favorite: true,
-                    price: '$170',
-                    color: 'brown',
-                    tags: ['casual'],
-                    images: {
-                        images: [],
-                        type: ''
-                    },
-                    pieceType: 'Sneakers',
-                    oufitsInArray: []
-                },
-            ],
-            otherArray: [
-                {
-                    _id: 44,
-                    clothingType: 'other',
-                    clothingName: 'Gucci Ring',
-                    brandName: ['Gucci'],
-                    timesWorn: 0, //defaults to zero, user can't control this
-                    favorite: true,
-                    price: '$500',
-                    color: 'silver',
-                    tags: ['luxury'],
-                    images: {
-                        images: [],
-                        type: ''
-                    },
-                    pieceType: 'ring',
-                    oufitsInArray: []
-                },
-            ]
+        closetObject: { 
+            topsArray: [],
+            bottomsArray: [],
+            footwearArray: [],
+            otherArray: [] 
         },
         clothingPieceInProgress: {
             _id: 0,
@@ -208,6 +86,14 @@ const closetSlice = createSlice({
                 bottomsArray: [],
                 otherArray: []
             },//same premise as taggedOutfits -- contains _ids of clothing w that tag
+        },
+        coloredClothing: {
+            white: {
+                footwearArray: [],
+                topsArray: [],
+                bottomsArray: [],
+                otherArray: []
+            }
         },
         status: 'idle',
         error: null
@@ -324,7 +210,7 @@ const closetSlice = createSlice({
                     pieceType: '',
                     size: '',
                     price: '', //$0
-                    color: '',
+                    color: [],
                     brandName: [
                         []
                     ], // array of names and nicknames
@@ -374,7 +260,7 @@ const closetSlice = createSlice({
                 }
             }
         },
-        pushTagsToTaggedClothing: {
+        pushAttributesToAttributedClothing: {
             reducer (state, action) {
 
                 /**Each item in the array for the tag will look like
@@ -392,30 +278,33 @@ const closetSlice = createSlice({
                  *  and tags will not be case sensitive
                  * ^^ I think we're going to go with this. Sacraficing extra storage for faster time
                  */
-                console.log(state.taggedClothing)
+                const {attribute} = action.payload
+                console.log(state[attribute])
 
-                action.payload.tagsArray.forEach(tag => {
-                    if (!state.taggedClothing[tag.toLowerCase()]){
-                        console.log(`No tag found for [${tag}], creating new tag object.`)
-                        state.taggedClothing[tag.toLowerCase()] = {
+                //taggedClothing and coloredClothing
+                action.payload.attributesArray.forEach(atr => {
+                    if (!state[attribute][atr.toLowerCase()]){
+                        console.log(`No ${attribute} found for [${atr}], creating new ${attribute} object.`)
+                        state[attribute][atr.toLowerCase()] = {
                             topsArray: [],
                             bottomsArray: [],
                             footwearArray: [],
                             otherArray: []
                         }
                     }
-                    console.log(`Adding tag[${tag}] to id[${action.payload._id}]`)
+                    console.log(`Adding ${attribute}[${atr}] to id[${action.payload._id}]`)
                     console.log(action.payload.clothingType.toLowerCase())
-                    state.taggedClothing[tag.toLowerCase()][`${action.payload.clothingType.toLowerCase()}Array`] =
-                    [...state.taggedClothing[tag.toLowerCase()][`${action.payload.clothingType.toLowerCase()}Array`], action.payload._id ]
+                    state[attribute][atr.toLowerCase()][`${action.payload.clothingType.toLowerCase()}Array`] =
+                    [...state[attribute][atr.toLowerCase()][`${action.payload.clothingType.toLowerCase()}Array`], action.payload._id ]
                 })
             },
-            prepare(tagsArray, _id, clothingType) {
+            prepare(attributesArray, _id, clothingType, attribute) {
                 return {
                     payload: {
-                        tagsArray,
+                        attributesArray,
                         _id,
-                        clothingType
+                        clothingType,
+                        attribute
                     }
                 }
             }
@@ -467,6 +356,6 @@ export const {
     brandDeleted,
     clothingInProgressCleansed,
     clothingInOutfitWorn,
-    pushTagsToTaggedClothing,
+    pushAttributesToAttributedClothing,
     removeTagsFromTaggedClothing
 } = closetSlice.actions;

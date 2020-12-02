@@ -147,32 +147,35 @@ const IndividualDescription = ({
     )
 }
 
-const IndividualTag = ({title, deleteFunc}) => {
+const IndividualTag = ({title, deleteFunc, isColor}) => {
     return (
-        <View style={{
-            width: 'auto',
-            height: 30,
-            margin: 5,
-            borderRadius: 5,
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            backgroundColor: 'black',
-            flexDirection: 'row',
-            elevation: 5
-        }}>
-            <Text category='h5' style={[{
-                color: 'white',
-                fontWeight: 'bold',
-                marginLeft: 10,
-                marginBottom: 0
-            }, GlobalStyles.h5]}>
-                {title}
-            </Text>
-            <TouchableOpacity
-            onPress={() => deleteFunc(title)}
-            style={{height: 25, width: 25, justifyContent: 'center', alignItems: 'center'}}>
-                <XIcon size={20} style={{color: 'white'}}/>
-            </TouchableOpacity>
+        <View style={[
+            {margin: 5,
+            borderRadius: 6, //i have to do this or else u can see black rounded corners... weird shit
+            zIndex: 2}, 
+            GlobalStyles.bgColorMain]}>
+            <View style={[{
+                width: 'auto',
+                height: 30,
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                flexDirection: 'row',
+                borderRadius: 5,
+                zIndex: 3
+            }, isColor ? {backgroundColor: title.toLowerCase()} : GlobalStyles.bgColorMain]}>
+                <Text category='h5' style={[{
+                    fontWeight: 'bold',
+                    marginLeft: 10,
+                    marginBottom: 0
+                }, GlobalStyles.h5, isColor && title.toLowerCase() === 'white' ? GlobalStyles.colorMain : {color: 'white'}]}>
+                    {title}
+                </Text>
+                <TouchableOpacity
+                onPress={() => deleteFunc(title)}
+                style={{height: 25, width: 25, justifyContent: 'center', alignItems: 'center'}}>
+                    <XIcon size={20} style={isColor && title.toLowerCase() === 'white' ? GlobalStyles.colorMain : {color: 'white'}}/>
+                </TouchableOpacity>
+            </View>
         </View>
     )
 }
@@ -189,8 +192,12 @@ export const NewItemDescription = () => {
 
     const [nameInput, setNameInput] = useState('');
     const [descriptionInput, setDescriptionInput] = useState('');
+
     const [colorInput, setColorInput] = useState('');
+    const [colorArray, setColorArray] = useState([])
+
     const [priceInput, setPriceInput] = useState('');
+
     const [tagsInput, setTagsInput] = useState('');
     const [tagsArray, setTagsArray] = useState([]);
 
@@ -209,7 +216,7 @@ export const NewItemDescription = () => {
         nameRef.current.focus();
     }, [])
 
-    const tagsChange = newValue => {
+    const tagsChange = (newValue) => {
         // end of tag detected
         if (newValue[newValue.length - 1] === ','){
             console.log("Found a fuckin comma")
@@ -224,9 +231,28 @@ export const NewItemDescription = () => {
         }
     }
 
+    const colorsChange = (newValue) => {
+        // end of tag detected
+        if (newValue[newValue.length - 1] === ','){
+            console.log("Found a fuckin comma")
+            let colorNameToAdd = newValue.substring(0, newValue.length - 1);
+            if (!colorArray.includes(colorNameToAdd) && colorNameToAdd !== ''){
+                setColorArray([...colorArray, colorNameToAdd]);
+            }
+            setColorInput('');
+        } else {
+            setColorInput(newValue);
+        }
+    }
+
     const deleteTag = (title) => {
         console.log(`Trying to delete ${title} from the state`)
         setTagsArray(tagsArray.filter(item => item !== title));
+    }
+
+    const deleteColor = (title) => {
+        console.log(`Trying to delete ${title} from the state`)
+        setColorArray(colorArray.filter(item => item !== title));
     }
 
 
@@ -272,15 +298,29 @@ export const NewItemDescription = () => {
                     />
                     <IndividualDescription 
                         title={'Color'} 
-                        placeholder={'White'} 
+                        placeholder={'Seperate colors with commas'} 
                         thisRef={colorRef} 
                         setIndex={setIndex}
                         multiline={false}
                         index={2}
                         nextFocusRef={priceRef}
                         textInput={colorInput}
-                        setTextInput={setColorInput}
+                        setTextInput={colorsChange}
                     />
+                    {/** Tags */}
+                    <View style={{
+                        width: '100%',
+                        height: 'auto',
+                        flexDirection: 'row',
+                        flexWrap: 'wrap',
+                        justifyContent: 'flex-start',
+                        alignItems: 'center'
+                    }}>
+                        {colorArray.map((item, index) => (
+                            <IndividualTag title={item} key={item} deleteFunc={deleteColor} isColor={true}/>
+                        ))}
+                    </View>
+
                     <IndividualDescription 
                         title={'Price'} 
                         placeholder={'79'} 
@@ -327,7 +367,7 @@ export const NewItemDescription = () => {
             disabledHook={nameInput === ''} 
             extraFunc={dispatch(clothingInProgressAttributeAdded({
                 clothingName: nameInput,
-                color: colorInput,
+                color: colorArray,
                 description: descriptionInput,
                 price: priceInput,
                 tags: tagsArray

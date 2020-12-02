@@ -8,7 +8,7 @@ import { TopNavScreenHeader } from '../GlobalComponents/TopNav'
 import { useSelector, useDispatch } from 'react-redux'
 import { FinalizeButton } from './NextButton'
 import { ScreenHeader } from '../GlobalComponents/ScreenHeader'
-import { clothingAddedToCloset, pushTagsToTaggedClothing } from '../../redux/reducers/closetSlice'
+import { clothingAddedToCloset, pushAttributesToAttributedClothing } from '../../redux/reducers/closetSlice'
 import GlobalStyles from '../GlobalComponents/GlobalStyles'
 import { XIcon } from '../GlobalComponents/GlobalIcons'
 import { clothingInProgressCleansed } from '../../redux/reducers/closetSlice'
@@ -89,6 +89,7 @@ export const FinalizeClothing = () => {
 
     // i assumwe we're using hooks here bc we can delete tags in the finalize screen
     const [tags, setTags] = useState(clothingPieceInProgress.tags)
+    const [colors, setColors] = useState(clothingPieceInProgress.color)
 
 
     const saveItem = async () => {
@@ -99,7 +100,8 @@ export const FinalizeClothing = () => {
                 ...clothingPieceInProgress,
                 _id: _id
             }),
-            pushTagsToTaggedClothing(tags, _id, clothingPieceInProgress.clothingType)
+            pushAttributesToAttributedClothing(tags, _id, clothingPieceInProgress.clothingType, 'taggedClothing'),
+            pushAttributesToAttributedClothing(colors, _id, clothingPieceInProgress.clothingType, 'coloredClothing')
         ]))
         // dispatch(batchActions([
         //     clothingInOutfitWorn(idArrayObject, nid),
@@ -107,7 +109,6 @@ export const FinalizeClothing = () => {
         // ))
         navigation.navigate('CLOSETSCREEN');
         //alternatively have  a'success' page like when u create an outfit
-        
     }
     
 
