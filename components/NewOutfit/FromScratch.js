@@ -27,7 +27,7 @@ const SelectClothingButton = ({title, navpath, iconName, defaultChecked, navprop
 
     
     
-    const clothingArray = useSelector(state => state.outfits.outfitInProgress[title.toLowerCase() + 'Array'])
+    const clothingArray = useSelector(state => state.outfits.outfitInProgress.outfitArr[title.toLowerCase() + 'Array'])
     const numOfItems = clothingArray.length;
 
 //temp, useSelector to find number of items
@@ -168,8 +168,6 @@ export const FromScratch = () => {
     return (
         <View 
         style={{flex: 1, backgroundColor: 'white'}}>
-            {/* <TopNav title={'From Scratch!'} exitDestination={'HOMESCREEN'}/> */}
-            {/* <ScreenHeader title={'Select Clothing'}/> */}
             <TopNavScreenHeader title={'Select Clothing'} exitDestination={'HOMESCREEN'} 
             extraFunc={() => dispatch(outfitInProgressCleansed())}/>
             <View style={{

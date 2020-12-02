@@ -436,13 +436,33 @@ const OutfitScroll = ({outfitsWornIn}) => {
                                 
                                 style={{width: '100%', aspectRatio: 1, borderRadius: 5}}/>
                         </View>
-                        <View style={{marginLeft: 5, marginBottom: 5}}>
-                            <Text 
-                            numberOfLines={1}
-                            style={[{fontWeight: 'bold'}, GlobalStyles.h7]}>
-                                {outfitObject._id}
+                        <View style={{marginTop: -5, marginLeft: 5, marginBottom: 5, marginRight: 5}}>
+                            <View style={{
+                                justifyContent: 'space-between',
+                                alignItems: 'center',
+                                flexDirection: 'row'
+                            }}>
+                                <Text 
+                                numberOfLines={1}
+                                style={[{fontWeight: 'bold'}, GlobalStyles.h6]}>
+                                    {`${new Date(outfitObject.date).toLocaleString('en-GB').substr(0, 10)}`}
                                 </Text>
-                            <Text style={GlobalStyles.h7}>{Date(outfitObject.date)}</Text>
+                                {
+                                    outfitObject.favorite ?  
+                                        <HeartIcon size={20} style={{color: 'red'}}/> : null
+                                }
+                            </View>
+                            <View style={{
+                                justifyContent: 'space-between',
+                                alignItems: 'center',
+                                flexDirection: 'row'
+                            }}>
+                                <Text style={GlobalStyles.h7}>{`${3} pieces`}</Text>
+                                <Text style={[{fontWeight: 'bold'}, GlobalStyles.hint]}>•</Text>
+                                <Text style={GlobalStyles.h7}>{`${3} brands`}</Text>
+                            </View>
+
+                            
                         </View>
                         <View style={{
                             position: 'absolute',

@@ -13,10 +13,9 @@ import { useSelector } from 'react-redux'
 import { NextButton } from '../NewClothing/NextButton'
 import { ScreenHeader } from '../GlobalComponents/ScreenHeader'
 import { useDispatch } from 'react-redux' 
-import { clothingInProgressAttributeAdded } from '../../redux/reducers/closetSlice'
+import { outfitInProgressAttributeAdded, outfitInProgressCleansed } from '../../redux/reducers/outfitsSlice'
 import GlobalStyles from '../GlobalComponents/GlobalStyles'
 import { XIcon, CheckIcon } from '../GlobalComponents/GlobalIcons'
-import { clothingInProgressCleansed } from '../../redux/reducers/closetSlice'
 
 
 
@@ -187,10 +186,10 @@ export const OutfitDescription = () => {
 
     const dispatch = useDispatch()
 
-    const [nameInput, setNameInput] = useState('');
+    // const [nameInput, setNameInput] = useState('');
     const [descriptionInput, setDescriptionInput] = useState('');
-    const [colorInput, setColorInput] = useState('');
-    const [priceInput, setPriceInput] = useState('');
+    // const [colorInput, setColorInput] = useState('');
+    // const [priceInput, setPriceInput] = useState('');
     const [tagsInput, setTagsInput] = useState('');
     const [tagsArray, setTagsArray] = useState([]);
 
@@ -237,7 +236,7 @@ export const OutfitDescription = () => {
             backgroundColor: 'white'
         }}>
             <TopNavScreenHeader title={'Enter Description'} exitDestination={'CLOSETSCREEN'}
-            extraFunc={() => dispatch(clothingInProgressCleansed())}/>
+            extraFunc={() => dispatch(outfitInProgressCleansed())}/>
             <View style={{
                 width: '100%'
             }}>
@@ -332,11 +331,11 @@ export const OutfitDescription = () => {
             <NextButton 
             navpath={"UPLOADFITPIC"} 
             disabledHook={false} 
-            extraFunc={dispatch(clothingInProgressAttributeAdded({
-                clothingName: nameInput,
-                color: colorInput,
+            extraFunc={dispatch(outfitInProgressAttributeAdded({
+                // clothingName: nameInput,
+                // color: colorInput,
                 description: descriptionInput,
-                price: priceInput,
+                // price: priceInput,
                 tags: tagsArray
             }))}/> 
         </View>

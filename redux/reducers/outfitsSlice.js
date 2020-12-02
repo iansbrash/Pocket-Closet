@@ -16,21 +16,20 @@ const outfitsSlice = createSlice({
             
         ],
         outfitInProgress: {
-            topsArray: [
-                
-            ],
-            bottomsArray: [
-
-            ],
-            footwearArray: [
-
-            ],
-            otherArray: [
-
-            ],
             fitpic: {
                 fitpic: '',
                 type: ''
+            },
+            date: '',
+            favorite: false,
+            descrition: '',
+            tags: [],
+            _id: '',
+            outfitArr: {
+                topsArray: [],
+                bottomsArray: [],
+                footwearArray: [],
+                otherArray: [],
             }
         },
         taggedOutfits: { //each property contains the IDs of outfits that have used that tag
@@ -63,7 +62,7 @@ const outfitsSlice = createSlice({
                 
 
 
-                action.payload.fitpic = state.outfitInProgress.fitpic
+                //action.payload.fitpic = state.outfitInProgress.fitpic
                 /** the object we push into the outfitsArray SHOULD (and hopefully will) look like this:
                  *  {
                  *      fitpic: {
@@ -84,11 +83,18 @@ const outfitsSlice = createSlice({
                  *  } 
                  */
 
+                let { outfitArr, _id, date } = action.payload;
+
+                state.outfitInProgress.outfitArr = outfitArr;
+                state.outfitInProgress._id = _id;
+                state.outfitInProgress.date = date;
 
                   // we previously used push, trying spread operator to get rid off:
                  //assign to read-only property' error
                 // state.outfitsArray.push(action.payload);
-                state.outfitsArray = [...state.outfitsArray, action.payload]
+                console.log('here is state.outfitInProgress before we push it')
+                console.log(state.outfitInProgress)
+                state.outfitsArray = [...state.outfitsArray, state.outfitInProgress]
 
 
                 //turns out outfitArr is an object... holding the 4 ararys... kill me
@@ -101,10 +107,17 @@ const outfitsSlice = createSlice({
                         fitpic: '',
                         type: ''
                     },
-                    topsArray: [],
-                    bottomsArray: [],
-                    footwearArray: [],
-                    otherArray: []
+                    date: '',
+                    favorite: false,
+                    description: '',
+                    tags: [],
+                    _id: '',
+                    outfitArr: {
+                        topsArray: [],
+                        bottomsArray: [],
+                        footwearArray: [],
+                        otherArray: [],
+                    }
                 }
             },
             prepare( outfitArr, _id, date ) {
@@ -119,9 +132,9 @@ const outfitsSlice = createSlice({
         },
         outfitInProgressItemAdded: {
             reducer (state, action) {
-                if (!state.outfitInProgress[action.payload.itemType]
+                if (!state.outfitInProgress.outfitArr[action.payload.itemType]
                         .find(clothingObj => clothingObj._id === action.payload.item._id)){
-                    state.outfitInProgress[action.payload.itemType].push(action.payload.item)
+                    state.outfitInProgress.outfitArr[action.payload.itemType].push(action.payload.item)
                 }
             },
             prepare (item, itemType) {
@@ -136,8 +149,17 @@ const outfitsSlice = createSlice({
         outfitInProgressItemDeleted: {
             reducer (state, action) {
                 console.log(action.payload)
-                state.outfitInProgress[action.payload.clothingType.toLowerCase() + "Array"] = 
-                state.outfitInProgress[action.payload.clothingType.toLowerCase() + "Array"].filter(obj => obj._id !== action.payload._id)   //.splice(delIndex, 1);
+                state.outfitInProgress.outfitArr[action.payload.clothingType.toLowerCase() + "Array"] = 
+                state.outfitInProgress.outfitArr[action.payload.clothingType.toLowerCase() + "Array"]
+                    .filter(obj => obj._id !== action.payload._id)   //.splice(delIndex, 1);
+            }
+        },
+        outfitInProgressAttributeAdded: {
+            reducer (state, action) {
+                console.log(`In outfitInProgressAttributeAdded. action.payload.keys: ${Object.keys(action.payload)}`)     
+                Object.keys(action.payload).forEach(key => {
+                    state.outfitInProgress[key] = action.payload[key];
+                })
             }
         },
         outfitInProgressFitpicAdded: {
@@ -166,18 +188,21 @@ const outfitsSlice = createSlice({
         outfitInProgressCleansed: {
             reducer (state, action) {
                 state.outfitInProgress = {
-                    topsArray: [
-                        
-                    ],
-                    bottomsArray: [
-        
-                    ],
-                    footwearArray: [
-        
-                    ],
-                    otherArray: [
-        
-                    ]
+                    fitpic: {
+                        fitpic: '',
+                        type: ''
+                    },
+                    date: '',
+                    favorite: false,
+                    description: '',
+                    tags: [],
+                    _id: '',
+                    outfitArr: {
+                        topsArray: [],
+                        bottomsArray: [],
+                        footwearArray: [],
+                        otherArray: [],
+                    }
                 }
                 console.log('cleansed outfitInProgress')
                 console.log(state.outfitInProgress);
@@ -222,5 +247,6 @@ export const {
     outfitInProgressCleansed,
     outfitDeletedFromOutfits,
     outfitFavoriteToggled,
-    outfitInProgressFitpicAdded
+    outfitInProgressFitpicAdded,
+    outfitInProgressAttributeAdded
 } = outfitsSlice.actions

@@ -140,10 +140,10 @@ export const FinalizeOutfit = () => {
         //but we need to instead to fill the 4 clothing arrays with the IDs
 
         const combinedClothingArrays = [
-            ...outfitInProgress.topsArray,
-            ...outfitInProgress.bottomsArray,
-            ...outfitInProgress.footwearArray,
-            ...outfitInProgress.otherArray,
+            ...outfitInProgress.outfitArr.topsArray,
+            ...outfitInProgress.outfitArr.bottomsArray,
+            ...outfitInProgress.outfitArr.footwearArray,
+            ...outfitInProgress.outfitArr.otherArray,
         ]
 
         const idArrayObject = {
@@ -161,6 +161,32 @@ export const FinalizeOutfit = () => {
 
         let nid = await nanoid();
         let date = Date.parse(new Date());
+
+        // TODO
+        /**
+         *  The problem here is that our outfitSlice outfitInProgress structure is not as detailed / intricate
+         *  as our closetSlice clothingPieceInProgress structure. Our outfitInProgress is a 1-layer-deep object...
+         *  We should reformat it to reflect what the final outfitObject will look like
+         *  i.e. 
+         *  outfitInProgress: {
+        *      fitpic: {
+        *          fitpic: '',
+        *          type: 'imgur' or 'local', default ''
+        *      },             
+        *      date: new Date(),
+        *      favorite: false,        
+        *      description: ''         
+        *      tags: []               
+        *      _id: 'ms892-sdj3ds'
+        *      outfitArr: {            
+        *          topsArray: [],
+        *          bottomsArray: [],
+        *          footwearArray: [],
+        *          otherArray: []
+        *      }
+        *  } 
+         */
+
 
         dispatch(batchActions([
             clothingInOutfitWorn(idArrayObject, nid),
@@ -208,13 +234,13 @@ export const FinalizeOutfit = () => {
                     <FlatList 
                         renderItem={key => ( 
                             // <Text>{key.item}</Text>) this is weird af.... why key.item...
-                            outfitInProgress[key.item].length !== 0 ?
+                            outfitInProgress.outfitArr[key.item].length !== 0 ?
                             <>
                                 <MiniScreenHeader 
-                                title={outfitInProgress[key.item][0].clothingType.charAt(0).toUpperCase() 
-                                    + outfitInProgress[key.item][0].clothingType.slice(1)}/>
+                                title={outfitInProgress.outfitArr[key.item][0].clothingType.charAt(0).toUpperCase() 
+                                    + outfitInProgress.outfitArr[key.item][0].clothingType.slice(1)}/>
                                 <FlatList 
-                                    data={outfitInProgress[key.item]}
+                                    data={outfitInProgress.outfitArr[key.item]}
                                     bounces={false}
                                     keyExtractor={item => item._id.toString()}
                                     renderItem={item => (
@@ -228,7 +254,7 @@ export const FinalizeOutfit = () => {
                                 />
                             </> : null)
                         }
-                        data={Object.keys(outfitInProgress).filter(item => item !== 'fitpic')}
+                        data={Object.keys(outfitInProgress.outfitArr)}
                         //
                         //['topsArray', 'bottomsArray', 'footwearArray', 'otherArray']
                     

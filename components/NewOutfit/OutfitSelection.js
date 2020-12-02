@@ -251,7 +251,7 @@ const FadeInViewTestTwo = (props) => {
 export const OutfitSelection = ({ route, navigation }) => {
     const [modalVisible, setModalVisible] = useState(true);
     const { topNavTitle , arrayName} = route.params;
-    const OutfitArray = useSelector(state => state.outfits.outfitInProgress[arrayName])
+    const OutfitArray = useSelector(state => state.outfits.outfitInProgress.outfitArr[arrayName])
 
     console.log(`arrayName: ${arrayName}`)
     const ClosetArray = useSelector(state => state.closet.closetObject[arrayName])

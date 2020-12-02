@@ -229,7 +229,7 @@ const OutfitDescription = ({fetchedOutfitObject, brandsLength, colorsLength}) =>
                 marginBottom: 10,
             }}>
                 <Text style={[GlobalStyles.lighterHint, GlobalStyles.h5,]}>
-                    {`The user's description goes here. If they said anything about the outfit, it'll be under the initial stats. Adding more description for super long decriptions that might be affected differently`}
+                    {fetchedOutfitObject.description && fetchedOutfitObject.description !== '' ? fetchedOutfitObject.description : 'No description.'}
                 </Text>
             </View>
         )
@@ -359,8 +359,9 @@ const TopButtonsStyleTwo = ({outfitObject, setModalVisible}) => {
 
 
     const ToggleFavorite = () => {
-        dispatch(outfitFavoriteToggled(outfitObject._id))
         setIsFavorited(!isFavorited)
+        dispatch(outfitFavoriteToggled(outfitObject._id))
+
     }
 
     const EditOutfit = () => {
@@ -435,15 +436,17 @@ const TopButtonsStyleTwo = ({outfitObject, setModalVisible}) => {
                     title={'Favorite'} 
                     icon={<HeartIcon 
                         style={[isFavorited ? {color: 'red'} : GlobalStyles.colorMain]} 
-                        size={'35%'} />}
+                        size={35} />}
                     onPressFunc={() => ToggleFavorite()}/>
                 <IndividualThirdButton 
                     title={'Edit'} 
-                    icon={<EditIcon style={[GlobalStyles.colorMain]} size={'35%'} />}
+                    icon={<EditIcon style={[GlobalStyles.colorMain]} 
+                    size={35} />}
                     onPressFunc={() => null}/>
                 <IndividualThirdButton 
                     title={'Delete'} 
-                    icon={<DeleteIcon style={[GlobalStyles.colorMain]} size={'35%'} />}
+                    icon={<DeleteIcon style={[GlobalStyles.colorMain]} 
+                    size={35} />}
                     onPressFunc={() => DeleteOutfitButtonPressed()}/>
             </View>
         </View>
@@ -480,6 +483,8 @@ export const ViewIndividualOutfit = ({ route }) => {
         date: outfitObject.date,
         fitpic: outfitObject.fitpic && outfitObject.fitpic !== '' ? outfitObject.fitpic : null,
         tags: outfitObject.tags ? outfitObject.tags : [],
+        _id: outfitObject._id,
+        description: outfitObject.description,
         outfitArr: outfitArr //this is the hook we just made
     };
     // console.log('ok we just instantiated the fetchedOO')
