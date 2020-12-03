@@ -137,3 +137,9 @@ export const CameraIcon = (props) => {
         <MaterialIcons style={props.style} name="camera-alt" size={props.size} />
     )
 }
+
+export const StatsIcon = (props) => {
+    return (
+        <Ionicons style={props.style} name="md-stats" size={props.size}/>
+    )
+}

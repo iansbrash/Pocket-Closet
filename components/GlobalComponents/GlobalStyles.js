@@ -61,7 +61,11 @@ const GlobalStyles = StyleSheet.create({
     },
     bgHint: {
         backgroundColor: 'lightgray'
+    },
+    bgLighterHint: {
+        backgroundColor: '#c9c9c9'
     }
+
 
 })
 

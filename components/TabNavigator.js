@@ -27,6 +27,7 @@ import { UploadFitpic } from './NewOutfit/UploadFitpic'
 import { NewItemDescription } from './NewClothing/NewItemDescription'
 import { OutfitDescription } from './NewOutfit/OutfitDescription'
 import { ViewIndividualTag } from './ViewIndividualTag'
+import { StatsScreen } from './StatsScreen'
 
 import GlobalStyles from './GlobalComponents/GlobalStyles'
 // Destructuring React Navigator import
@@ -34,7 +35,9 @@ const BottomTab = createBottomTabNavigator();
 const { Navigator, Screen } = createBottomTabNavigator();
 const HomeStack = createStackNavigator();
 const ClosetStack = createStackNavigator();
-const HistoryStack = createStackNavigator();
+// const HistoryStack = createStackNavigator();
+const StatsStack = createStackNavigator();
+
 
 
 // Creating react functions for each screen
@@ -90,11 +93,19 @@ const ClosetNav = () => {
     )
 }
 
-const HistoryNav = () => {
+// const HistoryNav = () => {
+//     return (
+//         <HistoryStack.Navigator screenOptions={{headerShown: false}}>
+//             <HistoryStack.Screen name="HISTORYSCREEN" component={HistoryScreen}/>
+//         </HistoryStack.Navigator>
+//     )
+// }
+
+const StatsNav = () => {
     return (
-        <HistoryStack.Navigator screenOptions={{headerShown: false}}>
-            <HistoryStack.Screen name="HISTORYSCREEN" component={HistoryScreen}/>
-        </HistoryStack.Navigator>
+        <StatsStack.Navigator screenOptions={{headerShown: false}}>
+            <StatsStack.Screen name="STATSSCREEN" component={StatsScreen}/>
+        </StatsStack.Navigator>
     )
 }
 
@@ -137,8 +148,9 @@ const TabNavTwo = () => {
         }}
         tabBar={(props, i) => <TabNavTwoProp {...props} key={i}/>}
         >
-            <Screen name='HISTORY'  component={HistoryNav}/>
-            <Screen name='HOME'  component={HomeNav}/>
+            {/* <Screen name='HISTORY'  component={HistoryNav}/> */}
+            <Screen name='STATS' component={StatsNav} />
+            <Screen name='HOME'  component={HomeNav} />
             <Screen name='CLOSET'  component={ClosetNav} />
         </BottomTab.Navigator>
     )
@@ -173,7 +185,7 @@ const TabNavTwoProp = ({ state, descriptors, navigation }) => {
             let icon;
               
             switch (label) {
-                case 'HISTORY':
+                case 'STATS':
                     icon = <CalendarIcon size={25} style={isFocused ? GlobalStyles.colorMain : GlobalStyles.hint} />
                     break;
                 case 'HOME':
