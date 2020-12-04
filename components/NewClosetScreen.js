@@ -170,6 +170,9 @@ const OutfitList = ({searchInput}) => {
     const outfitsArray = useSelector(state => state.outfits.outfitsArray);
     const closetObject = useSelector(state => state.closet.closetObject);
 
+    console.log('closet object:')
+    console.log(closetObject)
+
     /** An outfit is an object
      *  that contains 4 arrays
      *  topsArray, bottomsArray, footwearArray, otherArray */
@@ -189,6 +192,8 @@ const OutfitList = ({searchInput}) => {
         
 
         let outfitArray = item.outfitArr;
+
+        console.log(item)
 
 
         // console.log(item);
@@ -226,8 +231,7 @@ const OutfitList = ({searchInput}) => {
                 //the clothingObject we find using the ID
                 const temp = closetObject[key].find(clothingObj => clothingObj._id === id);
                 if (!temp){
-                    console.log('temp not found... so descriptive')
-                    console.log('this means we cant find the clothing Objecy were searching for? ')
+                    console.log(`Cannot find clothingObject with id: ${id}`)
                 }
                 else if (Array.isArray(temp.images)){
                     imageArrayFromIds.push(dummySrc)
@@ -378,7 +382,8 @@ const OutfitList = ({searchInput}) => {
                                                         source={
                                                             imageArrayFromIds[index].type === 'imgur' ? 
                                                             {uri: makeSmallImage(imageArrayFromIds[index].images)} :
-                                                            {uri: imageArrayFromIds[index].images}
+                                                            {uri: imageArrayFromIds[index].images} 
+                                                            // dummySrc.images
 
                                                         } 
                                                         style={{height: '100%', aspectRatio: 1, borderRadius: 10}} />

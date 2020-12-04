@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import {
     View,
     Text,
@@ -19,6 +19,7 @@ import {
 import {
     LineChart
 } from 'react-native-chart-kit'
+import { useSelector, useDispatch } from 'react-redux'
 
  const screenWidth = Dimensions.get("window").width;
 
@@ -122,6 +123,18 @@ const AllStatsTwo = () => {
 }
 
 const AllStatsThree = () => {
+
+    /**
+     *              DATA WE NEED
+     * Number of Tops, Bottoms, Footwear, Other, Outfits
+     * 
+     */
+
+    const closetObject = useSelector(state => state.closet.closetObject)
+    const outfitsArray = useSelector(state => state.outfits.outfitsArray)
+
+    
+
     const StatsContainerThree = ({stat, value, icon}) => {
         return (
             <View style={{
@@ -171,11 +184,21 @@ const AllStatsThree = () => {
                     // backgroundColor: '#f5f5f5'
                     backgroundColor: 'white'
                 }, GlobalStyles.shadowLightest]}>
-                    <StatsContainerThree value={30} icon={<ShirtIcon size={35} style={GlobalStyles.colorMain}/>}/>
-                    <StatsContainerThree value={30} icon={<LegIcon size={35} style={GlobalStyles.colorMain}/>}/>
-                    <StatsContainerThree value={30} icon={<ShoeIcon size={35} style={GlobalStyles.colorMain}/>}/>
-                    <StatsContainerThree value={30} icon={<BagIcon size={35} style={GlobalStyles.colorMain}/>}/>
-                    <StatsContainerThree value={30} icon={<TieIcon size={35} style={GlobalStyles.colorMain}/>}/>
+                    <StatsContainerThree 
+                        value={closetObject.topsArray.length} 
+                        icon={<ShirtIcon size={35} style={GlobalStyles.colorMain}/>}/>
+                    <StatsContainerThree 
+                        value={closetObject.bottomsArray.length} 
+                        icon={<LegIcon size={35} style={GlobalStyles.colorMain}/>}/>
+                    <StatsContainerThree 
+                        value={closetObject.footwearArray.length} 
+                        icon={<ShoeIcon size={35} style={GlobalStyles.colorMain}/>}/>
+                    <StatsContainerThree 
+                        value={closetObject.otherArray.length} 
+                        icon={<BagIcon size={35} style={GlobalStyles.colorMain}/>}/>
+                    <StatsContainerThree 
+                        value={outfitsArray.length} 
+                        icon={<TieIcon size={35} style={GlobalStyles.colorMain}/>}/>
                 </View>
             </View>
         </View>
@@ -183,40 +206,54 @@ const AllStatsThree = () => {
 }
 
 const VerbalStats = () => {
+    /**
+     *                  DATA WE NEED
+     *  Closet Worth
+     *  Average Clothing Price (Closet Worth / Number of Clothing)
+     *  Average Times Worn (Total Number Times Worn / Number of Clothing)
+     *  Number of Brands (Either just do state.closetObject.brandsArray.length, or create a set and sum everything from closetObject)
+     * 
+     */
+    const closetObject = useSelector(state => state.closet.closetObject)
+
+    const [closetWorth, setClosetWorth] = useState(0)
+    const [closetSize, setClosetSize] = useState(0)
+    const [totalTimesWorn, setTotalTimesWorn] = useState(0)
+    const [totalNumberOfBrands, setTotalNumberOfBrands] = useState(0)
 
 
-    const VerbalContainer = ({stat, value}) => {
-        return (
-            <View style={{
-                width: '100%'
-            }}>
-                <View style={{
-                    margin: 5,
-                    width: 'auto'
-                }}>
-                    <View style={[{
-                        width: '100%',
-                    }, ]}>
-                        <View style={[{
-                            padding: 5,
-                            flexDirection: 'row',
-                            justifyContent: 'space-between',
-                            backgroundColor: 'white',
-                            borderRadius: 5
-                        }, GlobalStyles.shadowLightest]}>
-                            <Text style={[{
-                                fontWeight: 'bold'
-                            }, GlobalStyles.h5]}>{stat}</Text>
-                            <Text style={[
-                                GlobalStyles.h5
-                            ]}>{value}</Text>
-                        </View>
-                    </View>
-                </View>
-            </View>
-        )
-    }
+    // This seems to be the solution to my rerendering problem
+    // Only the last call to any useState hook works in a useEffect call
+    // So we have to use local variables to accumulate the cost
+    // Then finally do one call to the useState hook, setting it to the local variable
+    useEffect(() => {
+        let accum = 0;
+        let size = 0;
+        let timesWorn = 0;
+        let brandsSet = new Set()
 
+        Object.keys(closetObject).forEach(key => {
+            closetObject[key].forEach(clothingObject => {
+                // Add price. Add 0 if price is undefined
+                accum += clothingObject.price === '' ? 0 : parseInt(clothingObject.price)
+
+                // Closet size is one bigger
+                size++;
+
+                //Add all brands to set. If duplicates exist, it won't be added (is a set)
+                clothingObject.brandName.forEach(brand => brandsSet.add(brand))
+
+                // Sum timesWorn
+                timesWorn += clothingObject.timesWorn
+            })
+        })
+
+        setClosetSize(size)
+        setClosetWorth(accum)
+        setTotalNumberOfBrands(brandsSet.size)
+        setTotalTimesWorn(timesWorn)
+    }, [])
+    
     const VerbalContainerTwo = ({stat, value}) => {
         return (
             <View style={{
@@ -251,48 +288,6 @@ const VerbalStats = () => {
         )
     }
 
-    const VerbalContainerThree = ({stat, value}) => {
-        return (
-            <View style={{
-                width: '100%'
-            }}>
-                <View style={{
-                    margin: 5,
-                    width: 'auto'
-                }}>
-                    <View style={[{
-                        width: '100%',
-                    }, ]}>
-                        <View style={[{
-                            padding: 5,
-                            flexDirection: 'row',
-                            justifyContent: 'space-between',
-                            backgroundColor: 'white',
-                            alignItems: 'center',
-                            borderRadius: 5
-                        }, GlobalStyles.shadowLightest]}>
-                            <Text style={[{
-                                fontWeight: 'bold'
-                            }, GlobalStyles.h1]}>{value}</Text>
-                            <View style={{
-                                flexDirection: 'row',
-                                width: '40%',
-                                flexWrap: 'wrap',
-                                flexShrink: 1,
-                                justifyContent: 'flex-end'
-                            }}>
-                                <Text style={[
-                                    GlobalStyles.h7, GlobalStyles.hint, {textAlign: 'right'}
-                                ]}>{stat}</Text>
-                            </View>
-                            
-                        </View>
-                    </View>
-                </View>
-            </View>
-        )
-    }
-
     return (
         <View style={{
             width: '65%',
@@ -308,17 +303,17 @@ const VerbalStats = () => {
                     backgroundColor: 'white',
                     borderRadius: 10
                 }, GlobalStyles.shadowLightest]}>
-                    <VerbalContainerTwo stat={'Closet worth'} value={'$' + 1000}/>
-                    <VerbalContainerTwo stat={'Average clothing price'} value={'$' + 79}/>
-                    <VerbalContainerTwo stat={'Average times worn'} value={4.3}/>
-                    <VerbalContainerTwo stat={'Number of brands'} value={32}/>
+                    <VerbalContainerTwo stat={'Closet worth'} value={`$${closetWorth}`}/>
+                    <VerbalContainerTwo stat={'Average clothing price'} value={`$${closetWorth / closetSize}`}/>
+                    <VerbalContainerTwo stat={'Average times worn'} value={`${totalTimesWorn / closetSize} times`}/>
+                    <VerbalContainerTwo stat={'Number of brands'} value={`${totalNumberOfBrands} brands`}/>
                 </View>
             </View>
         </View>
     )
 }
 
-const RefreshStats = () => {
+const RefreshStats = ({reRender, setReRender}) => {
     return (
         <View style={{
             margin: 5,
@@ -333,7 +328,8 @@ const RefreshStats = () => {
                 <Text style={[{fontWeight: 'bold'}, GlobalStyles.h2]}>
                     In Depth
                 </Text>
-                <TouchableOpacity>
+                <TouchableOpacity
+                onPress={() => setReRender(!reRender)}>
                     <View style={[{
                         height: 50,
                         aspectRatio: 1,
@@ -404,7 +400,101 @@ const InDepthButtons = () => {
     )
 }
 
-const VariableChart = () => {
+const VariableChart = ({reRender, setReRender}) => {
+
+    /** 
+     *                  THINGS WE CAN CHART
+     * 
+     *  # of [Brands, Clothing, Colors] Worn / Outfit Cost      PER Day
+     *  Closet Worth / Number of Clothing in Closet             PER Month
+     * 
+     *  # of [Brands, Clothing, Colors] Worn / Outfit Cost      PER Day
+     *      --> state.outfits.outfitsArray 
+     *          --> 7 most recent objects (we only have outfitArr with clothingObject _ids)
+     *              --> Clothing:
+     *                  --> Sum from each of four outfitArr arrays. Easy.
+     *              --> Brands / Color / Outfit Cost
+     *                  --> For each of the 7 most recent outfitObjects
+     *                      --> Create a set for brands AND color
+     *                      --> Create a 'totalCost' variable
+     *                      --> For each of the 4 outfitArr attributes
+     *                          --> Fetch via _id from state.closet.closetObject[key]
+     *                          --> Add each item in brands AND color to the set
+     *                          --> totalCost += item.price
+     *                      --> set.length can be plotted now, as well as totalCost
+     *  
+     * 
+     *  Closet Worth / Number of Clothing in Closet             PER Month
+     *  --> This isn't something we can just dynamically fetch
+     *  --> If we want to plot this, we probably need to create a statsSlice.js or something to store
+     *      stats data that we update weekly / monthly (and that can't be changed once inputted)
+     *  --> i.e. Every week, we push a new closetObjectValue or closetObjectNumber to the statsSlice state
+     *  --> To find closet worth / number of clothing in closet, just fetch those numbers and plot them
+     *  --> This seems to be the only approach, as we are not able to store our history anywhere else
+     */
+
+
+    const [dataArray, setDataArray] = useState(["January", "February", "March", "April", "May", "June"])
+    const [labelsArray, setLabelsArray] = useState([
+        Math.random() * 100,
+        Math.random() * 100,
+        Math.random() * 100,
+        Math.random() * 100,
+        Math.random() * 100,
+        Math.random() * 100
+    ])
+
+    // used to re-update the LineChart so it doesn't crash on the initial render
+    const [mounted, setMounted] = useState(false)
+
+    
+
+    const outfitsArray = useSelector(state => state.outfits.outfitsArray)
+
+    console.log(dataArray)
+    console.log(labelsArray)
+
+
+    useEffect(() => {
+        // Labels: x axis
+        // Data: y axis
+        // We'll start by making number of pieces per outfit
+
+        let labels = []
+        let dataArray = []
+
+        for (let revIndex = outfitsArray.length - 1; revIndex >= 0 && revIndex >= outfitsArray.length - 6; revIndex--){
+            let accum = 0;
+
+            Object.keys(outfitsArray[revIndex].outfitArr).forEach(key => {
+                accum += outfitsArray[revIndex].outfitArr[key].length
+            })
+
+            console.log(labels)
+            console.log(accum)
+
+            labels.push(`${ new Date(outfitsArray[revIndex].date).toLocaleString('en-GB').substr(0, 5)}`)
+            dataArray.push(accum)  
+        }
+
+        setDataArray(dataArray)
+        setLabelsArray(labels)
+    }, [reRender])
+
+
+    /** 
+     *  Not only am I surprised that this works,
+     *  But I am astonished that I have to implement this garbage
+     *  spaghetti solution in order to get the LineGraph to not
+     *  crash the entire app.
+     */
+    useEffect(() => {
+        setMounted(true)
+    }, [])
+
+    
+
+    
 
     const data = {
         labels: ["January", "February", "March", "April", "May", "June"],
@@ -424,18 +514,15 @@ const VariableChart = () => {
 
     const chartConfig = {
         backgroundColor: "#1E2923",
-    //   backgroundGradientFrom: "#fb8c00",
-    //   backgroundGradientTo: "#ffa726",
-        // fillShadowGradient: '#ffffff',  
         backgroundGradientFrom: "#ffffff",
         backgroundGradientFromOpacity: 0,
         backgroundGradientTo: "#ffffff",
         backgroundGradientToOpacity: 0.5,
-        decimalPlaces: 2, // optional, defaults to 2dp
+        decimalPlaces: 0, // optional, defaults to 2dp
         color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`, //color of inside dots and conncecting lines
         labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`, //color of labels on x and y axis
         style: {
-            borderRadius: 16,
+            borderRadius: 10,
         },
         propsForDots: {
             r: "6", //radius of each dot
@@ -445,19 +532,29 @@ const VariableChart = () => {
     }
 
     return (
-        <View style={[{backgroundColor: 'white', borderRadius: 16}, GlobalStyles.shadowLightest]}>
+        <View style={[
+            {backgroundColor: 'white', borderRadius: 10, margin: 5}, 
+            GlobalStyles.shadowLightest]}
+        >
             <LineChart
-                data={data}
-                width={Dimensions.get("window").width - 20} // from react-native
-                height={220}
-                yAxisLabel="$"
-                yAxisSuffix="k"
+                data={{
+                    labels: mounted ? labelsArray : ["Jan"],
+                    datasets: [
+                        {
+                        data: mounted ? dataArray : [123.32]
+                        }
+                    ]
+                }}
+                width={Dimensions.get("window").width - 30} // from react-native
+                height={240}
+                // yAxisLabel={null}
+                // yAxisSuffix={' pieces'}
                 yAxisInterval={1} // optional, defaults to 1
                 chartConfig={chartConfig}
                 // bezier //makes lines go curvy
                 style={{
-                marginVertical: 8,
-                borderRadius: 16,
+                    marginVertical: 8, //why
+                    borderRadius: 10,
                 }}
             />
         </View>
@@ -465,6 +562,11 @@ const VariableChart = () => {
 }
 
 export const StatsScreen = () => {
+    // yet another garbage solution to control the quirks of useEffect
+    const [reRender, setReRender] = useState(false)
+
+
+
     return (
         <View style={{
             flex: 1,
@@ -493,10 +595,39 @@ export const StatsScreen = () => {
                     <AllStatsThree />
                     <VerbalStats />
                 </View>
-                <RefreshStats />
-                <VariableChart />
+                <RefreshStats reRender={reRender} setReRender={setReRender}/>
+                <VariableChart reRender={reRender} setReRender={setReRender}/>
                 
             </View>
         </View>
     )
+}
+
+
+//nah
+const fetchStats = (
+    setNumberOfTops, setNumberOfBottoms, setNumberOfFootwear, setNumberOfOther, setNumberOfOutfits,
+    setClosetWorth,
+    setNumberOfClothing,
+    setTotalTimesWorn,
+    setNumberOfBrands,
+    setNumberOfColors,
+
+
+    ) => {
+    /**         TO FETCH:
+     * Number of tops,bottoms,...,outfits
+     * Closet Worth
+     * Total Number of Clothing
+     * Total Times Worn
+     * Total Number of Brands
+     * 
+     *  # of [Brands, Clothing, Colors] Worn / Outfit Cost      PER Day
+     *  Closet Worth / Number of Clothing in Closet             PER Month
+     * 
+     */
+
+
+
+    return;
 }

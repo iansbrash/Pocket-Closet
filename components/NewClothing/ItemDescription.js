@@ -300,7 +300,7 @@ export const ItemDescription = () => {
                 clothingName: nameInput,
                 color: colorInput,
                 description: descriptionInput,
-                price: priceInput,
+                price: parseInt(priceInput),
                 tags: tagsArray
             }))}/> 
         </View>

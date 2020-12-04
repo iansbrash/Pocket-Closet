@@ -35,8 +35,8 @@ const ClothingAddedIcon = (props) => {
 
     let src;
 
-    if (item.images.length !== 0){
-        src = {uri: item.images[0]}
+    if (item.images.images.length !== 0){
+        src = {uri: item.images.images[0]}
     } else {
         src = { uri: 'https://randomuser.me/api/portraits/men/1.jpg' }
     }
