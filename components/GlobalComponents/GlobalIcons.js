@@ -1,10 +1,10 @@
 import React from 'react'
-import { View } from 'react-native'
 import { Feather } from '@expo/vector-icons'; 
 import { Entypo } from '@expo/vector-icons'; 
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
 import { Ionicons } from '@expo/vector-icons';
+import { FontAwesome5 } from '@expo/vector-icons';
 
 export const LeftIcon = (props) => {
     return (
@@ -141,5 +141,17 @@ export const CameraIcon = (props) => {
 export const StatsIcon = (props) => {
     return (
         <Ionicons style={props.style} name="md-stats" size={props.size}/>
+    )
+}
+
+export const TieIcon = (props) => {
+    return (
+        <FontAwesome5 style={props.style} name="user-tie" size={props.size}/>
+    )
+}
+
+export const RefreshIcon = (props) => {
+    return (
+        <Ionicons style={props.style} name="md-refresh" size={props.size}/>
     )
 }

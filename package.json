@@ -1,5 +1,5 @@
 {
-  "main": "index.js",
+  "main": "./node_modules/expo/AppEntry.js",
   "scripts": {
     "android": "react-native run-android",
     "ios": "react-native run-ios",
@@ -26,11 +26,13 @@
     "react": "16.13.1",
     "react-dom": "16.13.1",
     "react-native": "0.63.3",
+    "react-native-chart-kit": "^6.7.0",
     "react-native-gesture-handler": "~1.7.0",
     "react-native-image-picker": "^3.0.0-vnext.2",
     "react-native-reanimated": "~1.13.0",
     "react-native-safe-area-context": "3.1.4",
     "react-native-screens": "~2.10.1",
+    "react-native-svg": "^12.1.0",
     "react-native-swipe-gestures": "^1.0.5",
     "react-native-unimodules": "~0.11.0",
     "react-native-web": "~0.13.7",
