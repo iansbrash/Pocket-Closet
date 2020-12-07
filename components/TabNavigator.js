@@ -9,7 +9,7 @@ import {
 } from '@react-navigation/stack'
 import { FromScratch } from './NewOutfit/FromScratch'
 import { OutfitSelection } from './NewOutfit/OutfitSelection'
-import { NewClosetScreen } from './NewClosetScreen'
+import { NewClosetScreen } from './ClosetScreen/NewClosetScreen'
 import { FinalizeOutfit } from './NewOutfit/FinalizeOutfit'
 import { ViewIndividualPiece } from './ViewIndividualPiece'
 import { FinalizeSuccess } from './NewOutfit/FinalizeSuccess'
@@ -28,6 +28,11 @@ import { NewItemDescription } from './NewClothing/NewItemDescription'
 import { OutfitDescription } from './NewOutfit/OutfitDescription'
 import { ViewIndividualTag } from './ViewIndividualTag'
 import { StatsScreen } from './StatsScreen'
+import { FromFavorites } from './NewOutfit/FromFavorites'
+import { FromTags } from './NewOutfit/FromTags'
+import { FromHistory } from './NewOutfit/FromHistory'
+import { FromRandom } from './NewOutfit/FromRandom'
+
 
 import GlobalStyles from './GlobalComponents/GlobalStyles'
 // Destructuring React Navigator import
@@ -113,14 +118,33 @@ const HomeNav = () => {
     return (
         <HomeStack.Navigator 
         screenOptions={{headerShown: false}}>
+            {/* Base home screen */}
             <HomeStack.Screen name="HOMESCREEN" component={HomeScreenNew} />
+
+            {/* Choose your path here */}
             <HomeStack.Screen name="RECORD" component={OutfitFrom} />
+
+            {/* From Scratch path */}
             <HomeStack.Screen name="FROMSCRATCH" component={FromScratch} />
             <HomeStack.Screen name="OUTFITSELECTION" component={OutfitSelection} />
             <HomeStack.Screen name="OUTFITDESCRIPTION" component={OutfitDescription} />
             <HomeStack.Screen name="UPLOADFITPIC" component={UploadFitpic} />
             <HomeStack.Screen name="FINALIZEOUTFIT" component={FinalizeOutfit} />
             <HomeStack.Screen name="FINALIZESUCCESS" component={FinalizeSuccess} />
+
+            {/* From Favorites path */}
+            <HomeStack.Screen name="FROMFAVORITES" component={FromFavorites} />
+
+            {/* From tags path */}
+            <HomeStack.Screen name="FROMTAGS" component={FromTags} />
+
+            {/* From history path */}
+            <HomeStack.Screen name="FROMHISTORY" component={FromHistory} />
+
+
+            {/* From random path */}
+            <HomeStack.Screen name="FROMRANDOM" component={FromRandom} />
+
         </HomeStack.Navigator>
     )
 }

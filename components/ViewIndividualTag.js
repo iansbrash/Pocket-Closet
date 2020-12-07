@@ -4,7 +4,7 @@ import {
     View,
     Text
 } from 'react-native'
-import {RenderSingleLineClosetItem} from './NewClosetScreen'
+import { RenderSingleLineClosetItem } from './ClosetScreen/ClosetList'
 import { useSelector } from 'react-redux'
 
 export const ViewIndividualTag = ({route}) => {

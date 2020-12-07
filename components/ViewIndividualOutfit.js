@@ -64,6 +64,7 @@ const DisplayClothingTypeFour = ({fetchedOutfitObject, outfitObject, icon}) => {
                 <ScrollView
                 style={{height: 'auto', paddingTop: 5, paddingBottom: 5}}
                 horizontal={true}
+                showsHorizontalScrollIndicator={false}
                 >
                         {fetchedOutfitObject.outfitArr[`${type}Array`].map(clothingObject => (
                             <ClothingIcon clothingObject={clothingObject}/>

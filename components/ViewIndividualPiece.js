@@ -467,6 +467,10 @@ const OutfitScroll = ({outfitsWornIn}) => {
 
     const ClothingIcon = ({outfitObject}) => {
 
+    if (!outfitObject){
+        console.log(`didnt find outfitObject... probably got deleted`)
+        return null;
+    }
 
         return (
             <View style={{
@@ -489,7 +493,8 @@ const OutfitScroll = ({outfitsWornIn}) => {
                             height: 'auto'
                         }}>
                             <Image source={
-                                outfitObject.fitpic.fitpic !== '' ? 
+                                (outfitObject.fitpic &&
+                                outfitObject.fitpic.fitpic !== '') ? 
                                     (outfitObject.fitpic.type === 'imgur' ? 
                                         {uri: makeMediumSmallImage(outfitObject.fitpic.fitpic)} : 
                                         {uri: outfitObject.fitpic.fitpic}
@@ -544,6 +549,7 @@ const OutfitScroll = ({outfitsWornIn}) => {
             <ScrollView
             style={{height: 'auto', paddingTop: 5, paddingBottom: 5}}
             horizontal={true}
+            showsHorizontalScrollIndicator={false}
             >
 
                 {outfitsWornIn ? 

@@ -122,7 +122,7 @@ const AllStatsTwo = () => {
     )
 }
 
-const AllStatsThree = () => {
+const AllStatsThree = ({reRender, setReRender}) => {
 
     /**
      *              DATA WE NEED
@@ -205,7 +205,7 @@ const AllStatsThree = () => {
     )
 }
 
-const VerbalStats = () => {
+const VerbalStats = ({reRender, setReRender}) => {
     /**
      *                  DATA WE NEED
      *  Closet Worth
@@ -252,7 +252,7 @@ const VerbalStats = () => {
         setClosetWorth(accum)
         setTotalNumberOfBrands(brandsSet.size)
         setTotalTimesWorn(timesWorn)
-    }, [])
+    }, [reRender])
     
     const VerbalContainerTwo = ({stat, value}) => {
         return (
@@ -463,7 +463,9 @@ const VariableChart = ({reRender, setReRender}) => {
         let labels = []
         let dataArray = []
 
-        for (let revIndex = outfitsArray.length - 1; revIndex >= 0 && revIndex >= outfitsArray.length - 6; revIndex--){
+        const maxNumOfPlots = 6;
+
+        for (let revIndex = outfitsArray.length - 1; revIndex >= 0 && revIndex >= outfitsArray.length - maxNumOfPlots; revIndex--){
             let accum = 0;
 
             Object.keys(outfitsArray[revIndex].outfitArr).forEach(key => {
@@ -555,6 +557,7 @@ const VariableChart = ({reRender, setReRender}) => {
                 style={{
                     marginVertical: 8, //why
                     borderRadius: 10,
+                    marginHorizontal: -20
                 }}
             />
         </View>
@@ -592,8 +595,8 @@ export const StatsScreen = () => {
                     width: '100%',
                     flexDirection: 'row'
                 }}>
-                    <AllStatsThree />
-                    <VerbalStats />
+                    <AllStatsThree reRender={reRender} setReRender={setReRender}/>
+                    <VerbalStats reRender={reRender} setReRender={setReRender}/>
                 </View>
                 <RefreshStats reRender={reRender} setReRender={setReRender}/>
                 <VariableChart reRender={reRender} setReRender={setReRender}/>

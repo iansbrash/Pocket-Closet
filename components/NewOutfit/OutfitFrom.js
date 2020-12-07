@@ -36,18 +36,23 @@ export const OutfitFrom = () => {
                 <MediumButton title={'Scratch'} icon={
                     <PlusIcon size={30} style={[GlobalStyles.colorMain, {marginRight: 10}]}/>
                 } onPressFunc={() => navigation.navigate('FROMSCRATCH')}/>
-                <MediumButton title={'Saved'} icon={
+
+                <MediumButton title={'Favorites'} icon={
                     <PlusIcon size={30} style={[GlobalStyles.colorMain, {marginRight: 10}]}/>
-                } onPressFunc={() => navigation.navigate('FROMSCRATCH')}/>
+                } onPressFunc={() => navigation.navigate('FROMFAVORITES')}/>
+
                 <MediumButton title={'Tags'} icon={
                     <PlusIcon size={30} style={[GlobalStyles.colorMain, {marginRight: 10}]}/>
-                } onPressFunc={() => navigation.navigate('FROMSCRATCH')}/>
+                } onPressFunc={() => navigation.navigate('FROMTAGS')}/>
+
                 <MediumButton title={'History'} icon={
                     <PlusIcon size={30} style={[GlobalStyles.colorMain, {marginRight: 10}]}/>
-                } onPressFunc={() => navigation.navigate('FROMSCRATCH')}/>
+                } onPressFunc={() => navigation.navigate('FROMHISTORY')}/>
+
                 <MediumButton title={'Random'} icon={
                     <PlusIcon size={30} style={[GlobalStyles.colorMain, {marginRight: 10}]}/>
-                } onPressFunc={() => navigation.navigate('FROMSCRATCH')}/>
+                } onPressFunc={() => navigation.navigate('FROMRANDOM')}/>
+
             </View>
             
         </View>
