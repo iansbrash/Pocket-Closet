@@ -10,14 +10,14 @@ import {
     Animated,
     Pressable
 } from 'react-native'
-import { useSelector, useDispatch} from 'react-redux' 
+import { useSelector, useDispatch } from 'react-redux' 
 import GestureRecognizer, {swipeDirections} from 'react-native-swipe-gestures';
 import { TopNavScreenHeader } from './GlobalComponents/TopNav'
 import GlobalStyles from './GlobalComponents/GlobalStyles'
 import { TouchableOpacity } from 'react-native-gesture-handler'
-import { HeartIcon, EditIcon, DeleteIcon, ShareIcon, CheckIcon, XIcon } from './GlobalComponents/GlobalIcons'
+import { HeartIcon, ArchiveIcon, DeleteIcon, ShareIcon, CheckIcon, XIcon } from './GlobalComponents/GlobalIcons'
 import { itemFavoriteToggled, clothingDeletedFromCloset } from '../redux/reducers/closetSlice'
-import { useNavigation } from '@react-navigation/native'
+import { useNavigation, useFocusEffect } from '@react-navigation/native'
 import { YesNoModal, ImageScrollModal } from './GlobalComponents/GlobalModals'
 import { TogglableDrawer } from './GlobalComponents/GlobalDrawers'
 import { makeSmallImage, makeMediumImage, makeMediumSmallImage } from './GlobalFunctions/ImgurResize'
@@ -29,88 +29,6 @@ const minImageHieght = maxImageHeight / 2;
 const desiredIconSizeTwo = 60;
 
 
-
-
-const ButtonsStyleTwo = ({imageHeight, item, setModalVisible}) => {
-
-    const [favorited, setFavorited] = useState(item.favorite)
-    const dispatch = useDispatch();
-
-    const FourButton = ({icon, onPressFunc}) => {
-        return (
-            <View style={{
-                width: '50%',
-                height: '50%',
-                justifyContent: 'center',
-                alignItems: 'center'
-            }}>
-                <View style={{margin: 5, height: 'auto', width: 'auto'}}>
-                    <TouchableOpacity style={[{
-                        aspectRatio: 1,
-                        borderRadius: 10,
-                        height: '100%',
-                        width: '100%',
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        backgroundColor: 'white'
-                    }, GlobalStyles.shadowLight]}
-                    onPress={() => onPressFunc()}>
-                        {icon}
-                    </TouchableOpacity>
-                </View>
-            </View>
-            
-        )
-    }
-
-    const FavoriteFunc = () => {
-        setFavorited(!favorited)
-        //toggles favorite
-        dispatch(itemFavoriteToggled({
-            clothingType: item.clothingType,
-            _id: item._id
-        }));
-    }
-    const DeleteFunc = () => {
-        Vibration.vibrate(400)
-        setModalVisible(true);
-    }
-    const EditFunc = () => {
-
-    }
-    
-    return (
-        <View style={[{
-            //backgroundColor: 'white',
-            justifyContent: 'center',
-            alignItems: 'center',
-            flexDirection: 'row',
-            flexWrap: 'wrap',
-            height: '100%',
-            borderRadius: 10,
-            width: '100%',
-            opacity: 1 - (imageHeight - minImageHieght) / minImageHieght
-        }, ]}>
-            <FourButton 
-            icon={<HeartIcon style={favorited ? {color: 'red'} : {color: 'black'}} size={(imageHeight * desiredIconSizeTwo) / minImageHieght}/>}
-            onPressFunc={FavoriteFunc}/>
-
-            <FourButton 
-            icon={<EditIcon size={(imageHeight * desiredIconSizeTwo) / minImageHieght}/>}
-            onPressFunc={EditFunc}/>
-
-            <FourButton 
-            icon={<ShareIcon size={(imageHeight * desiredIconSizeTwo) / minImageHieght}/>}
-            onPressFunc={null}/>
-
-            <FourButton 
-            icon={<DeleteIcon size={(imageHeight * desiredIconSizeTwo) / minImageHieght}/>}
-            onPressFunc={DeleteFunc}/>
-
-
-        </View>
-    )
-}
 
 
 const TopButtonsStyleTwo = ({item, setModalVisible}) => {
@@ -132,6 +50,10 @@ const TopButtonsStyleTwo = ({item, setModalVisible}) => {
     
 
     const EditOutfit = () => {
+
+    }
+
+    const ArchiveOutfit = () => {
 
     }
 
@@ -206,10 +128,10 @@ const TopButtonsStyleTwo = ({item, setModalVisible}) => {
                         size={35} />}
                     onPressFunc={() => ToggleFavorite()}/>
                 <IndividualThirdButton 
-                    title={'Edit'} 
-                    icon={<EditIcon style={[GlobalStyles.colorMain]} 
+                    title={'Archive'} 
+                    icon={<ArchiveIcon style={[GlobalStyles.colorMain]} 
                     size={35} />}
-                    onPressFunc={() => EditOutfit()}/>
+                    onPressFunc={() => ArchiveOutfit()}/>
                 <IndividualThirdButton 
                     title={'Delete'} 
                     icon={<DeleteIcon style={[GlobalStyles.colorMain]} 
@@ -433,14 +355,19 @@ const ColorTags = ({colorArray}) => {
 }
 
 //we need to fetch / store the list of outfits this clothing is in somehow
-const OutfitScroll = ({outfitsWornIn}) => {
+//wow. this is incredible. React.memo
+const OutfitScroll = React.memo(({outfitsWornIn}) => {
     
+    
+
     const dummySrc = {uri: 'https://randomuser.me/api/portraits/men/1.jpg'}
 
     const outfitsArray = useSelector(state => state.outfits.outfitsArray)
     const navigation = useNavigation();
 
     console.log(outfitsWornIn)
+
+    
 
     const mockOutfitsThisClothingIsUsedInArray = [
         {
@@ -465,12 +392,13 @@ const OutfitScroll = ({outfitsWornIn}) => {
         }
     ]
 
-    const ClothingIcon = ({outfitObject}) => {
+    const ClothingIcon = React.memo(({outfitObject}) => {
 
-    if (!outfitObject){
-        console.log(`didnt find outfitObject... probably got deleted`)
-        return null;
-    }
+        if (!outfitObject){
+            console.log(`didnt find outfitObject... probably got deleted`)
+            return null;
+        }
+        console.log("i am being re rendered")
 
         return (
             <View style={{
@@ -478,7 +406,7 @@ const OutfitScroll = ({outfitsWornIn}) => {
                 height: 'auto',
             }}>
                 <TouchableOpacity
-                onPress={() => navigation.navigate('VIEWINDIVIDUALOUTFIT', {item: outfitObject})}>
+                onPress={() => navigation.push('VIEWINDIVIDUALOUTFIT', {item: outfitObject})}>
                     <View style={[{
                         margin: 5,
                         height: 'auto',
@@ -512,7 +440,8 @@ const OutfitScroll = ({outfitsWornIn}) => {
                                 <Text 
                                 numberOfLines={1}
                                 style={[{fontWeight: 'bold'}, GlobalStyles.h6]}>
-                                    {`${new Date(outfitObject.date).toLocaleString('en-GB').substr(0, 10)}`}
+                                    {/* {`${new Date(outfitObject.date).toLocaleString('en-GB').substr(0, 10)}`} */}
+                                    {Math.random()}
                                 </Text>
                                 {
                                     outfitObject.favorite ?  
@@ -542,7 +471,8 @@ const OutfitScroll = ({outfitsWornIn}) => {
                 </TouchableOpacity>
             </View>
         )
-    }
+    })
+
 
     return (
         <View style={{width: '100%'}}>
@@ -565,7 +495,7 @@ const OutfitScroll = ({outfitsWornIn}) => {
             </ScrollView>
         </View>
     )
-}
+})
 
 
 export const ViewIndividualPiece = ({ route }) => {
@@ -574,9 +504,33 @@ export const ViewIndividualPiece = ({ route }) => {
     const [imageModal, setImageModal] = useState(false)
 
     // we pass in the item we clicked on so we can display stats XDDDD
-    const { item } = route.params;
+    // const { item } = route.params;
     // console.log('item')
     // console.log(item)
+
+
+    //thought this would prevent re rendering
+    const [item, setItem] = useState(route.params.item);
+    
+    //this prevents screens that are in the navigation stack from updating, even when blurred
+    //without this, visiting multiple outfits / clothing pieces consecutively though their
+    //respective ViewIndividual_____ screens, then updating the redux state (i.e. favoriting)
+    //causes each screen in the stack to rerender, sometimes casuing a stack overflow and completely
+    //crashing the phone / emulator
+    const [isFocused, setIsFocused] = useState(true)
+    useFocusEffect(
+        React.useCallback(() => {
+            // Do something when the screen is focused
+
+            setIsFocused(true)
+            return () => {
+                setIsFocused(false)
+
+            // Do something when the screen is unfocused
+            // Useful for cleanup functions
+            };
+        }, [])
+    );
 
     let src
 
@@ -750,7 +704,7 @@ export const ViewIndividualPiece = ({ route }) => {
                     </Text>
                 </View>
                 {/* Need to pass array of all outfitObj that include this piece to this component eventually */}
-                <OutfitScroll outfitsWornIn={item.outfitsWornIn}/>
+                {isFocused ? <OutfitScroll outfitsWornIn={item.outfitsWornIn}/> : null}
             </View>
             
             

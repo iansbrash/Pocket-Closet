@@ -155,3 +155,10 @@ export const RefreshIcon = (props) => {
         <Ionicons style={props.style} name="md-refresh" size={props.size}/>
     )
 }
+
+
+export const ArchiveIcon = (props) => {
+    return (
+        <Ionicons style={props.style} name="md-save" size={props.size}/>
+    )
+}

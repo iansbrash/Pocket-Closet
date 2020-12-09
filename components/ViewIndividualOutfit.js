@@ -25,7 +25,7 @@ import {
  } from './GlobalComponents/GlobalIcons'
 import { itemFavoriteToggled, clothingDeletedFromCloset } from '../redux/reducers/closetSlice'
 import { outfitDeletedFromOutfits, outfitFavoriteToggled } from '../redux/reducers/outfitsSlice'
-import { useNavigation } from '@react-navigation/native'
+import { useNavigation, useFocusEffect } from '@react-navigation/native'
 import { YesNoModal, ImageScrollModal } from './GlobalComponents/GlobalModals'
 import { TogglableDrawer } from './GlobalComponents/GlobalDrawers'
 import { makeSmallImage, makeMediumImage, makeMediumSmallImage } from './GlobalFunctions/ImgurResize'
@@ -41,7 +41,7 @@ const desiredIconSizeTwo = 60;
 
 
 
-const DisplayClothingTypeFour = ({fetchedOutfitObject, outfitObject, icon}) => {
+const DisplayClothingTypeFour = React.memo(({fetchedOutfitObject, outfitObject, icon}) => {
 
 
     const typesArray = useSelector(state => Object.keys(state.closet.typesOfClothing))
@@ -83,7 +83,7 @@ const DisplayClothingTypeFour = ({fetchedOutfitObject, outfitObject, icon}) => {
                 height: 'auto',
             }}>
                 <TouchableOpacity
-                onPress={() => navigation.navigate('VIEWINDIVIDUALPIECE', {item: clothingObject})}>
+                onPress={() => navigation.push('VIEWINDIVIDUALPIECE', {item: clothingObject})}>
                     <View style={[{
                         margin: 5,
                         height: 'auto',
@@ -207,7 +207,7 @@ const DisplayClothingTypeFour = ({fetchedOutfitObject, outfitObject, icon}) => {
             
         </View>
     )
-} 
+} )
 
 const OutfitDescription = ({fetchedOutfitObject, brandsLength, colorsLength}) => {
 
@@ -269,12 +269,12 @@ const OutfitTags = ({fetchedOutfitObject}) => {
 
 
     // testing plz delete 
-    if (fetchedOutfitObject.tags.length === 0) {
-        fetchedOutfitObject.tags.push('i pushed this tag for sanity')
-        fetchedOutfitObject.tags.push('sanity2')
-        fetchedOutfitObject.tags.push('SANNY 3')
+    // if (fetchedOutfitObject.tags.length === 0) {
+    //     fetchedOutfitObject.tags.push('i pushed this tag for sanity')
+    //     fetchedOutfitObject.tags.push('sanity2')
+    //     fetchedOutfitObject.tags.push('SANNY 3')
 
-    }
+    // }
 
     const IndividualTags = ({title}) => {
         return (
@@ -493,7 +493,25 @@ export const ViewIndividualOutfit = ({ route }) => {
     const [brandsSet, setBrandsSet] = useState(new Set())
     const [colorsSet, setColorsSet] = useState(new Set())
 
-    
+    //this prevents screens that are in the navigation stack from updating, even when blurred
+    //without this, visiting multiple outfits / clothing pieces consecutively though their
+    //respective ViewIndividual_____ screens, then updating the redux state (i.e. favoriting)
+    //causes each screen in the stack to rerender, sometimes casuing a stack overflow and completely
+    //crashing the phone / emulator
+    const [isFocused, setIsFocused] = useState(true)
+    useFocusEffect(
+        React.useCallback(() => {
+            // Do something when the screen is focused
+
+            setIsFocused(true)
+            return () => {
+                setIsFocused(false)
+
+            // Do something when the screen is unfocused
+            // Useful for cleanup functions
+            };
+        }, [])
+    );
 
     // this is unneccesarily called every time something re renders... XD
     // wow i think i fixed it
@@ -698,7 +716,7 @@ export const ViewIndividualOutfit = ({ route }) => {
 
 
             {/* This is the 4 drawers, and the icons that show underneath them */}
-            <DisplayClothingTypeFour fetchedOutfitObject={fetchedOutfitObject}/>
+            {isFocused ? <DisplayClothingTypeFour fetchedOutfitObject={fetchedOutfitObject}/> : null}
         </View>
     )
 }

@@ -45,14 +45,18 @@ const closetSlice = createSlice({
             pieceType: '',
             size: '',
             price: '', //$0
-            color: '',
+            color: [],
             brandName: [
                 []
             ], // array of names and nicknames
             timesWorn: 0, //defaults to zero, user can't control this
             tags: [],
-            images: [],
+            images: {
+                images: [],
+                type: '',
+            },
             favorite: false,
+            archive: false
             
         },
         typesOfClothing: {
@@ -122,7 +126,7 @@ const closetSlice = createSlice({
                     timesWorn: 0, //defaults to zero, user can't control this
                     favorite: false,
                     price: '$98',
-                    color: 'black',
+                    color: ['black'],
                     tags: ['hype', 'casual'],
                     images: {
                         images: [],
@@ -148,10 +152,20 @@ const closetSlice = createSlice({
         },
         clothingDeletedFromCloset: {
             reducer (state, action) {
+                // remove ID from closetObject
                 state.closetObject[action.payload.clothingType.toLowerCase() + 'Array'] = 
                 state.closetObject[action.payload.clothingType.toLowerCase() + 'Array'].filter(
                     obj => obj._id !== action.payload._id
                 )
+
+                //also need to scan outfits and remove _id from its outfitArr
+                //possible add a 'fragment' to indicate a removed item?
+                //an 'archived' piece
+                //      can use outfitsWornIn to find and delete
+
+                //instead of deleting a piece, you can 'archive it'
+                //it stays, but you can't edit it anymore, and you can't wear it anymore
+                //its like you sold an item but want to remember it
             }
         },
         typesOfClothingSpecificTypeAdded: {
@@ -222,6 +236,7 @@ const closetSlice = createSlice({
                         type: ''
                     },
                     favorite: false,
+                    archive: false
                 }
                 console.log('cleansed clothingPieceInProgress')
                 console.log(state.clothingPieceInProgress);
