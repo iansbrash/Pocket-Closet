@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react'
+import React, { useState, useRef, useEffect, useCallback } from 'react'
 import { 
     Image, 
     ScrollView, 
@@ -42,13 +42,19 @@ const desiredIconSizeTwo = 60;
 
 
 
-const DisplayClothingTypeFour = React.memo(({fetchedOutfitObject, outfitObject, icon}) => {
+const DisplayClothingTypeFour = React.memo(({fetchedOutfitObject, outfitObject}) => {
 
 
     const typesArray = useSelector(state => Object.keys(state.closet.typesOfClothing))
-    const [type, setType] = useState('tops');
-    const dummySrc = { uri: 'https://randomuser.me/api/portraits/men/1.jpg' }
 
+    //ok. this works.
+    const [type, setType] = useState(
+        outfitObject.outfitArr.topsArray.length !== 0 ? 'tops' :
+            (outfitObject.outfitArr.bottomsArray.length !== 0 ? 'bottoms' : 
+                (outfitObject.outfitArr.footwearArray.length !== 0 ? 'footwear' : 'other'))
+    );
+    const dummySrc = { uri: 'https://randomuser.me/api/portraits/men/1.jpg' }
+    console.log(fetchedOutfitObject)
     // const topsArray = useSelector(state => state.closet.closetObject.topsArray);
     // const bottomsArray = useSelector(state => state.closet.closetObject.bottomsArray);
     // const footwearArray = useSelector(state => state.closet.closetObject.footwearArray);
@@ -56,6 +62,28 @@ const DisplayClothingTypeFour = React.memo(({fetchedOutfitObject, outfitObject, 
     const navigation = useNavigation();
 
 
+    // //this works... NOT. wtf
+    // useFocusEffect(
+    //     // let keys = Object.keys(fetchedOutfitObject.outfitArr)
+    //     useCallback(() => {
+
+    //         const toReturn = () => {
+    //             let keys = ['tops', 'bottoms', 'footwear', 'other']
+
+    //             console.log(keys)
+                
+    //             for (let i = 0; i < keys.length; i++){
+    //                 if (fetchedOutfitObject.outfitArr[`${keys[i]}Array`].length !== 0){
+    //                     setType(keys[i])
+    //                     break;
+    //                 }
+    //             }
+    //         }
+
+    //         return () => toReturn()
+            
+    //     }, [])
+    // )
     
 
     // I just realized that when we store the outfit, it is then constant, and doesn't change when we favorite/edit desciriptn... etc
@@ -496,6 +524,7 @@ export const ViewIndividualOutfit = ({ route }) => {
     const [brandsSet, setBrandsSet] = useState(new Set())
     const [colorsSet, setColorsSet] = useState(new Set())
 
+
     //this prevents screens that are in the navigation stack from updating, even when blurred
     //without this, visiting multiple outfits / clothing pieces consecutively though their
     //respective ViewIndividual_____ screens, then updating the redux state (i.e. favoriting)
@@ -507,6 +536,7 @@ export const ViewIndividualOutfit = ({ route }) => {
             // Do something when the screen is focused
 
             setIsFocused(true)
+
             return () => {
                 setIsFocused(false)
 
@@ -516,6 +546,8 @@ export const ViewIndividualOutfit = ({ route }) => {
         }, [])
     );
 
+
+    
     // this is unneccesarily called every time something re renders... XD
     // wow i think i fixed it
     useEffect(() => {
@@ -569,6 +601,11 @@ export const ViewIndividualOutfit = ({ route }) => {
         setBrandsSet(nonStateBrandsSet)
         setColorsSet(nonStateColorsSet)
     }, [closetObject])
+
+
+
+    
+    
 
     
     // hook whether image is small
@@ -719,7 +756,11 @@ export const ViewIndividualOutfit = ({ route }) => {
 
 
             {/* This is the 4 drawers, and the icons that show underneath them */}
-            {isFocused ? <DisplayClothingTypeFour fetchedOutfitObject={fetchedOutfitObject}/> : null}
+            {isFocused ? 
+                <DisplayClothingTypeFour 
+                    fetchedOutfitObject={fetchedOutfitObject}
+                    outfitObject={route.params.item} /> 
+                : null}
         </View>
     )
 }
