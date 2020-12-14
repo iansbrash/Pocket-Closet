@@ -3689,6 +3689,11 @@ expo-font@~8.3.0:
     fbjs "1.0.0"
     fontfaceobserver "^2.1.0"
 
+expo-haptics@~8.3.0:
+  version "8.3.0"
+  resolved "https://registry.yarnpkg.com/expo-haptics/-/expo-haptics-8.3.0.tgz#9556b39cda70af7870a4991527110becb037be43"
+  integrity sha512-LzNPSIvly9GBPoBNj1pbVX3RepA1NIU9mfs04mX0bKFlnIiw3Iinjywv1FiwpOZaQpWaA1LofPQlv06fxZlEgA==
+
 expo-image-loader@~1.2.0:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/expo-image-loader/-/expo-image-loader-1.2.0.tgz#1cf70fc14c45e8595c3d1a2b16f40a53810b4ba4"
@@ -6847,10 +6852,10 @@ react-is@^16.12.0, react-is@^16.13.0, react-is@^16.13.1, react-is@^16.7.0, react
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-16.13.1.tgz#789729a4dc36de2999dc156dd6c1d9c18cea56a4"
   integrity sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ==
 
-react-native-chart-kit@^6.7.0:
-  version "6.7.0"
-  resolved "https://registry.yarnpkg.com/react-native-chart-kit/-/react-native-chart-kit-6.7.0.tgz#2cecdf8cb74a7da88304d7b1e1c5ac1f81e59ca5"
-  integrity sha512-1MF7pwnPVXTh7ohEa42NHGJoCcjLWTpXkPdv3WcV+qWFrcMR6jHigEKGR3hfMWOcVRCR+2/MY/7mX/WXcZMs1g==
+react-native-chart-kit@^6.8.1:
+  version "6.8.1"
+  resolved "https://registry.yarnpkg.com/react-native-chart-kit/-/react-native-chart-kit-6.8.1.tgz#8359083337ace5ec83327d6caf39d4297573bd6f"
+  integrity sha512-v0CVMZu+8yPG5+KVJE2PQ5+56CntCNe+u+Au+u0oaE7rVyW/dGew7UnFmQAl6ypHYkVe5+YZJgrTbtG2p6oVYw==
   dependencies:
     lodash "^4.17.13"
     paths-js "^0.4.10"
@@ -6865,6 +6870,11 @@ react-native-gesture-handler@~1.7.0:
     hoist-non-react-statics "^2.3.1"
     invariant "^2.2.4"
     prop-types "^15.7.2"
+
+react-native-haptic-feedback@^1.11.0:
+  version "1.11.0"
+  resolved "https://registry.yarnpkg.com/react-native-haptic-feedback/-/react-native-haptic-feedback-1.11.0.tgz#adfd841f3b67046532f912c6ec827aea0037d8ad"
+  integrity sha512-KTIy7lExwMtB6pOpCARyUzFj5EzYTh+A1GN/FB5Eb0LrW5C6hbb1kdj9K2/RHyZC+wyAJD1M823ZaDCU6n6cLA==
 
 react-native-image-picker@^3.0.0-vnext.2:
   version "3.0.0-vnext.2"

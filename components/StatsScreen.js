@@ -2,7 +2,9 @@ import React, { useState, useEffect } from 'react'
 import {
     View,
     Text,
-    TouchableOpacity
+    TouchableOpacity,
+    Pressable,
+    Animated
 } from 'react-native'
 import {ScreenHeader} from './GlobalComponents/ScreenHeader'
 import GlobalStyles from './GlobalComponents/GlobalStyles'
@@ -20,8 +22,15 @@ import {
     LineChart
 } from 'react-native-chart-kit'
 import { useSelector, useDispatch } from 'react-redux'
+import { BlurView } from 'expo-blur';
 
- const screenWidth = Dimensions.get("window").width;
+
+
+import ReactNativeHapticFeedback from "react-native-haptic-feedback";
+import * as Haptics from 'expo-haptics';
+
+
+const screenWidth = Dimensions.get("window").width;
 
 
 
@@ -205,7 +214,7 @@ const AllStatsThree = ({reRender, setReRender}) => {
     )
 }
 
-const VerbalStats = ({reRender, setReRender}) => {
+const VerbalStats = ({reRender, setReRender, modalVisible, setModalVisible}) => {
     /**
      *                  DATA WE NEED
      *  Closet Worth
@@ -255,10 +264,27 @@ const VerbalStats = ({reRender, setReRender}) => {
     }, [reRender])
     
     const VerbalContainerTwo = ({stat, value}) => {
+
+        const [ pressed, setPressed ] = useState(false)
+        
+        const options = {
+            enableVibrateFallback: true,
+            ignoreAndroidSystemSettings: false
+        };
+
+        const onLongPress = () => {
+            setPressed(true)
+            Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy)
+            setModalVisible(true)
+            // Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning)
+            // ReactNativeHapticFeedback.trigger("selection", options)
+        } 
+
         return (
             <View style={{
                 width: '100%',
-                height: 69 //nice
+                height: 69, //nice
+                zIndex: 5//pressed ? 6 : 2
             }}>
                 <View style={{
                     margin: 5,
@@ -267,21 +293,29 @@ const VerbalStats = ({reRender, setReRender}) => {
                     <View style={[{
                         width: '100%',
                     }, ]}>
-                        <View style={[{
-                            padding: 5,
-                            flexDirection: 'column',
-                            justifyContent: 'flex-start',
-                            backgroundColor: 'white',
-                            alignItems: 'flex-start',
-                            borderRadius: 5
-                        }, GlobalStyles.shadowLightest]}>
-                            <Text style={[{
-                                fontWeight: 'bold'
-                            }, GlobalStyles.h4]}>{value}</Text>
-                            <Text style={[
-                                GlobalStyles.h6, GlobalStyles.hint
-                            ]}>{stat}</Text>
-                        </View>
+                        <Pressable
+                        onPress={null}
+                        onPressIn={() => setPressed(true)}
+                        onPressOut={() => setPressed(false)}
+                        onLongPress={() => onLongPress()}
+                        >
+                            <View style={[{
+                                padding: 5,
+                                flexDirection: 'column',
+                                justifyContent: 'flex-start',
+                                backgroundColor: 'white',
+                                alignItems: 'flex-start',
+                                borderRadius: 5,
+                                opacity: pressed ? 0.5 : 1
+                            }, GlobalStyles.shadowLightest]}>
+                                <Text style={[{
+                                    fontWeight: 'bold'
+                                }, GlobalStyles.h4]}>{value}</Text>
+                                <Text style={[
+                                    GlobalStyles.h6, GlobalStyles.hint
+                                ]}>{stat}</Text>
+                            </View>
+                        </Pressable>
                     </View>
                 </View>
             </View>
@@ -291,7 +325,7 @@ const VerbalStats = ({reRender, setReRender}) => {
     return (
         <View style={{
             width: '65%',
-            backgroundColor: 'white'
+            backgroundColor: 'white',
         }}>
             <View style={{
                 margin: 5,
@@ -304,8 +338,13 @@ const VerbalStats = ({reRender, setReRender}) => {
                     borderRadius: 10
                 }, GlobalStyles.shadowLightest]}>
                     <VerbalContainerTwo stat={'Closet worth'} value={`$${closetWorth}`}/>
-                    <VerbalContainerTwo stat={'Average clothing price'} value={`$${closetWorth / closetSize}`}/>
-                    <VerbalContainerTwo stat={'Average times worn'} value={`${totalTimesWorn / closetSize} times`}/>
+
+                    <VerbalContainerTwo stat={'Average clothing price'} 
+                        value={`$${closetSize !== 0 ? (closetWorth / closetSize) : 0}`}/>
+
+                    <VerbalContainerTwo stat={'Average times worn'} 
+                        value={`${closetSize !== 0 ? (totalTimesWorn / closetSize) : 0} times`}/>
+
                     <VerbalContainerTwo stat={'Number of brands'} value={`${totalNumberOfBrands} brands`}/>
                 </View>
             </View>
@@ -341,60 +380,6 @@ const RefreshStats = ({reRender, setReRender}) => {
                         <RefreshIcon size={30} style={GlobalStyles.colorMain}/>
                     </View>
                 </TouchableOpacity>
-            </View>
-        </View>
-    )
-}
-
-const InDepthButtons = () => {
-
-    const IndividualDepthButton = ({title, navpath, icon}) => {
-        return (
-            <View style={{
-                width: '33.3%',
-                aspectRatio: 1
-            }}>
-                <View style={{
-                    margin: 5,
-                    width: 'auto',
-                }}>
-                    <TouchableOpacity>
-                        <View style={[{
-                            width: '100%',
-                            height: '100%',
-                            borderRadius: 5,
-                            backgroundColor: 'white',
-                            justifyContent: 'center',
-                            alignItems: 'center'
-                        }, GlobalStyles.shadowLightest]}>
-                            {icon}
-                        </View>
-                    </TouchableOpacity>
-                </View>
-
-            </View>
-        )
-    }
-
-    return (
-        <View style={{
-            width: 'auto',
-        }}>
-            <View style={{
-                width: '100%',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                flexDirection: 'row',
-            }}>
-                <IndividualDepthButton 
-                    title={'test'} 
-                    navpath={'nav'} icon={<ShirtIcon size={80} style={GlobalStyles.colorMain}/>}/>
-                <IndividualDepthButton 
-                    title={'test'} 
-                    navpath={'nav'} icon={<TieIcon size={80} style={GlobalStyles.colorMain}/>}/>
-                <IndividualDepthButton 
-                    title={'test'} 
-                    navpath={'nav'} icon={<ShirtIcon size={60} style={GlobalStyles.colorMain}/>}/>
             </View>
         </View>
     )
@@ -450,6 +435,10 @@ const VariableChart = ({reRender, setReRender}) => {
     
 
     const outfitsArray = useSelector(state => state.outfits.outfitsArray)
+
+    if (outfitsArray.length === 0 ){
+        return null;
+    }
 
     console.log(dataArray)
     console.log(labelsArray)
@@ -568,13 +557,62 @@ export const StatsScreen = () => {
     // yet another garbage solution to control the quirks of useEffect
     const [reRender, setReRender] = useState(false)
 
+    const [viewBlur] = useState(new Animated.Value(0))
+    const [modalVisible, setModalVisible] = useState(false)
 
+    const onShow = () => {
+        Animated.timing(viewBlur, {
+            toValue: .95,
+            duration: 250,
+            useNativeDriver: true
+        }).start();
+    }
+
+    const onDismiss = () => {
+        Animated.timing(viewBlur, {
+            toValue: 0,
+            duration: 250,
+            useNativeDriver: true
+        }).start();
+    }
+
+    useEffect(() => {
+        if (modalVisible){
+            onShow()
+        } else {
+            onDismiss()
+        }
+    },[modalVisible])
 
     return (
         <View style={{
             flex: 1,
             backgroundColor: 'white'
         }}>
+            
+            {/* Used to blur everything */}
+            {/* <Animated.View style={{
+                position: 'absolute',
+                height: '100%',
+                width: '100%',
+                opacity: viewBlur,
+                zIndex: 1,
+                backgroundColor: 'pink'
+            }}
+            pointerEvents={'none'}> */}
+                {/* <BlurView style={{
+                    position: 'absolute',
+                    top: 0,
+                    bottom: 0,
+                    right: 0,
+                    left: 0,
+                }}
+                intensity={95}>
+                    
+                </BlurView> */}
+            {/* </Animated.View> */}
+            {/* ^^Used to blur everything^^ */}
+
             <View style={{
                 justifyContent: 'flex-start',
                 flexDirection: 'row',
@@ -593,10 +631,12 @@ export const StatsScreen = () => {
             }}>
                 <View style={{
                     width: '100%',
-                    flexDirection: 'row'
+                    flexDirection: 'row',
                 }}>
+                    
                     <AllStatsThree reRender={reRender} setReRender={setReRender}/>
-                    <VerbalStats reRender={reRender} setReRender={setReRender}/>
+                    <VerbalStats reRender={reRender} setReRender={setReRender}
+                        modalVisible={modalVisible} setModalVisible={setModalVisible}/>
                 </View>
                 <RefreshStats reRender={reRender} setReRender={setReRender}/>
                 <VariableChart reRender={reRender} setReRender={setReRender}/>
@@ -604,33 +644,4 @@ export const StatsScreen = () => {
             </View>
         </View>
     )
-}
-
-
-//nah
-const fetchStats = (
-    setNumberOfTops, setNumberOfBottoms, setNumberOfFootwear, setNumberOfOther, setNumberOfOutfits,
-    setClosetWorth,
-    setNumberOfClothing,
-    setTotalTimesWorn,
-    setNumberOfBrands,
-    setNumberOfColors,
-
-
-    ) => {
-    /**         TO FETCH:
-     * Number of tops,bottoms,...,outfits
-     * Closet Worth
-     * Total Number of Clothing
-     * Total Times Worn
-     * Total Number of Brands
-     * 
-     *  # of [Brands, Clothing, Colors] Worn / Outfit Cost      PER Day
-     *  Closet Worth / Number of Clothing in Closet             PER Month
-     * 
-     */
-
-
-
-    return;
 }

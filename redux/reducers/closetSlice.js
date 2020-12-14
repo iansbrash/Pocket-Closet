@@ -46,6 +46,7 @@ const closetSlice = createSlice({
             size: '',
             price: '', //$0
             color: [],
+            description: '',
             brandName: [
                 []
             ], // array of names and nicknames
@@ -125,6 +126,7 @@ const closetSlice = createSlice({
                     brandName: ['Bape', 'A Bathing Ape'],
                     timesWorn: 0, //defaults to zero, user can't control this
                     favorite: false,
+                    archive: false,
                     price: '$98',
                     color: ['black'],
                     tags: ['hype', 'casual'],
@@ -225,6 +227,7 @@ const closetSlice = createSlice({
                     size: '',
                     price: '', //$0
                     color: [],
+                    description: '',
                     brandName: [
                         []
                     ], // array of names and nicknames
@@ -352,6 +355,33 @@ const closetSlice = createSlice({
                     }
                 }
             }
+        },
+        itemArchiveToggled: {
+            reducer (state, action) {
+
+                let { _id, clothingType } = action.payload
+
+                console.log(`${_id} and ${clothingType}`)
+                console.log(`${clothingType.toLowerCase()}Array`)
+                console.log(state.closetObject[`${clothingType.toLowerCase()}Array`])
+
+                let toToggle = state.closetObject[`${clothingType.toLowerCase()}Array`].find(clothingObj => 
+                    clothingObj._id === _id
+                )
+
+                console.log(toToggle)
+
+                toToggle.archive = !toToggle.archive;
+
+            },
+            prepare (_id, clothingType) {
+                return {
+                    payload: {
+                        _id,
+                        clothingType,
+                    }
+                }
+            }
         }
     },
 })
@@ -372,5 +402,6 @@ export const {
     clothingInProgressCleansed,
     clothingInOutfitWorn,
     pushAttributesToAttributedClothing,
-    removeTagsFromTaggedClothing
+    removeTagsFromTaggedClothing,
+    itemArchiveToggled
 } = closetSlice.actions;

@@ -16,7 +16,11 @@ import { TopNavScreenHeader } from './GlobalComponents/TopNav'
 import GlobalStyles from './GlobalComponents/GlobalStyles'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 import { HeartIcon, ArchiveIcon, DeleteIcon, ShareIcon, CheckIcon, XIcon } from './GlobalComponents/GlobalIcons'
-import { itemFavoriteToggled, clothingDeletedFromCloset } from '../redux/reducers/closetSlice'
+import { 
+    itemFavoriteToggled, 
+    clothingDeletedFromCloset,
+    itemArchiveToggled
+} from '../redux/reducers/closetSlice'
 import { useNavigation, useFocusEffect } from '@react-navigation/native'
 import { YesNoModal, ImageScrollModal } from './GlobalComponents/GlobalModals'
 import { TogglableDrawer } from './GlobalComponents/GlobalDrawers'
@@ -35,6 +39,8 @@ const TopButtonsStyleTwo = ({item, setModalVisible}) => {
 
 
     const [isFavorited, setIsFavorited] = useState(item.favorite)
+    const [isArchived, setIsArchived] = useState(item.archive)
+
     const dispatch = useDispatch();
     const navigation = useNavigation();
 
@@ -49,12 +55,12 @@ const TopButtonsStyleTwo = ({item, setModalVisible}) => {
     }
     
 
-    const EditOutfit = () => {
-
-    }
-
-    const ArchiveOutfit = () => {
-
+    
+    
+    const ToggleArchive = () => {
+        //this is structured differently than itemFavoriteToggled lol
+        dispatch(itemArchiveToggled(item._id, item.clothingType))
+        setIsArchived(!isArchived)
     }
 
     const DeleteOutfitButtonPressed = () => {
@@ -64,21 +70,22 @@ const TopButtonsStyleTwo = ({item, setModalVisible}) => {
     }
 
 
-    const IndividualThirdButton = ({title, icon, onPressFunc}) => {
+    const IndividualThirdButton = ({title, icon, onPressFunc, disabled}) => {
         return (
             <View style={{
                 height: '33.3%',
                 width: '100%'
             }}>
                 <TouchableOpacity
-                onPress={() => onPressFunc()}>
+                onPress={() => onPressFunc()}
+                disabled={disabled}>
                     <View style={[{
                         margin: 5,
                         height: 'auto',
                         width: 'auto',
                         borderRadius: 5,
                         backgroundColor: 'white'
-                    }, GlobalStyles.shadowLightest]}>
+                    }, disabled ? null : GlobalStyles.shadowLightest]}>
                         <View style={{
                             height: '100%',
                             width: '100%',
@@ -89,7 +96,6 @@ const TopButtonsStyleTwo = ({item, setModalVisible}) => {
                             <View style={{
                                 height: '100%',
                                 aspectRatio: 1,
-                                marginLeft: 5,
                                 justifyContent: 'center',
                                 alignItems: 'center'
                             }}>
@@ -100,7 +106,7 @@ const TopButtonsStyleTwo = ({item, setModalVisible}) => {
                             }}>  
                                 <Text style={[{
                                     fontWeight: 'bold'
-                                }, GlobalStyles.h4]}>
+                                }, GlobalStyles.h4, disabled ? GlobalStyles.lighterHint : GlobalStyles.colorMain]}>
                                     {title}
                                 </Text>
                             </View>
@@ -122,21 +128,23 @@ const TopButtonsStyleTwo = ({item, setModalVisible}) => {
                 flexDirection: 'column'
             }}>
                 <IndividualThirdButton 
-                    title={'Favorite'} 
+                    title={isFavorited ? 'Unfavorite' : 'Favorite'} 
                     icon={<HeartIcon 
-                        style={[isFavorited ? {color: 'red'} : GlobalStyles.colorMain]} 
+                        style={[isArchived ? GlobalStyles.lighterHint : (isFavorited ? {color: 'red'} : GlobalStyles.colorMain)]} 
                         size={35} />}
-                    onPressFunc={() => ToggleFavorite()}/>
+                    onPressFunc={() => ToggleFavorite()}
+                    disabled={isArchived}/>
                 <IndividualThirdButton 
-                    title={'Archive'} 
+                    title={isArchived ? 'Unarchive' : 'Archive'} 
                     icon={<ArchiveIcon style={[GlobalStyles.colorMain]} 
                     size={35} />}
-                    onPressFunc={() => ArchiveOutfit()}/>
+                    onPressFunc={() => ToggleArchive()}/>
                 <IndividualThirdButton 
                     title={'Delete'} 
-                    icon={<DeleteIcon style={[GlobalStyles.colorMain]} 
+                    icon={<DeleteIcon style={[isArchived ? GlobalStyles.lighterHint : GlobalStyles.colorMain]} 
                     size={35} />}
-                    onPressFunc={() => DeleteOutfitButtonPressed()}/>
+                    onPressFunc={() => DeleteOutfitButtonPressed()}
+                    disabled={isArchived}/>
             </View>
         </View>
     )

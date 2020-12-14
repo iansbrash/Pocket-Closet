@@ -31,8 +31,9 @@ export const ViewIndividualTag = ({route}) => {
                 flexDirection: 'column'
             }}>
                 {Object.keys(taggedItems).map(key => (
-                    taggedItems[key].map(_id => (
-                        <RenderSingleLineClosetItem item={closetObject[key].find(clothingObject => clothingObject._id === _id)}/>
+                    taggedItems[key].map((_id, index) => (
+                        // Using index as a key here is OK because we the position of each clothingObject is static
+                        <RenderSingleLineClosetItem key={index} item={closetObject[key].find(clothingObject => clothingObject._id === _id)}/>
                     ))
                 ))}
             </View>

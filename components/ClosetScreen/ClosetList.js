@@ -9,7 +9,7 @@ import {
 import { useSelector } from 'react-redux'
 import { useNavigation } from '@react-navigation/native'
 import GlobalStyles from '../GlobalComponents/GlobalStyles'
-import { HeartIcon } from '../GlobalComponents/GlobalIcons'
+import { HeartIcon, ArchiveIcon } from '../GlobalComponents/GlobalIcons'
 import { makeSmallImage } from '../GlobalFunctions/ImgurResize'
 
 
@@ -131,11 +131,16 @@ export const RenderSingleLineClosetItem = ({item}) => {
                         <View style={{
                             position: 'absolute',
                             bottom: 5,
-                            right: 5
+                            right: 5,
+                            flexDirection: 'row'
                         }}>
                             {
-                                item.favorite ? <HeartIcon size={20} style={{color: '#ff4040'}}/> : null
+                                item.archive ? <ArchiveIcon size={20} style={[{margin: 2}, GlobalStyles.lighterHint]}/> : null
                             }
+                            {
+                                item.favorite ? <HeartIcon size={20} style={{color: '#ff4040', margin: 2}}/> : null
+                            }
+                            
                         </View>
                         <View style={{width: '15%', justifyContent: 'center', alignItems: 'center'}}>
                             {/* This accounts for 15% of the right of the card lmaoooo spaghetti */}

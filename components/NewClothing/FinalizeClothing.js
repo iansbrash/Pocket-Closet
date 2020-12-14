@@ -116,11 +116,57 @@ export const FinalizeClothing = () => {
         <View style={{flex: 1, backgroundColor: 'white'}}>
             <TopNavScreenHeader title={'Finalize'} exitDestination={"CLOSETSCREEN"}
             extraFunc={() => dispatch(clothingInProgressCleansed())}/>
-            <ScrollView>
+            <ScrollView
+            bounces={false}
+            >
                 <View style={{
                     flex: 1,
                     margin: 10
                 }}>
+                    <View style={{
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        width: '100%',
+                        aspectRatio: 1
+                    }}>
+                        <ScrollView
+                        horizontal={true}
+                        style={{
+                            margin: -20,
+                        }}
+                        contentContainerStyle={{
+                            width: `${src.length * 100}%`,
+                            height: 'auto'
+                        }}
+                        pagingEnabled={true}
+                        >
+                            {src.map((uri, index) => (
+                                <View style={[{
+                                    height: '100%', 
+                                    aspectRatio: 1, 
+                                    borderRadius: 5,
+                                    justifyContent: 'center',
+                                    alignItems: 'center',}, 
+                                    GlobalStyles.shadowLight]}>
+                                    
+                                    <Image style={{
+                                    width: '90%',
+                                    aspectRatio: 1,
+                                    borderRadius: 5,
+                                    // height: imageHeight * (windowHeight / imageHeight),
+                                    // width: imageWidth * (windowWidth / imageWidth)
+                                    }} source={{uri: uri}}/> 
+                                </View>
+                            ))}
+                        </ScrollView>
+                    </View>
+                    <View>
+                        <Text style={
+                            [GlobalStyles.colorMain, GlobalStyles.h3, {fontWeight: 'bold'}]
+                        }>
+                            {clothingPieceInProgress.clothingName + 'asdasdasd'}
+                        </Text>
+                    </View>
                     <FinalizeDescription title={'Type'} 
                     value={`${clothingPieceInProgress.clothingType} (${clothingPieceInProgress.pieceType})`}/>
                     {/* <Divider style={{margin: 5}} /> */}
@@ -154,45 +200,6 @@ export const FinalizeClothing = () => {
                             <IndividualTag title={item} />
                         ))}
                     </View>
-                    {/* <Divider style={{margin: 5}}/> */}
-                    <View style={{
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        width: '100%',
-                        aspectRatio: 1
-                    }}>
-                        <ScrollView
-                        horizontal={true}
-                        style={{
-                            margin: -10,
-                        }}
-                        contentContainerStyle={{
-                            width: `${src.length * 100}%`,
-                            height: 'auto'
-                        }}
-                        >
-                            {src.map((uri, index) => (
-                                <View style={[{
-                                    height: '100%', 
-                                    aspectRatio: 1, 
-                                    borderRadius: 5,
-                                    justifyContent: 'center',
-                                    alignItems: 'center',}, 
-                                    GlobalStyles.shadowLight]}>
-                                    
-                                    <Image style={{
-                                    width: '90%',
-                                    aspectRatio: 1,
-                                    borderRadius: 5,
-                                    // height: imageHeight * (windowHeight / imageHeight),
-                                    // width: imageWidth * (windowWidth / imageWidth)
-                                    }} source={{uri: uri}}/> 
-                                </View>
-                            ))}
-                        </ScrollView>
-                    </View>
-                    
-                    
                 </View>
             </ScrollView>
             <FinalizeButton 

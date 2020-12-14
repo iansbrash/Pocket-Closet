@@ -22,6 +22,7 @@ import {
     ShirtIcon,
     LegIcon,
     ShoeIcon,
+    ArchiveIcon
  } from './GlobalComponents/GlobalIcons'
 import { itemFavoriteToggled, clothingDeletedFromCloset } from '../redux/reducers/closetSlice'
 import { outfitDeletedFromOutfits, outfitFavoriteToggled } from '../redux/reducers/outfitsSlice'
@@ -116,9 +117,11 @@ const DisplayClothingTypeFour = React.memo(({fetchedOutfitObject, outfitObject, 
                         <View style={{
                             position: 'absolute',
                             bottom: 5,
-                            right: 5
+                            right: 5,
+                            flexDirection: 'row'
                         }}>
-                            {clothingObject.favorite ? <HeartIcon style={{color: 'red'}} size={20}/> : null}
+                            {clothingObject.archive ? <ArchiveIcon style={GlobalStyles.lighterHint} size={18}/> : null}
+                            {clothingObject.favorite ? <HeartIcon style={{color: 'red', marginLeft: 2}} size={18}/> : null}
                         </View>
                     </View>
                 </TouchableOpacity>

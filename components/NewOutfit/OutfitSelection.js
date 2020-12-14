@@ -363,7 +363,7 @@ export const OutfitSelection = ({ route, navigation }) => {
                     marginTop: 55
                     }} hookValue={modalVisible}>
                     <FlatList 
-                        data={ClosetArray.filter(item => item.clothingName.toLowerCase().includes(searchInput.toLowerCase()))}
+                        data={ClosetArray.filter(item => !item.archive).filter(item => item.clothingName.toLowerCase().includes(searchInput.toLowerCase()))}
                         keyExtractor={item => item._id.toString()}
                         renderItem={renderItem}
                         />
