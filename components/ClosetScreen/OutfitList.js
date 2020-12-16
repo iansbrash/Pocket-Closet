@@ -289,10 +289,15 @@ export const OutfitList = ({outfitsArray, onClickFunc}) => {
             
             <FlatList
                 data={outfitsArray}
-                renderItem={(object, index) => <RenderOutfit  {...object}
-                />}
-                //TEMP
+                renderItem={(object, index) => <RenderOutfit  {...object} />}
                 keyExtractor={(obj, index) => obj._id.toString()} //obj._id.. not all obj has _id rn
+
+                // Below are possible optimizations
+                removeClippedSubviews={true} // TEMP
+                getItemLayout={(data, index) => (
+                    {length: 200, offset: 200 * index, index}
+                )}
+                initialNumToRender={3}
             />
             
         </View>

@@ -139,6 +139,7 @@ export const FinalizeClothing = () => {
                             height: 'auto'
                         }}
                         pagingEnabled={true}
+                        showsHorizontalScrollIndicator={false}
                         >
                             {src.map((uri, index) => (
                                 <View style={[{

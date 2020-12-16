@@ -16,9 +16,16 @@ import { OutfitList } from './OutfitList'
 import { ClosetList } from './ClosetList'
 import { useSelector } from 'react-redux'
 
+import * as Haptics from 'expo-haptics';
 
 
 const ClosetOutfitsToggle = ({closetIsActive, setClosetIsActive }) => {
+
+    const ToggleCloset = (bool) => {
+        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy)
+        setClosetIsActive(bool)
+    }
+
     return (
         <View style={{
             width: '100%', 
@@ -26,10 +33,10 @@ const ClosetOutfitsToggle = ({closetIsActive, setClosetIsActive }) => {
             justifyContent: 'center',
             alignItems: 'center',
             flexDirection: 'row',}}>
-            <TouchableHighlight
-                activeOpacity={0.6}
-                underlayColor="#DDDDDD"
-                onPress={() => setClosetIsActive(true)}
+            <Pressable
+                activeOpacity={0.6} //was used for TouchableHighlight
+                underlayColor="#DDDDDD" //was used for TouchableHighlight
+                onPress={() => ToggleCloset(true)}
                 style={{
                     width: '50%',
                     height: 40,
@@ -48,11 +55,11 @@ const ClosetOutfitsToggle = ({closetIsActive, setClosetIsActive }) => {
                         <View style={closetIsActive ? styles.activeBar : styles.inactiveBar}>
                         </View>
                 </View>
-            </TouchableHighlight>
-            <TouchableHighlight
-                activeOpacity={0.6}
-                underlayColor="#DDDDDD"
-                onPress={() => setClosetIsActive(false)}
+            </Pressable>
+            <Pressable
+                activeOpacity={0.6} //was used for TouchableHighlight
+                underlayColor="#DDDDDD" //was used for TouchableHighlight
+                onPress={() => ToggleCloset(false)}
                 style={{
                     width: '50%',
                     height: 40,
@@ -69,7 +76,7 @@ const ClosetOutfitsToggle = ({closetIsActive, setClosetIsActive }) => {
                         <View style={!closetIsActive ? styles.activeBar : styles.inactiveBar}>
                         </View>
                 </View>
-            </TouchableHighlight>
+            </Pressable>
         </View>
     )
 }

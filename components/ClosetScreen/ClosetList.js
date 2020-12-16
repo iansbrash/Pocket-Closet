@@ -58,6 +58,59 @@ export const RenderSingleLineClosetItem = ({item}) => {
                     alignItems: 'center',
                     flexDirection: 'column',
                 }}>
+
+                    {/* Option 1 for price */}
+                    {/* <View style={[{
+                        position: 'absolute',
+                        top: 0,
+                        right: 0,
+                        height: 'auto',
+                        borderRadius: 10,
+                        width: 'auto',
+                        zIndex: 1,
+                        padding: 5,
+                    }, GlobalStyles.bgColorMain]}>
+                        <View>
+                            <Text style={[
+                                GlobalStyles.h5,
+                                {color: 'white', fontWeight: 'bold'}
+                            ]}>
+                                {`$${item.price ? item.price : 0}`}
+                            </Text>
+                        </View>
+                    </View> */}
+                    {/* Option 2 for color */}
+                    {item.color.length !== 0 ? 
+                        <View style={[{
+                            position: 'absolute',
+                            top: 5,
+                            right: 10,
+                            height: 'auto',
+                            width: 'auto',
+                            zIndex: 1,}]}>
+                            <View style={{
+                                justifyContent: 'flex-start',
+                                alignItems: 'center',
+                                flexDirection: 'row',
+                                borderColor: 'white',
+                                borderWidth: 0.5,
+                                borderStyle: 'solid'
+                            }}>
+                                {item.color.slice(0, 4).map(col => (
+                                    <View style={{
+                                        backgroundColor: col.toLowerCase(),
+                                        height: 10,
+                                        aspectRatio: 1,
+                                        borderColor: 'white',
+                                        borderWidth: 0.5,
+                                        borderStyle: 'solid'
+                                    }}></View>
+                                ))}
+                            </View>
+                        </View>
+                    : null }
+
+
                     <View 
                     style={{
                         height: 10, 
@@ -77,7 +130,7 @@ export const RenderSingleLineClosetItem = ({item}) => {
                             alignItems: 'center',
                             flexDirection: 'row',
                             height: '100%',
-                            width: '85%'
+                            width: '100%'
 
                         }}>
                             <View style={[{
@@ -113,37 +166,99 @@ export const RenderSingleLineClosetItem = ({item}) => {
                                 <View style={{
                                     flexDirection: 'column',
                                     flexWrap: 'wrap',
-
+                                    height: 35
                                 }}>
-                                    {item.brandName.slice(0, 4).map((brand, index) => (
+                                    {item.brandName.slice(0, 2).map((brand, index) => (
                                         <View key={brand}>
-                                            <Text category='h5' appearance='hint' 
+                                            <Text category='h5'
                                             style={[{fontWeight: 'bold', marginLeft: 10, marginTop: -5, flexShrink: 1}, 
                                             GlobalStyles.h6, GlobalStyles.hint]}
-                                            >{`${brand}${index === 3 && item.brandName.length > 4 ? '...' : ''}`}</Text>
+                                            >{`${brand}${index === 1 && item.brandName.length > 2 ? '...' : ''}`}</Text>
                                         </View>
                                         )
                                     )}
                                 </View>
+                                {/* Colors under brand names */}
+                                <View style={{
+                                    height: 20,
+                                    width: 'auto',
+                                    marginTop: -5,
+                                    marginLeft: 10,
+                                    justifyContent: 'flex-start',
+                                    alignItems: 'center',
+                                    flexDirection: 'row'
+                                }}>
+                                    <Text 
+                                    numberOfLines={1}
+                                    style={[
+                                        GlobalStyles.lighterHint,
+                                        GlobalStyles.h6,
+                                        {fontWeight: 'bold', width: 180}
+                                    ]}>
+                                        {item.color.map((col, index) => <Text>{index === 0 ? col : ', ' + col}</Text>)}
+                                    </Text>
+                                </View>
+                                {/* Tags under the colors */}
+                                <View style={{
+                                    height: 20,
+                                    width: 'auto',
+                                    marginTop: -5,
+                                    marginLeft: 10,
+                                    justifyContent: 'flex-start',
+                                    alignItems: 'center',
+                                    flexDirection: 'row'
+                                }}>
+                                    <Text 
+                                    numberOfLines={1}
+                                    style={[
+                                        GlobalStyles.lighterHint,
+                                        GlobalStyles.h6,
+                                        {fontWeight: 'bold', width: 200}
+                                    ]}>{item.tags.join(', ')}</Text>
+                                </View>
                             </View>
                         </View>
-                        {/* This is going to be the heart at the bottom */}
                         <View style={{
                             position: 'absolute',
                             bottom: 5,
                             right: 5,
-                            flexDirection: 'row'
+                            flexDirection: 'column'
                         }}>
-                            {
-                                item.archive ? <ArchiveIcon size={20} style={[{margin: 2}, GlobalStyles.lighterHint]}/> : null
-                            }
-                            {
-                                item.favorite ? <HeartIcon size={20} style={{color: '#ff4040', margin: 2}}/> : null
-                            }
+                            {/* Price */}
+                            <View style={{
+                                justifyContent: 'flex-end',
+                            }}>
+                                <Text style={[
+                                    GlobalStyles.h6,
+                                    GlobalStyles.lighterHint,
+                                    {fontWeight: 'bold'}
+                                ]}>
+                                    {`$${item.price ? 
+                                        (item.price >= 10000 ? 
+                                            item.price.toString().substring(0, item.price.toString().length - 3) + 'k' : 
+                                            item.price
+                                        )
+                                    : 0}`}
+                                </Text>
+                            </View>
+                            {/* Archive / Favorite icons */}
+                            <View style={{
+                                flexDirection: 'row',
+                                justifyContent: 'flex-end',
+                            }}>
+                                {
+                                    item.archive ? <ArchiveIcon size={20} style={[{
+                                        marginTop: -3, marginBottom: 2, marginLeft: 2, marginRight: 2
+                                    }, GlobalStyles.lighterHint]}/> : null
+                                }
+                                {
+                                    item.favorite ? <HeartIcon size={20} style={{
+                                        color: '#ff4040',
+                                        marginTop: -3, marginBottom: 2, marginLeft: 2, marginRight: 2
+                                    }}/> : null
+                                }
+                            </View>
                             
-                        </View>
-                        <View style={{width: '15%', justifyContent: 'center', alignItems: 'center'}}>
-                            {/* This accounts for 15% of the right of the card lmaoooo spaghetti */}
                         </View>
                     </View>
                 </View> 
@@ -188,9 +303,17 @@ export const ClosetList = ({searchInput, filtersEnabled, heartToggleChecked}) =>
                 )
             )}
             keyExtractor={obj => obj._id.toString()}
-            renderItem={object => <RenderSingleLineClosetItem {...object}/>
-            /** HOW THE FUCK DOES THE ABOVE WORK... WTF */}
+            renderItem={object => <RenderSingleLineClosetItem {...object}/>}
+            ListEmptyComponent={<Text>Add some items! (change this)</Text>}
+
+            // Below are possible optimizations
+            removeClippedSubviews={true} // TEMP
+            getItemLayout={(data, index) => (
+                {length: 120, offset: 120 * index, index}
+            )}
+            initialNumToRender={5}
             />
+            
             
         </View>
     )

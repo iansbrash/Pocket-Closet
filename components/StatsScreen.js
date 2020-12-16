@@ -6,7 +6,6 @@ import {
     Pressable,
     Animated
 } from 'react-native'
-import {ScreenHeader} from './GlobalComponents/ScreenHeader'
 import GlobalStyles from './GlobalComponents/GlobalStyles'
 import { 
     StatsIcon,
@@ -22,11 +21,7 @@ import {
     LineChart
 } from 'react-native-chart-kit'
 import { useSelector, useDispatch } from 'react-redux'
-import { BlurView } from 'expo-blur';
 
-
-
-import ReactNativeHapticFeedback from "react-native-haptic-feedback";
 import * as Haptics from 'expo-haptics';
 
 

@@ -327,6 +327,7 @@ export const GlobalUpload = (
                     height: 'auto'
                 }}
                 pagingEnabled={true}
+                showsHorizontalScrollIndicator={false}
                 >
                     {fileUri.map((uri, index) => (
                         <View style={[{
