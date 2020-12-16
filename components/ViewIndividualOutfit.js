@@ -1,4 +1,9 @@
-import React, { useState, useRef, useEffect, useCallback } from 'react'
+import React, { 
+    useState, 
+    useRef, 
+    useEffect, 
+    useCallback 
+} from 'react'
 import { 
     Image, 
     ScrollView, 
@@ -31,72 +36,31 @@ import { YesNoModal, ImageScrollModal } from './GlobalComponents/GlobalModals'
 import { TogglableDrawer } from './GlobalComponents/GlobalDrawers'
 import { makeSmallImage, makeMediumImage, makeMediumSmallImage } from './GlobalFunctions/ImgurResize'
 
-const windowWidth = Dimensions.get('window').width;
-//edit these instead of numbers in handleScroll
-const maxImageHeight = windowWidth - 20; //accounts for margins
-const minImageHieght = maxImageHeight / 2;
-const desiredIconSizeTwo = 60;
-
-
-
-
-
-
+/**
+ *  @param {Object} fetchedOutfitObject - React hook that includes all of our outfitObject's updated properties
+ *  @param {Object} outfitObject - route.params.item that contains an outfitArr filled with ____Array's with only _ids
+ */
 const DisplayClothingTypeFour = React.memo(({fetchedOutfitObject, outfitObject}) => {
+    console.log(`DisplayClothingTypeFour being re-rendered.`)
 
-    // outfitObject = {outfitArr: {
-    //     topsArray: [], bottomsArray: [], footwearArray: [], otherArray: []
-    // }}
+    const navigation = useNavigation();
 
+    //Not used right now. This sort of abstraction will be useful if we allow users to add more
+    //than just 'tops, bottoms, footwear, other'
     const typesArray = useSelector(state => Object.keys(state.closet.typesOfClothing))
 
-    //ok. this works.
-    // const [type, setType] = useState(
-    //     outfitObject.outfitArr.topsArray.length !== 0 ? 'tops' :
-    //         (outfitObject.outfitArr.bottomsArray.length !== 0 ? 'bottoms' : 
-    //             (outfitObject.outfitArr.footwearArray.length !== 0 ? 'footwear' : 'other'))
-    // );
+    
+    //The drawer selected. This ternary operator chain selects the first array that actually has items
     const [type, setType] = useState(
         outfitObject.outfitArr.topsArray.length !== 0 ? 'tops' :
             (outfitObject.outfitArr.bottomsArray.length !== 0 ? 'bottoms' : 
                 (outfitObject.outfitArr.footwearArray.length !== 0 ? 'footwear' : 'other'))
     );
     
+    //Dummy <Image> source if we don't have a fitpic/image... should change to something different
     const dummySrc = { uri: 'https://randomuser.me/api/portraits/men/1.jpg' }
 
-    console.log(fetchedOutfitObject)
-    // const topsArray = useSelector(state => state.closet.closetObject.topsArray);
-    // const bottomsArray = useSelector(state => state.closet.closetObject.bottomsArray);
-    // const footwearArray = useSelector(state => state.closet.closetObject.footwearArray);
-    // const otherArray = useSelector(state => state.closet.closetObject.otherArray);
-    const navigation = useNavigation();
-
-
-    // //this works... NOT. wtf
-    // useFocusEffect(
-    //     // let keys = Object.keys(fetchedOutfitObject.outfitArr)
-    //     useCallback(() => {
-
-    //         const toReturn = () => {
-    //             let keys = ['tops', 'bottoms', 'footwear', 'other']
-
-    //             console.log(keys)
-                
-    //             for (let i = 0; i < keys.length; i++){
-    //                 if (fetchedOutfitObject.outfitArr[`${keys[i]}Array`].length !== 0){
-    //                     setType(keys[i])
-    //                     break;
-    //                 }
-    //             }
-    //         }
-
-    //         return () => toReturn()
-            
-    //     }, [])
-    // )
-    
-
-    // I just realized that when we store the outfit, it is then constant, and doesn't change when we favorite/edit desciriptn... etc
+    // Renders a horizontal list of ClothingIcons, 4 total for each 'drawer'
     const ScrollClothingList = () => {
         return (
             <View style={{width: '100%'}}>
@@ -113,9 +77,9 @@ const DisplayClothingTypeFour = React.memo(({fetchedOutfitObject, outfitObject})
         )
     }
 
+    //Renders ClothingIcon, which display's an individual piece's image, # of brands and colors, and favorite/archive
+    //Tapping navigates to ViewIndividualPiece
     const ClothingIcon = ({clothingObject}) => {
-
-
         return (
             <View style={{
                 width: 150, // might just have to do this
@@ -167,7 +131,7 @@ const DisplayClothingTypeFour = React.memo(({fetchedOutfitObject, outfitObject})
         )
     }
 
-
+    //Renders the button you click on to change drawers. Rendered 4 times for each drawer
     const TypesDrawer = ({clothingType, icon, disabled}) => {
         return (
             <View style={{
@@ -248,17 +212,16 @@ const DisplayClothingTypeFour = React.memo(({fetchedOutfitObject, outfitObject})
             
         </View>
     )
-} )
+})
 
 const OutfitDescription = ({fetchedOutfitObject, brandsLength, colorsLength}) => {
-
-
-
     const {footwearArray, bottomsArray, topsArray, otherArray} = fetchedOutfitObject.outfitArr;
-    const piecesLength = footwearArray.length + 
-    bottomsArray.length + 
-    topsArray.length + 
-    otherArray.length;
+
+    const piecesLength = 
+        footwearArray.length + 
+        bottomsArray.length + 
+        topsArray.length + 
+        otherArray.length;
 
     const OutfitDesc = () => {
         return (
@@ -304,18 +267,8 @@ const OutfitDescription = ({fetchedOutfitObject, brandsLength, colorsLength}) =>
     )
 }
 
+//renders an outfit's tags 
 const OutfitTags = ({fetchedOutfitObject}) => {
-
-    const tagsArray = ['Temp', 'Tags', 'Go', 'Here', 'Please', 'Replace']
-
-
-    // testing plz delete 
-    // if (fetchedOutfitObject.tags.length === 0) {
-    //     fetchedOutfitObject.tags.push('i pushed this tag for sanity')
-    //     fetchedOutfitObject.tags.push('sanity2')
-    //     fetchedOutfitObject.tags.push('SANNY 3')
-
-    // }
 
     const IndividualTags = ({title}) => {
         return (
@@ -360,11 +313,11 @@ const OutfitTags = ({fetchedOutfitObject}) => {
     )
 }
 
+//renders brands
 const BrandTags = ({fetchedOutfitObject, brandsSet}) => {
 
-
-
-    const IndividualTags = ({title}) => {
+    //renders an individual brand
+    const IndividualBrand = ({title}) => {
         return (
             <View style={[{
                 width: 'auto',
@@ -383,16 +336,14 @@ const BrandTags = ({fetchedOutfitObject, brandsSet}) => {
 
     return (
         <TogglableDrawer minHeight={88}>
-            {[...brandsSet].map(tag => <IndividualTags key={tag} title={tag}/>)}
+            {[...brandsSet].map(tag => <IndividualBrand key={tag} title={tag}/>)}
         </TogglableDrawer>   
     )
 }
 
 
-
+//Renders the three buttons to the right of the fitpic <Image>
 const TopButtonsStyleTwo = ({outfitObject, setModalVisible}) => {
-
-
     // the outfitObject is going to be the original
     // i.e. the arrays are filled with IDs, not clothingObjects
     const [isFavorited, setIsFavorited] = useState(outfitObject.favorite)
@@ -400,23 +351,20 @@ const TopButtonsStyleTwo = ({outfitObject, setModalVisible}) => {
     const navigation = useNavigation();
 
 
+    //update hook and redux state
     const ToggleFavorite = () => {
         setIsFavorited(!isFavorited)
         dispatch(outfitFavoriteToggled(outfitObject._id))
-
     }
 
-    const EditOutfit = () => {
-
-    }
-
+    //show YesNoModal
     const DeleteOutfitButtonPressed = () => {
         Vibration.vibrate(400)
         setModalVisible(true)
         console.log("in deltetOutfitButtonPressed")
     }
 
-
+    //rectangle button that renders an icon and text
     const IndividualThirdButton = ({title, icon, onPressFunc}) => {
         return (
             <View style={{
@@ -497,54 +445,27 @@ const TopButtonsStyleTwo = ({outfitObject, setModalVisible}) => {
 
 
 export const ViewIndividualOutfit = ({ route }) => {
-    
-    const [modalVisible, setModalVisible] = useState(false);
-    const [imageModal, setImageModal] = useState(false);
-    //const [previouslyIterated, setPreviouslyIterated] = useState(false)
-
-    // we pass in the item we clicked on so we can display stats XDDDD
-    // dont think this is the problem to the readonly property problem
-    const closetObject = useSelector(state => state.closet.closetObject);
-
+    /** CONSTANTS */
     //we are just sweeping a problem under the rug here... was initially const but we sometimes edit it
     //i.e. we change fitpic to the dummy src if we don't have an imgur url there for convenience
     //so we don't need any logic to chcek if the fitpic is empty when we load it into the <Image />
+    //we pass this to some components because it contains a lot less data then our fetchedOutfitObjectHook
     let outfitObject = route.params.item;
 
-    //creating only the outfitArr as a hook should hopefully make it 
-    //easier to add the full clothingObjects to the fetchedOutfitObject
-    const [outfitArr, setOutfitArr] = useState({
-        topsArray: [],
-        bottomsArray: [],
-        footwearArray: [],
-        otherArray: []
-    })
+    //the usual
+    const navigation = useNavigation();
+    const dispatch = useDispatch();
+    const closetObject = useSelector(state => state.closet.closetObject);
+    const dummySrc = { uri: 'https://randomuser.me/api/portraits/men/1.jpg' }
+    
+    /** HOOKS */
+    //YesNoModal visible or not
+    const [modalVisible, setModalVisible] = useState(false);
 
-    // this is so fked... definitely causes re renders in each componenet bc not a useState hook
-    let fetchedOutfitObject = {
-        date: outfitObject.date,
-        fitpic: outfitObject.fitpic && outfitObject.fitpic !== '' ? outfitObject.fitpic : null,
-        tags: outfitObject.tags ? outfitObject.tags : [],
-        _id: outfitObject._id,
-        description: outfitObject.description,
-        outfitArr: outfitArr //this is the hook we just made
-    };
-    //what if we made a hook for each property... and just combined them in the end
-    const [date, setDate] = useState(outfitObject.date)
-    const [fitpic, setFitpic] = useState(outfitObject.fitpic && outfitObject.fitpic !== '' ? outfitObject.fitpic : null)
-    const [tags, setTags] = useState(outfitObject.tags ? outfitObject.tags : [])
-    const [_id, set_Id] = useState(outfitObject._id)
-    const [description, setDescription] = useState(outfitObject.description)
+    //ImageModal visible or not
+    const [imageModal, setImageModal] = useState(false);
 
-
-
-    // console.log('ok we just instantiated the fetchedOO')
-    // console.log(fetchedOutfitObject)
-    const [brandsSet, setBrandsSet] = useState(new Set())
-    const [colorsSet, setColorsSet] = useState(new Set())
-
-
-    //trying to replace let fetchedoutfitobject
+    //hook that replaces our previous very inefficient fetchedOutfitObject variable
     const [fetchedOutfitObjectHook, setFetchedOutfitObjectHook] = useState({
         _id: '213',
         description: 'no',
@@ -562,6 +483,15 @@ export const ViewIndividualOutfit = ({ route }) => {
         }
     })
 
+    // brands/colors set for our components
+    const [brandsSet, setBrandsSet] = useState(new Set())
+    const [colorsSet, setColorsSet] = useState(new Set())
+
+    // hook whether image is small
+    const [imageIsSmall, setImageIsSmall] = useState(false)
+
+    // value we use to animate the Animated.View
+    const [imageWidth] = useState(new Animated.Value(1))
 
     //this prevents screens that are in the navigation stack from updating, even when blurred
     //without this, visiting multiple outfits / clothing pieces consecutively though their
@@ -569,14 +499,17 @@ export const ViewIndividualOutfit = ({ route }) => {
     //causes each screen in the stack to rerender, sometimes casuing a stack overflow and completely
     //crashing the phone / emulator
     const [isFocused, setIsFocused] = useState(true)
+
+    //useFocusEffect is similar to useEffect, but it is called when we directly see a screen.
+    //lets us only do heavy computation when we need do, and stops a long stack of ViewIndividual____
+    //from all trying to update at once when a user favorites/changes an item (leads to big crash)
     useFocusEffect(
         React.useCallback(() => {
             // Do something when the screen is focused
-
+            // lets our components rerender only when we can actually see them
             setIsFocused(true)
 
-            //resets outfitArr hook in case we refresh(dev) or update items (i.e. favorite, delete)
-            setOutfitArr(null)
+            //temp variable, we populate this outfitArr with actual clothingObjects so our components can use it
             let tempOutfitArr = {
                 topsArray: [],
                 bottomsArray: [],
@@ -584,6 +517,7 @@ export const ViewIndividualOutfit = ({ route }) => {
                 otherArray: []
             }
 
+            //i don't think we really need this, but i will leave it here for now
             let fetchedOutfitObject = {
                 date: outfitObject.date,
                 fitpic: outfitObject.fitpic ? outfitObject.fitpic : 'https://randomuser.me/api/portraits/men/1.jpg',
@@ -606,9 +540,11 @@ export const ViewIndividualOutfit = ({ route }) => {
             //gets the set of Brands... and the colors
             const fetchedOutfitObjectOutfitArrKeys = Object.keys(fetchedOutfitObject.outfitArr)
 
-            //these used to be const... but we're adding to then... might be the solution to readonly problem
+            //temp sets which we use to update hooks later
             let nonStateBrandsSet = new Set();
             let nonStateColorsSet = new Set();
+
+            //populate temporary sets
             for (let i = 3; i >= 0; i--){
                 for (let k = 0; k < fetchedOutfitObject.outfitArr[fetchedOutfitObjectOutfitArrKeys[i]].length; k++){
                     //console.log(`'xd' iteration ${k}`)
@@ -621,6 +557,8 @@ export const ViewIndividualOutfit = ({ route }) => {
                     }
                 }
             }
+
+            //we use this hook in place of fetchedOutfitObject
             setFetchedOutfitObjectHook({
                 _id: outfitObject._id,
                 date: outfitObject.date,
@@ -628,108 +566,29 @@ export const ViewIndividualOutfit = ({ route }) => {
                 fitpic: outfitObject.fitpic,
                 tags: outfitObject.tags,
                 outfitArr: tempOutfitArr
-
             })
-            setOutfitArr(tempOutfitArr)
+
+            //update sets so we can use them in our components
             setBrandsSet(nonStateBrandsSet)
             setColorsSet(nonStateColorsSet)
 
             return () => {
+                // Do something when the screen is unfocused
+                // Useful for cleanup functions
+                //stops our computationally heavy components from re-rendering when we're not looking
                 setIsFocused(false)
-
-            // Do something when the screen is unfocused
-            // Useful for cleanup functions
             };
         }, [])
     );
 
-
-    
-    // this is unneccesarily called every time something re renders... XD
-    // wow i think i fixed it
-    // // 12/16: I feel like this should be useFocusEffect
-    // useEffect(() => {
-    //     //resets outfitArr hook in case we refresh(dev) or update items (i.e. favorite, delete)
-    //     setOutfitArr(null)
-    //     let tempOutfitArr = {
-    //         topsArray: new Array(),
-    //         bottomsArray: new Array(),
-    //         footwearArray: new Array(),
-    //         otherArray: new Array()
-    //     }
-
-    //     fetchedOutfitObject = {
-    //         date: outfitObject.date,
-    //         fitpic: outfitObject.fitpic ? outfitObject.fitpic : 'https://randomuser.me/api/portraits/men/1.jpg',
-    //         tags: outfitObject.tags ? outfitObject.tags : [],
-    //         outfitArr: tempOutfitArr ///outfitArr //this is the hook we just made
-    //     };
-        
-    //     //populates fetchedOutfitObject's outfitArr
-    //     //i.e. it fills the arrays with clothingObjects, not _id's
-    //     const outfitArrKeys = Object.keys(fetchedOutfitObject.outfitArr)
-    //     for (let i = 0; i < outfitArrKeys.length; i++){
-    //         for (let k = 0; k < outfitObject.outfitArr[outfitArrKeys[i]].length; k++){
-    //             let toAddClothingObject = closetObject[outfitArrKeys[i]].find(clothingObject =>
-    //                 clothingObject._id === outfitObject.outfitArr[outfitArrKeys[i]][k])
-    //             let newArray = tempOutfitArr[outfitArrKeys[i]];
-    //             newArray.push(toAddClothingObject)
-    //         }
-    //     }
-
-    //     //gets the set of Brands... and the colors
-    //     const fetchedOutfitObjectOutfitArrKeys = Object.keys(fetchedOutfitObject.outfitArr)
-
-    //     //these used to be const... but we're adding to then... might be the solution to readonly problem
-    //     let nonStateBrandsSet = new Set();
-    //     let nonStateColorsSet = new Set();
-    //     for (let i = 3; i >= 0; i--){
-    //         for (let k = 0; k < fetchedOutfitObject.outfitArr[fetchedOutfitObjectOutfitArrKeys[i]].length; k++){
-    //             //console.log(`'xd' iteration ${k}`)
-    //             if (fetchedOutfitObject.outfitArr[fetchedOutfitObjectOutfitArrKeys[i]][k].color &&
-    //                 fetchedOutfitObject.outfitArr[fetchedOutfitObjectOutfitArrKeys[i]][k].color !== ''){
-    //                 nonStateColorsSet.add(fetchedOutfitObject.outfitArr[fetchedOutfitObjectOutfitArrKeys[i]][k].color)
-    //             }
-    //             if (fetchedOutfitObject.outfitArr[fetchedOutfitObjectOutfitArrKeys[i]][k].brandName && fetchedOutfitObject.outfitArr[fetchedOutfitObjectOutfitArrKeys[i]][k].brandName.length != 0){
-    //                 nonStateBrandsSet.add(fetchedOutfitObject.outfitArr[fetchedOutfitObjectOutfitArrKeys[i]][k].brandName[0])
-    //             }
-    //         }
-    //     }
-    //     setOutfitArr(tempOutfitArr)
-    //     setBrandsSet(nonStateBrandsSet)
-    //     setColorsSet(nonStateColorsSet)
-    // }, [closetObject])
-
-
-    
-    
-    
-
-    
-    // hook whether image is small
-    const [imageIsSmall, setImageIsSmall] = useState(false)
-
-    // value we use to animate the Animated.View
-    const [imageWidth] = useState(new Animated.Value(1))
-    
-
-    const dummySrc = { uri: 'https://randomuser.me/api/portraits/men/1.jpg' }
-    
-
-    // const image = useRef(null) //might be useless
-    const navigation = useNavigation();
-    const dispatch = useDispatch();
-
-    //called when confirming delete on modal
+    //called when confirming deleting the outfit on the YesNoModal
     const ConfirmDelete = () => {
         console.log("Delete confirmed")
         setModalVisible(false)
-        //dispatch(clothingDeletedFromCloset({...item}))
         dispatch(outfitDeletedFromOutfits(outfitObject._id))
         navigation.navigate('CLOSETSCREEN')
     }
 
-   
     //makes image small
     const onSwipeUp = (gestureState) => {
         setImageIsSmall(true);
@@ -739,6 +598,7 @@ export const ViewIndividualOutfit = ({ route }) => {
             useNativeDriver: false
         }).start();
     }
+
     //makes image big
     const onSwipeDown = (gestureState) => {
         setImageIsSmall(false);
@@ -748,8 +608,6 @@ export const ViewIndividualOutfit = ({ route }) => {
             useNativeDriver: false
         }).start();
     }
-
-    
 
     return (
         <View 
@@ -762,19 +620,21 @@ export const ViewIndividualOutfit = ({ route }) => {
                 modalVisible={modalVisible} 
                 setModalVisible={setModalVisible} 
                 onPressFunc={() => ConfirmDelete()}/>
+
+            {/* Full screen image viewing modal. Called when clicking on the fitpic */}
             <ImageScrollModal 
                 modalVisible={imageModal}
                 setModalVisible={setImageModal}
-                title={'Title XD'}
+                title={'Title XD'} //title does nothing as of now
                 imageArray={[outfitObject.fitpic.fitpic]}/>
             
             
-            {/* GestureRecognizers allow us to swipe up/down to make the fitpic image big/small */}
+            {/* GestureRecognizers allow us to swipe up/down to make the fitpic image big/small 
+                Can't wrap everything in this because it messes up its children's horizontal swiping */}
             <GestureRecognizer
             onSwipeUp={state => onSwipeUp()}
             onSwipeDown={state => onSwipeDown()}
             >
-            
                 {/* This is the image, wrapped in an Animated.View to make it big/small */}
                 <View style={{
                     justifyContent: 'flex-start',
@@ -795,7 +655,7 @@ export const ViewIndividualOutfit = ({ route }) => {
                         
                             <Pressable
                             onPress={() => setImageModal(true)}>
-                                <Image //ref={image} //I think this is useless here, delete later
+                                <Image 
                                     source={outfitObject.fitpic !== ''
                                             && outfitObject.fitpic.fitpic !== '' ? (
                                                 outfitObject.fitpic.type === 'imgur' ?
@@ -803,14 +663,12 @@ export const ViewIndividualOutfit = ({ route }) => {
                                                 : {uri: outfitObject.fitpic.fitpic}
                                             ) : dummySrc} 
                                     style={[{
-                                        width: '100%',//'imageHeight',
+                                        width: '100%',
                                         aspectRatio: 1,
                                         borderRadius: 5
                                     },]} 
                                 />
                             </Pressable>
-                            
-                            
                         </View>
                     </Animated.View>
                     <Animated.View style={{
@@ -822,7 +680,6 @@ export const ViewIndividualOutfit = ({ route }) => {
                         <TopButtonsStyleTwo outfitObject={outfitObject} setModalVisible={setModalVisible}/>
                     </Animated.View>
                 </View>
-                    
             </GestureRecognizer>
 
             {/* GestureRecognizers allow us to swipe up/down to make the fitpic image big/small */}
@@ -831,7 +688,7 @@ export const ViewIndividualOutfit = ({ route }) => {
             onSwipeDown={state => onSwipeDown()}
             >
                 <OutfitDescription 
-                    fetchedOutfitObject={fetchedOutfitObject} 
+                    fetchedOutfitObject={fetchedOutfitObjectHook} 
                     brandsLength={brandsSet.size}
                     colorsLength={colorsSet.size}/>
             </GestureRecognizer>
@@ -841,7 +698,7 @@ export const ViewIndividualOutfit = ({ route }) => {
             onSwipeUp={state => onSwipeUp()}
             onSwipeDown={state => onSwipeDown()}
             >
-                <OutfitTags fetchedOutfitObject={fetchedOutfitObject}/>
+                <OutfitTags fetchedOutfitObject={fetchedOutfitObjectHook}/>
             </GestureRecognizer>
 
             {/* GestureRecognizers allow us to swipe up/down to make the fitpic image big/small */}
@@ -849,19 +706,15 @@ export const ViewIndividualOutfit = ({ route }) => {
             onSwipeUp={state => onSwipeUp()}
             onSwipeDown={state => onSwipeDown()}
             >
-                <BrandTags fetchedOutfitObject={fetchedOutfitObject} brandsSet={brandsSet}/>
+                <BrandTags fetchedOutfitObject={fetchedOutfitObjectHook} brandsSet={brandsSet}/>
             </GestureRecognizer>
 
 
             {/* This is the 4 drawers, and the icons that show underneath them */}
-            {isFocused ? 
+            {isFocused ? //only renders when useFocusEffect is called and updates isFocused hook (when we can see it)
                 <DisplayClothingTypeFour 
-                    //fetchedOutfitObject={fetchedOutfitObject} //can replace this with an object containing all the hooks i made?
-                    // fetchedOutfitObject={{_id, description, fitpic, date, tags, outfitArr}}
                     fetchedOutfitObject={fetchedOutfitObjectHook}
                     outfitObject={route.params.item} /> //this might cause errors, because when navigating backwards, sometimes route.params isn't available
-                    //dont think the below is causing re renders
-                    
                     : null}
         </View>
     )

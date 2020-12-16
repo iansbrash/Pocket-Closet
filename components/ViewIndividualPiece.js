@@ -448,7 +448,6 @@ const OutfitScroll = React.memo(({outfitsWornIn}) => {
                                 <Text 
                                 numberOfLines={1}
                                 style={[{fontWeight: 'bold'}, GlobalStyles.h6]}>
-                                    {/* {`${new Date(outfitObject.date).toLocaleString('en-GB').substr(0, 10)}`} */}
                                     {`${new Date(outfitObject.date).toLocaleString('en-GB').substr(0, 10)}`}
                                 </Text>
                                 {
