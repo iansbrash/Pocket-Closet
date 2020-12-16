@@ -44,16 +44,26 @@ const desiredIconSizeTwo = 60;
 
 const DisplayClothingTypeFour = React.memo(({fetchedOutfitObject, outfitObject}) => {
 
+    // outfitObject = {outfitArr: {
+    //     topsArray: [], bottomsArray: [], footwearArray: [], otherArray: []
+    // }}
 
     const typesArray = useSelector(state => Object.keys(state.closet.typesOfClothing))
 
     //ok. this works.
+    // const [type, setType] = useState(
+    //     outfitObject.outfitArr.topsArray.length !== 0 ? 'tops' :
+    //         (outfitObject.outfitArr.bottomsArray.length !== 0 ? 'bottoms' : 
+    //             (outfitObject.outfitArr.footwearArray.length !== 0 ? 'footwear' : 'other'))
+    // );
     const [type, setType] = useState(
         outfitObject.outfitArr.topsArray.length !== 0 ? 'tops' :
             (outfitObject.outfitArr.bottomsArray.length !== 0 ? 'bottoms' : 
                 (outfitObject.outfitArr.footwearArray.length !== 0 ? 'footwear' : 'other'))
     );
+    
     const dummySrc = { uri: 'https://randomuser.me/api/portraits/men/1.jpg' }
+
     console.log(fetchedOutfitObject)
     // const topsArray = useSelector(state => state.closet.closetObject.topsArray);
     // const bottomsArray = useSelector(state => state.closet.closetObject.bottomsArray);
@@ -510,7 +520,7 @@ export const ViewIndividualOutfit = ({ route }) => {
         otherArray: []
     })
 
-    // this is so fked
+    // this is so fked... definitely causes re renders in each componenet bc not a useState hook
     let fetchedOutfitObject = {
         date: outfitObject.date,
         fitpic: outfitObject.fitpic && outfitObject.fitpic !== '' ? outfitObject.fitpic : null,
@@ -519,10 +529,38 @@ export const ViewIndividualOutfit = ({ route }) => {
         description: outfitObject.description,
         outfitArr: outfitArr //this is the hook we just made
     };
+    //what if we made a hook for each property... and just combined them in the end
+    const [date, setDate] = useState(outfitObject.date)
+    const [fitpic, setFitpic] = useState(outfitObject.fitpic && outfitObject.fitpic !== '' ? outfitObject.fitpic : null)
+    const [tags, setTags] = useState(outfitObject.tags ? outfitObject.tags : [])
+    const [_id, set_Id] = useState(outfitObject._id)
+    const [description, setDescription] = useState(outfitObject.description)
+
+
+
     // console.log('ok we just instantiated the fetchedOO')
     // console.log(fetchedOutfitObject)
     const [brandsSet, setBrandsSet] = useState(new Set())
     const [colorsSet, setColorsSet] = useState(new Set())
+
+
+    //trying to replace let fetchedoutfitobject
+    const [fetchedOutfitObjectHook, setFetchedOutfitObjectHook] = useState({
+        _id: '213',
+        description: 'no',
+        fitpic: {
+            fitpic: '',
+            type: ''
+        },
+        date: '1234123',
+        tags: [],
+        outfitArr: {
+            topsArray: [],
+            bottomsArray: [],
+            footwearArray: [],
+            otherArray: []
+        }
+    })
 
 
     //this prevents screens that are in the navigation stack from updating, even when blurred
@@ -537,6 +575,65 @@ export const ViewIndividualOutfit = ({ route }) => {
 
             setIsFocused(true)
 
+            //resets outfitArr hook in case we refresh(dev) or update items (i.e. favorite, delete)
+            setOutfitArr(null)
+            let tempOutfitArr = {
+                topsArray: [],
+                bottomsArray: [],
+                footwearArray: [],
+                otherArray: []
+            }
+
+            let fetchedOutfitObject = {
+                date: outfitObject.date,
+                fitpic: outfitObject.fitpic ? outfitObject.fitpic : 'https://randomuser.me/api/portraits/men/1.jpg',
+                tags: outfitObject.tags ? outfitObject.tags : [],
+                outfitArr: tempOutfitArr ///outfitArr //this is the hook we just made
+            };
+            
+            //populates fetchedOutfitObject's outfitArr
+            //i.e. it fills the arrays with clothingObjects, not _id's
+            const outfitArrKeys = Object.keys(fetchedOutfitObject.outfitArr)
+            for (let i = 0; i < outfitArrKeys.length; i++){
+                for (let k = 0; k < outfitObject.outfitArr[outfitArrKeys[i]].length; k++){
+                    let toAddClothingObject = closetObject[outfitArrKeys[i]].find(clothingObject =>
+                        clothingObject._id === outfitObject.outfitArr[outfitArrKeys[i]][k])
+                    let newArray = tempOutfitArr[outfitArrKeys[i]];
+                    newArray.push(toAddClothingObject)
+                }
+            }
+
+            //gets the set of Brands... and the colors
+            const fetchedOutfitObjectOutfitArrKeys = Object.keys(fetchedOutfitObject.outfitArr)
+
+            //these used to be const... but we're adding to then... might be the solution to readonly problem
+            let nonStateBrandsSet = new Set();
+            let nonStateColorsSet = new Set();
+            for (let i = 3; i >= 0; i--){
+                for (let k = 0; k < fetchedOutfitObject.outfitArr[fetchedOutfitObjectOutfitArrKeys[i]].length; k++){
+                    //console.log(`'xd' iteration ${k}`)
+                    if (fetchedOutfitObject.outfitArr[fetchedOutfitObjectOutfitArrKeys[i]][k].color &&
+                        fetchedOutfitObject.outfitArr[fetchedOutfitObjectOutfitArrKeys[i]][k].color !== ''){
+                        nonStateColorsSet.add(fetchedOutfitObject.outfitArr[fetchedOutfitObjectOutfitArrKeys[i]][k].color)
+                    }
+                    if (fetchedOutfitObject.outfitArr[fetchedOutfitObjectOutfitArrKeys[i]][k].brandName && fetchedOutfitObject.outfitArr[fetchedOutfitObjectOutfitArrKeys[i]][k].brandName.length != 0){
+                        nonStateBrandsSet.add(fetchedOutfitObject.outfitArr[fetchedOutfitObjectOutfitArrKeys[i]][k].brandName[0])
+                    }
+                }
+            }
+            setFetchedOutfitObjectHook({
+                _id: outfitObject._id,
+                date: outfitObject.date,
+                description: outfitObject.description,
+                fitpic: outfitObject.fitpic,
+                tags: outfitObject.tags,
+                outfitArr: tempOutfitArr
+
+            })
+            setOutfitArr(tempOutfitArr)
+            setBrandsSet(nonStateBrandsSet)
+            setColorsSet(nonStateColorsSet)
+
             return () => {
                 setIsFocused(false)
 
@@ -550,60 +647,61 @@ export const ViewIndividualOutfit = ({ route }) => {
     
     // this is unneccesarily called every time something re renders... XD
     // wow i think i fixed it
-    useEffect(() => {
-        //resets outfitArr hook in case we refresh(dev) or update items (i.e. favorite, delete)
-        setOutfitArr(null)
-        let tempOutfitArr = {
-            topsArray: new Array(),
-            bottomsArray: new Array(),
-            footwearArray: new Array(),
-            otherArray: new Array()
-        }
+    // // 12/16: I feel like this should be useFocusEffect
+    // useEffect(() => {
+    //     //resets outfitArr hook in case we refresh(dev) or update items (i.e. favorite, delete)
+    //     setOutfitArr(null)
+    //     let tempOutfitArr = {
+    //         topsArray: new Array(),
+    //         bottomsArray: new Array(),
+    //         footwearArray: new Array(),
+    //         otherArray: new Array()
+    //     }
 
-        fetchedOutfitObject = {
-            date: outfitObject.date,
-            fitpic: outfitObject.fitpic ? outfitObject.fitpic : 'https://randomuser.me/api/portraits/men/1.jpg',
-            tags: outfitObject.tags ? outfitObject.tags : [],
-            outfitArr: tempOutfitArr ///outfitArr //this is the hook we just made
-        };
+    //     fetchedOutfitObject = {
+    //         date: outfitObject.date,
+    //         fitpic: outfitObject.fitpic ? outfitObject.fitpic : 'https://randomuser.me/api/portraits/men/1.jpg',
+    //         tags: outfitObject.tags ? outfitObject.tags : [],
+    //         outfitArr: tempOutfitArr ///outfitArr //this is the hook we just made
+    //     };
         
-        //populates fetchedOutfitObject's outfitArr
-        //i.e. it fills the arrays with clothingObjects, not _id's
-        const outfitArrKeys = Object.keys(fetchedOutfitObject.outfitArr)
-        for (let i = 0; i < outfitArrKeys.length; i++){
-            for (let k = 0; k < outfitObject.outfitArr[outfitArrKeys[i]].length; k++){
-                let toAddClothingObject = closetObject[outfitArrKeys[i]].find(clothingObject =>
-                    clothingObject._id === outfitObject.outfitArr[outfitArrKeys[i]][k])
-                let newArray = tempOutfitArr[outfitArrKeys[i]];
-                newArray.push(toAddClothingObject)
-            }
-        }
+    //     //populates fetchedOutfitObject's outfitArr
+    //     //i.e. it fills the arrays with clothingObjects, not _id's
+    //     const outfitArrKeys = Object.keys(fetchedOutfitObject.outfitArr)
+    //     for (let i = 0; i < outfitArrKeys.length; i++){
+    //         for (let k = 0; k < outfitObject.outfitArr[outfitArrKeys[i]].length; k++){
+    //             let toAddClothingObject = closetObject[outfitArrKeys[i]].find(clothingObject =>
+    //                 clothingObject._id === outfitObject.outfitArr[outfitArrKeys[i]][k])
+    //             let newArray = tempOutfitArr[outfitArrKeys[i]];
+    //             newArray.push(toAddClothingObject)
+    //         }
+    //     }
 
-        //gets the set of Brands... and the colors
-        const fetchedOutfitObjectOutfitArrKeys = Object.keys(fetchedOutfitObject.outfitArr)
+    //     //gets the set of Brands... and the colors
+    //     const fetchedOutfitObjectOutfitArrKeys = Object.keys(fetchedOutfitObject.outfitArr)
 
-        //these used to be const... but we're adding to then... might be the solution to readonly problem
-        let nonStateBrandsSet = new Set();
-        let nonStateColorsSet = new Set();
-        for (let i = 3; i >= 0; i--){
-            for (let k = 0; k < fetchedOutfitObject.outfitArr[fetchedOutfitObjectOutfitArrKeys[i]].length; k++){
-                //console.log(`'xd' iteration ${k}`)
-                if (fetchedOutfitObject.outfitArr[fetchedOutfitObjectOutfitArrKeys[i]][k].color &&
-                    fetchedOutfitObject.outfitArr[fetchedOutfitObjectOutfitArrKeys[i]][k].color !== ''){
-                    nonStateColorsSet.add(fetchedOutfitObject.outfitArr[fetchedOutfitObjectOutfitArrKeys[i]][k].color)
-                }
-                if (fetchedOutfitObject.outfitArr[fetchedOutfitObjectOutfitArrKeys[i]][k].brandName && fetchedOutfitObject.outfitArr[fetchedOutfitObjectOutfitArrKeys[i]][k].brandName.length != 0){
-                    nonStateBrandsSet.add(fetchedOutfitObject.outfitArr[fetchedOutfitObjectOutfitArrKeys[i]][k].brandName[0])
-                }
-            }
-        }
-        setOutfitArr(tempOutfitArr)
-        setBrandsSet(nonStateBrandsSet)
-        setColorsSet(nonStateColorsSet)
-    }, [closetObject])
+    //     //these used to be const... but we're adding to then... might be the solution to readonly problem
+    //     let nonStateBrandsSet = new Set();
+    //     let nonStateColorsSet = new Set();
+    //     for (let i = 3; i >= 0; i--){
+    //         for (let k = 0; k < fetchedOutfitObject.outfitArr[fetchedOutfitObjectOutfitArrKeys[i]].length; k++){
+    //             //console.log(`'xd' iteration ${k}`)
+    //             if (fetchedOutfitObject.outfitArr[fetchedOutfitObjectOutfitArrKeys[i]][k].color &&
+    //                 fetchedOutfitObject.outfitArr[fetchedOutfitObjectOutfitArrKeys[i]][k].color !== ''){
+    //                 nonStateColorsSet.add(fetchedOutfitObject.outfitArr[fetchedOutfitObjectOutfitArrKeys[i]][k].color)
+    //             }
+    //             if (fetchedOutfitObject.outfitArr[fetchedOutfitObjectOutfitArrKeys[i]][k].brandName && fetchedOutfitObject.outfitArr[fetchedOutfitObjectOutfitArrKeys[i]][k].brandName.length != 0){
+    //                 nonStateBrandsSet.add(fetchedOutfitObject.outfitArr[fetchedOutfitObjectOutfitArrKeys[i]][k].brandName[0])
+    //             }
+    //         }
+    //     }
+    //     setOutfitArr(tempOutfitArr)
+    //     setBrandsSet(nonStateBrandsSet)
+    //     setColorsSet(nonStateColorsSet)
+    // }, [closetObject])
 
 
-
+    
     
     
 
@@ -758,9 +856,13 @@ export const ViewIndividualOutfit = ({ route }) => {
             {/* This is the 4 drawers, and the icons that show underneath them */}
             {isFocused ? 
                 <DisplayClothingTypeFour 
-                    fetchedOutfitObject={fetchedOutfitObject}
-                    outfitObject={route.params.item} /> 
-                : null}
+                    //fetchedOutfitObject={fetchedOutfitObject} //can replace this with an object containing all the hooks i made?
+                    // fetchedOutfitObject={{_id, description, fitpic, date, tags, outfitArr}}
+                    fetchedOutfitObject={fetchedOutfitObjectHook}
+                    outfitObject={route.params.item} /> //this might cause errors, because when navigating backwards, sometimes route.params isn't available
+                    //dont think the below is causing re renders
+                    
+                    : null}
         </View>
     )
 }

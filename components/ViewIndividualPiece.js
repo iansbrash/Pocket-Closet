@@ -248,7 +248,7 @@ const BrandTags = ({brandsArray}) => {
     )
 }
 
-const ClothingTags = ({tagsArray}) => {
+const ClothingTags = React.memo(({tagsArray}) => {
 
     //const tagsArray = ['Temp', 'Tags', 'Go', 'Here', 'Please', 'Replace']
 
@@ -298,9 +298,9 @@ const ClothingTags = ({tagsArray}) => {
             </View>
         </TogglableDrawer>
     )
-}
+})
 
-const ColorTags = ({colorArray}) => {
+const ColorTags = React.memo(({colorArray}) => {
 
     //const tagsArray = ['Temp', 'Tags', 'Go', 'Here', 'Please', 'Replace']
 
@@ -360,7 +360,7 @@ const ColorTags = ({colorArray}) => {
             </View>
         </TogglableDrawer>
     )
-}
+})
 
 //we need to fetch / store the list of outfits this clothing is in somehow
 //wow. this is incredible. React.memo
@@ -449,7 +449,7 @@ const OutfitScroll = React.memo(({outfitsWornIn}) => {
                                 numberOfLines={1}
                                 style={[{fontWeight: 'bold'}, GlobalStyles.h6]}>
                                     {/* {`${new Date(outfitObject.date).toLocaleString('en-GB').substr(0, 10)}`} */}
-                                    {Math.random()}
+                                    {`${new Date(outfitObject.date).toLocaleString('en-GB').substr(0, 10)}`}
                                 </Text>
                                 {
                                     outfitObject.favorite ?  
@@ -668,6 +668,7 @@ export const ViewIndividualPiece = ({ route }) => {
             </GestureRecognizer>
             
             <YesNoModal modalVisible={modalVisible} setModalVisible={setModalVisible} onPressFunc={() => ConfirmDelete()}/>
+            
             <ImageScrollModal 
                 modalVisible={imageModal}
                 setModalVisible={setImageModal}
@@ -676,26 +677,33 @@ export const ViewIndividualPiece = ({ route }) => {
                 imageArray={item.images.images}
             />
 
-            <ThreeAttributeHeader 
-                brandsLength={item.brandName.length} 
-                price={item.price} 
-                pieceType={item.pieceType} 
-                color={item.color}
-                description={item.description}/>
-            
-            <View style={{
-                marginLeft: 20,
-            }}>
-                {/* <Text style={
-                    [GlobalStyles.h6, {fontWeight :'bold'}]
-                }>
-                    {`${item.timesWorn && item.timesWorn !== 0 ? `Worn ${item.timesWorn}x` : 'Never worn'}`}
-                </Text> */}
-            </View>
-            
-            <ColorTags colorArray={item.color}/>
-            <ClothingTags tagsArray={item.tags}/>
-            <BrandTags brandsArray={item.brandName}/>
+            <GestureRecognizer
+            onSwipeUp={state => onSwipeUp()}
+            onSwipeDown={state => onSwipeDown()}
+            >
+
+                <ThreeAttributeHeader 
+                    brandsLength={item.brandName.length} 
+                    price={item.price} 
+                    pieceType={item.pieceType} 
+                    color={item.color}
+                    description={item.description}/>
+                
+                <View style={{
+                    marginLeft: 20,
+                }}>
+                    {/* <Text style={
+                        [GlobalStyles.h6, {fontWeight :'bold'}]
+                    }>
+                        {`${item.timesWorn && item.timesWorn !== 0 ? `Worn ${item.timesWorn}x` : 'Never worn'}`}
+                    </Text> */}
+                </View>
+                
+                <ColorTags colorArray={item.color}/>
+                <ClothingTags tagsArray={item.tags}/>
+                <BrandTags brandsArray={item.brandName}/>
+            </GestureRecognizer>
+
             <View style={{
                 backgroundColor: 'white',
                 width: '100%',
