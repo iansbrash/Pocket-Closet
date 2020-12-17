@@ -100,8 +100,8 @@ export const FinalizeClothing = () => {
                 ...clothingPieceInProgress,
                 _id: _id
             }),
-            pushAttributesToAttributedClothing(tags, _id, clothingPieceInProgress.clothingType, 'taggedClothing'),
-            pushAttributesToAttributedClothing(colors, _id, clothingPieceInProgress.clothingType, 'coloredClothing')
+            pushAttributesToAttributedClothing(_id, clothingPieceInProgress.clothingType, 'taggedClothing', tags),
+            pushAttributesToAttributedClothing(_id, clothingPieceInProgress.clothingType, 'coloredClothing', colors)
         ]))
         // dispatch(batchActions([
         //     clothingInOutfitWorn(idArrayObject, nid),

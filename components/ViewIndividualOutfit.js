@@ -29,7 +29,6 @@ import {
     ShoeIcon,
     ArchiveIcon
  } from './GlobalComponents/GlobalIcons'
-import { itemFavoriteToggled, clothingDeletedFromCloset } from '../redux/reducers/closetSlice'
 import { outfitDeletedFromOutfits, outfitFavoriteToggled } from '../redux/reducers/outfitsSlice'
 import { useNavigation, useFocusEffect } from '@react-navigation/native'
 import { YesNoModal, ImageScrollModal } from './GlobalComponents/GlobalModals'

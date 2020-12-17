@@ -15,7 +15,13 @@ import { makeSmallImage } from '../GlobalFunctions/ImgurResize'
 
 
 // used as render method for FlatList in ClosetListOneCol
-export const RenderSingleLineClosetItem = ({item}) => {
+export const RenderSingleLineClosetItem = ({item, debugId}) => {
+
+    if (!item){
+        console.log('RenderSingleLineClosetItem was passed null as its item arguement.')
+        debugId ? console.log(`debugId: ${debugId}`) : console.log(`No debugId provided`)
+        return null;
+    }
 
     let src;
 
@@ -50,7 +56,7 @@ export const RenderSingleLineClosetItem = ({item}) => {
                 borderRadius: 10
             }, GlobalStyles.shadowLight]}
             activeOpacity={0.5}
-            onPress={() => navigation.navigate('VIEWINDIVIDUALPIECE', {item: item})}> 
+            onPress={() => navigation.push('VIEWINDIVIDUALPIECE', {item: item})}> 
                 <View style={{
                     height: 'auto',
                     width: '100%',
@@ -84,7 +90,7 @@ export const RenderSingleLineClosetItem = ({item}) => {
                         <View style={[{
                             position: 'absolute',
                             top: 5,
-                            right: 10,
+                            right: 5, //orig 10, will look better when we fix borderRadius problem
                             height: 'auto',
                             width: 'auto',
                             zIndex: 1,}]}>
@@ -94,7 +100,7 @@ export const RenderSingleLineClosetItem = ({item}) => {
                                 flexDirection: 'row',
                                 borderColor: 'white',
                                 borderWidth: 0.5,
-                                borderStyle: 'solid'
+                                borderStyle: 'solid' 
                             }}>
                                 {item.color.slice(0, 4).map(col => (
                                     <View style={{

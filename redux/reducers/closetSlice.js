@@ -1,7 +1,10 @@
-import { DrawerActions } from '@react-navigation/native'
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import { ActivityIndicatorComponent } from 'react-native';
+import {batchActions} from 'redux-batched-actions';
  
+
+import store from '../store'
+
 
 // TODO
 /**
@@ -100,6 +103,15 @@ const closetSlice = createSlice({
                 otherArray: []
             }
         },
+        brandedClothing: {
+            Undefeated: {
+
+            },
+            //Apparently this is a thing
+            'Off---White': {
+
+            }
+        },
         status: 'idle',
         error: null
     },
@@ -155,6 +167,10 @@ const closetSlice = createSlice({
         clothingDeletedFromCloset: {
             reducer (state, action) {
                 // remove ID from closetObject
+                console.log('in clothingDeletedFromCloset.u')
+                console.log(`payload:`)
+                console.log(action.payload)
+
                 state.closetObject[action.payload.clothingType.toLowerCase() + 'Array'] = 
                 state.closetObject[action.payload.clothingType.toLowerCase() + 'Array'].filter(
                     obj => obj._id !== action.payload._id
@@ -168,6 +184,14 @@ const closetSlice = createSlice({
                 //instead of deleting a piece, you can 'archive it'
                 //it stays, but you can't edit it anymore, and you can't wear it anymore
                 //its like you sold an item but want to remember it
+            },
+            prepare (_id, clothingType) {
+                return {
+                    payload: {
+                        _id,
+                        clothingType
+                    }
+                }
             }
         },
         typesOfClothingSpecificTypeAdded: {
@@ -296,11 +320,11 @@ const closetSlice = createSlice({
                  *  and tags will not be case sensitive
                  * ^^ I think we're going to go with this. Sacraficing extra storage for faster time
                  */
-                const {attribute} = action.payload
+                const {_id, clothingType, attribute, attributesArray} = action.payload
                 console.log(state[attribute])
 
                 //taggedClothing and coloredClothing
-                action.payload.attributesArray.forEach(atr => {
+                attributesArray.forEach(atr => {
                     if (!state[attribute][atr.toLowerCase()]){
                         console.log(`No ${attribute} found for [${atr}], creating new ${attribute} object.`)
                         state[attribute][atr.toLowerCase()] = {
@@ -310,48 +334,65 @@ const closetSlice = createSlice({
                             otherArray: []
                         }
                     }
-                    console.log(`Adding ${attribute}[${atr}] to id[${action.payload._id}]`)
-                    console.log(action.payload.clothingType.toLowerCase())
-                    state[attribute][atr.toLowerCase()][`${action.payload.clothingType.toLowerCase()}Array`] =
-                    [...state[attribute][atr.toLowerCase()][`${action.payload.clothingType.toLowerCase()}Array`], action.payload._id ]
+                    console.log(`Adding ${attribute}[${atr}] to id[${_id}]`)
+                    console.log(clothingType.toLowerCase())
+                    state[attribute][atr.toLowerCase()][`${clothingType.toLowerCase()}Array`] =
+                    [...state[attribute][atr.toLowerCase()][`${clothingType.toLowerCase()}Array`], _id ]
                 })
             },
-            prepare(attributesArray, _id, clothingType, attribute) {
+            prepare(_id, clothingType, attribute, attributesArray, ) {
                 return {
                     payload: {
-                        attributesArray,
                         _id,
                         clothingType,
-                        attribute
+                        attribute,
+                        attributesArray,
                     }
                 }
             }
         },
-        removeTagsFromTaggedClothing: {
+        //we could perhaps abstrac this to also work for color/brand
+        removeAttributesFromAttributedClothing: {
             reducer(state, action) {
-                action.payload.tagsArray.forEach(tag => {
+                //attribute looks like 'taggedClothing' or 'coloredClothing'
+                //attributesArray looks like ['flex', 'casual'] or ['black', 'blue']
+                const {_id, clothingType, attribute, attributesArray} = action.payload
+
+                attributesArray.forEach(atr => {
+
+
 
                     //i am the master of naming variables
-                    let whatWeWant = state.taggedClothing[tag]
+                    let whatWeWant = state[attribute][atr.toLowerCase()]
 
-                    whatWeWant[`${action.payload.clothingType}Array`] = 
-                    whatWeWant[`${action.payload.clothingType}Array`].filter(item => item !== _id)
+                    if (!whatWeWant){
+                        console.log(`Couldn't find attribute ${atr.toLowerCase()} in state.closet.${attribute} to delete.`)
+
+                        //skips to next iteration. continue doesn't work in forEach
+                        return;
+                    }
+
+                    //filter our the _id we just deleted
+                    whatWeWant[`${clothingType}Array`] = 
+                    whatWeWant[`${clothingType}Array`].filter(item => item !== _id)
 
                     if (whatWeWant.topsArray.length === 0 && 
                         whatWeWant.bottomsArray.length === 0 && 
                         whatWeWant.footwearArray.length === 0 && 
                         whatWeWant.otherArray.length === 0){
+
                         //remove this tag frome xistence
-                        delete state.taggedClothing[tag];
+                        delete state[attribute][atr];
                     }
                 })
             },
-            prepare(tagsArray, _id, clothingType){
+            prepare(_id, clothingType, attribute, attributesArray){
                 return {
                     payload: {
                         _id,
                         clothingType,
-                        tagsArray
+                        attribute,
+                        attributesArray
                     }
                 }
             }
@@ -392,7 +433,7 @@ export const {
     clothingInProgressAttributeAdded ,
     clothingAddedToCloset,
     itemFavoriteToggled,
-    clothingDeletedFromCloset,
+    // clothingDeletedFromCloset,
     typesOfClothingSpecificTypeAdded,
     typesOfClothingSpecificTypeDeleted,
     sizeAdded,
@@ -405,3 +446,30 @@ export const {
     removeTagsFromTaggedClothing,
     itemArchiveToggled
 } = closetSlice.actions;
+
+//we export this instead of clothingDeletedFromCloset because it lets us
+//abstract the deletion process (as we have to delete many things)
+export const deleteClothingFromCloset = (_id, clothingType, tagsArray, colorsArray, brandsArray) => {
+    console.log(`_id: ${_id}`)
+    console.log(`clothingType: ${clothingType}`)
+    console.log(`tagsArray: ${tagsArray}`)
+    console.log(`colorsArray: ${colorsArray}`)
+    console.log(`brandsArray: ${brandsArray}`)
+
+    // man
+    clothingType = clothingType.toLowerCase();
+
+
+    const {
+        clothingDeletedFromCloset,
+        removeAttributesFromAttributedClothing
+    } = closetSlice.actions;
+
+    store.dispatch(batchActions([
+        clothingDeletedFromCloset(_id, clothingType),
+        removeAttributesFromAttributedClothing(_id, clothingType, 'taggedClothing', tagsArray),
+        removeAttributesFromAttributedClothing(_id, clothingType, 'coloredClothing', colorsArray),
+        // uncomment when uninstalling expo (not in initialstate)
+        // removeAttributesFromAttributedClothing(_id, clothingType, 'brandedClothing', brandsArray)
+    ]))
+}

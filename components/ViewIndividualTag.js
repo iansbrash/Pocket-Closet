@@ -17,6 +17,7 @@ export const ViewIndividualTag = ({route}) => {
     }
 
     const closetObject = useSelector(state => state.closet.closetObject)
+    // console.log(closetObject)
 
     console.log(taggedItems)
     console.log(Object.keys(taggedItems))
@@ -33,7 +34,10 @@ export const ViewIndividualTag = ({route}) => {
                 {Object.keys(taggedItems).map(key => (
                     taggedItems[key].map((_id, index) => (
                         // Using index as a key here is OK because we the position of each clothingObject is static
-                        <RenderSingleLineClosetItem key={index} item={closetObject[key].find(clothingObject => clothingObject._id === _id)}/>
+                        <RenderSingleLineClosetItem 
+                            key={_id} 
+                            item={closetObject[key].find(clothingObject => clothingObject._id === _id)}
+                            debugId={_id}/>
                     ))
                 ))}
             </View>

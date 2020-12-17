@@ -18,7 +18,8 @@ import { TouchableOpacity } from 'react-native-gesture-handler'
 import { HeartIcon, ArchiveIcon, DeleteIcon, ShareIcon, CheckIcon, XIcon } from './GlobalComponents/GlobalIcons'
 import { 
     itemFavoriteToggled, 
-    clothingDeletedFromCloset,
+    clothingDeletedFromCloset,//we used this action to delete previously. now trying the below function which bundles actions
+    deleteClothingFromCloset, //this is a function, not an action
     itemArchiveToggled
 } from '../redux/reducers/closetSlice'
 import { useNavigation, useFocusEffect } from '@react-navigation/native'
@@ -339,7 +340,7 @@ const ColorTags = React.memo(({colorArray}) => {
     }
 
     return (
-        <TogglableDrawer minHeight={35}>
+        <TogglableDrawer minHeight={33}>
             <View style={{width: '100%', height: 'auto'}}>
                 <View style={{
                     width: 'auto'
@@ -464,8 +465,6 @@ const OutfitScroll = React.memo(({outfitsWornIn}) => {
                                 <Text style={[{fontWeight: 'bold'}, GlobalStyles.hint]}>•</Text>
                                 <Text style={GlobalStyles.h7}>{`${3} brands`}</Text>
                             </View>
-
-                            
                         </View>
                         <View style={{
                             position: 'absolute',
@@ -518,6 +517,10 @@ export const ViewIndividualPiece = ({ route }) => {
 
     //thought this would prevent re rendering
     const [item, setItem] = useState(route.params.item);
+
+    // const toLog = useSelector(state => state.closet.taggedClothing)
+    // console.log('toLog:')
+    // console.log(toLog)
     
     //this prevents screens that are in the navigation stack from updating, even when blurred
     //without this, visiting multiple outfits / clothing pieces consecutively though their
@@ -563,23 +566,13 @@ export const ViewIndividualPiece = ({ route }) => {
 
     const ConfirmDelete = () => {
         setModalVisible(false)
-        dispatch(clothingDeletedFromCloset({...item}))
+        // dispatch(clothingDeletedFromCloset(_id))
+
+        deleteClothingFromCloset(item._id, item.clothingType, item.tags, item.color, item.brandName)
         navigation.navigate('CLOSETSCREEN')
     }
     
 
-    const handleScroll = (event) => {
-        let numWereUsing = event.nativeEvent.contentOffset.y
-        let toChangeHeight = maxImageHeight - (numWereUsing);
-        if (toChangeHeight >= minImageHieght && toChangeHeight <= maxImageHeight){
-            setImageHeight(toChangeHeight);
-        }
-        else if (toChangeHeight <= minImageHieght) {
-            setImageHeight(minImageHieght)
-        } else {
-            setImageHeight(maxImageHeight)
-        }
-    }
 
     // hook whether image is small
     const [imageIsSmall, setImageIsSmall] = useState(false)

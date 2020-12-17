@@ -162,7 +162,7 @@ const IndividualTag = ({title, deleteFunc, isColor}) => {
                 flexDirection: 'row',
                 borderRadius: 5,
                 zIndex: 3
-            }, isColor ? {backgroundColor: title.toLowerCase()} : GlobalStyles.bgColorMain]}>
+            }, isColor ? {backgroundColor: title.toLowerCase().split(' ').join('')} : GlobalStyles.bgColorMain]}>
                 <Text category='h5' style={[{
                     fontWeight: 'bold',
                     marginLeft: 10,

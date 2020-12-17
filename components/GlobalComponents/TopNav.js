@@ -60,10 +60,16 @@ export const TopNavScreenHeader = ({title, exitDestination, extraFunc}) => {
                 </Pressable>
 
                 <View style={{
-                width: 'auto',
+                width: '80%',
                 height: 'auto',
-                }}>
-                    <Text style={[{fontWeight: 'bold'}, GlobalStyles.h4]}>{title}</Text>
+                justifyContent: 'center',
+                alignItems: 'center'
+                }}
+                >
+                    <Text style={[{fontWeight: 'bold'}, GlobalStyles.h4]}
+                    numberOfLines={1}>
+                        {title}
+                    </Text>
                 </View>
 
                 <Pressable
