@@ -16,6 +16,8 @@ import { CheckIcon, PlusIcon } from '../GlobalComponents/GlobalIcons'
 import GlobalStyles from '../GlobalComponents/GlobalStyles'
 import { outfitInProgressCleansed } from '../../redux/reducers/outfitsSlice'
 
+import { MediumCheckButton } from '../GlobalComponents/GlobalButtons'
+
 
 
 
@@ -24,6 +26,7 @@ const SelectClothingButton = ({title, navpath, iconName, defaultChecked, navprop
 
     const navigation = useNavigation();
     const [checked, setChecked] = useState(defaultChecked);
+    const [pressed, setPressed] = useState(false)
 
     
     
@@ -50,37 +53,58 @@ const SelectClothingButton = ({title, navpath, iconName, defaultChecked, navprop
                 backgroundColor: 'white',
                 borderRadius: 10
             }, GlobalStyles.shadowLight]}>
-                <TouchableOpacity style={{
+                <Pressable 
+                style={{
                     height: '100%',
                     width: '100%',
                     justifyContent: 'flex-start',
                     alignItems: 'center',
                     flexDirection: 'column',
+                    opacity: pressed ? 0.5 : 1.0
                 }}
-                activeOpacity={0.5}
-                disabled={!checked} 
-                onPress={() => navigation.navigate(navpath, navprops)}>
-                    <View 
-                        style={checked ? styles.barActive : styles.barInactive}></View>
+                disabled={!checked}
+                onPress={() => navigation.navigate(navpath, navprops)}
+                onPressIn={() => setPressed(true)}
+                onPressOut={() => setPressed(false)}>
                     <View style={{
-                        height: 'auto',
+                        height: 10,
+                        width: '100%',
+                        zIndex: 0,
+                    }}>
+                        <View style={[{
+                            position: 'absolute',
+                            top: 0,
+                            width: '100%',
+                            left: 0,
+                            borderRadius: 10,
+                            height: 20,
+                            zIndex: 0,
+                        }, !checked ? styles.barInactive : styles.barActive]}>
+                        </View>
+                    </View>
+                    
+                    <View style={{
+                        height: 45,
                         width: '100%',
                         justifyContent: 'space-between',
                         alignItems: 'center',
                         flexDirection: 'row',
-                        marginTop: 8
+                        zIndex: 1,
+                        backgroundColor: 'white',
                     }}>
                         <View style={{
+                            height: '100%', 
                             justifyContent: 'flex-start',
                             flexDirection: 'row',
-                            alignItems: 'center'
+                            alignItems: 'center',
                         }}>
-                            <TouchableOpacity
+                            <Pressable
+                            hitSlop={20}
                             style={checked ? styles.checkboxActive : styles.checkbox}
                             onPress={() => setChecked(!checked)}>
                                 {/* <Icon width='25' height='25' fill='white' name={'checkmark-outline'}/> */}
                                 <CheckIcon size={25} style={{color: 'white'}}/>
-                            </TouchableOpacity>
+                            </Pressable>
                             <Text category='h4' style={[checked ? styles.textActive : styles.textInactive, GlobalStyles.h4]}>{title}</Text>
                             <Text appearace='hint' style={[{fontWeight: 'bold', marginLeft: 10, marginTop: 2}, GlobalStyles.h6, GlobalStyles.hint]}>
                                 {(checked && numOfItems !== 0) ? `(${numOfItems} item${numOfItems === 1 ? '' : 's'})` : ''}
@@ -90,71 +114,11 @@ const SelectClothingButton = ({title, navpath, iconName, defaultChecked, navprop
                         {/* <Icon style={{marginRight: 15, marginLeft: 5}} width='30' height='30' fill={checked ? 'black' : '#6c7280'} name={iconName}/> */}
                         <PlusIcon size={30} style={{marginRight: 15, marginLeft: 5, color: checked ? '#09122b' : '#6c7280'}}/>
                     </View>
-                </TouchableOpacity>
+                </Pressable>
             </View>
             
         </View>
         
-    )
-}
-
-
-//Taken from previous screen, could potentially create a fit-all button
-//So that I don't have to waste space making copies with small
-//changes to them (i.e. this)
-const SelectOutfitButton = ({ title, navTitle, icon, defaultChecked, navProps }) => {
-    const navigation = useNavigation();
-
-    const [checked, setChecked] = useState(defaultChecked);
-
-    return (
-        <View style={{width: '50%',
-        justifyContent: 'center',
-        alignItems: 'center',}}
-        level='1'>
-            <View style={{
-                width: '95%',
-                justifyContent: 'center',
-                alignItems: 'center',
-                margin: 5,
-                borderRadius: 10,
-                elevation: 10
-            }}
-            level='4'>
-                <View style={{
-                    margin: 5
-                }}level='4'
-                >
-                    <Text>Checkbox go ehre XD</Text>
-                    {/* <CheckBox
-                        status='primary'
-                        checked={checked}
-                        onChange={() => setChecked(!checked)}
-                        >
-                            <Text category='h5'
-                                style={{fontWeight: 'bold'}}>{title.toUpperCase()}</Text>
-                    </CheckBox> */}
-                </View>
-                <View
-                style={{width: '100%', 
-                aspectRatio: 1,
-                justifyContent: 'center',
-                borderBottomRightRadius: 10,
-                borderBottomLeftRadius: 10}}
-                level='3'>
-                    {/* <Button accessoryLeft={icon}
-                    style={{
-                        //cant do elevation: 10, here...fucks up the disabled btn
-                    height: '90%',
-                    margin: 10,
-                    flex: 1,
-                    borderRadius: 10}}
-                    onPress={() => navigation.navigate('OUTFITSELECTION', navProps)}
-                    disabled={!checked}>     
-                    </Button> */}
-                </View>
-            </View>
-        </View>
     )
 }
 
@@ -177,6 +141,15 @@ export const FromScratch = () => {
                 justifyContent: 'center',
                 alignItems: 'center',
             }}>
+                {/* <MediumCheckButton 
+                    title={'Tops'} 
+                    onPressFunc={() => navigation.navigate('OUTFITSELECTION', {
+                        topNavTitle: 'Tops',
+                        arrayName: 'topsArray'})} 
+                    isFromScratch={true}
+                    defaultScratchChecked={false}
+                /> */}
+                
                 <SelectClothingButton 
                 title={'Tops'} 
                 iconName={'plus'}
@@ -242,18 +215,18 @@ const styles = StyleSheet.create({
         borderColor: '#6c7280'
     },
     barActive: {
-        height: 10, 
-        borderTopLeftRadius: 10, 
-        borderTopRightRadius: 10, 
+        // height: 10, 
+        // borderTopLeftRadius: 10, 
+        // borderTopRightRadius: 10, 
         backgroundColor: '#09122b',
-        width: '100%'
+        // width: '100%'
     },
     barInactive: {
         backgroundColor: '#6c7280',
-        height: 10, 
-        borderTopLeftRadius: 10, 
-        borderTopRightRadius: 10, 
-        width: '100%'
+        // height: 10, 
+        // borderTopLeftRadius: 10, 
+        // borderTopRightRadius: 10, 
+        // width: '100%'
     },
     textActive: {
         fontWeight: 'bold',

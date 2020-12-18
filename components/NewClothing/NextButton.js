@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, TouchableOpacity, StyleSheet } from 'react-native'
+import { View, TouchableOpacity, StyleSheet, Pressable } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
 import { RightIcon, CheckIcon } from '../GlobalComponents/GlobalIcons'
 import GlobalStyles from '../GlobalComponents/GlobalStyles'
@@ -53,12 +53,13 @@ export const NextButton = ({disabledHook, navpath, extraFunc}) => {
         }}>
             {
             !disabledHook && (
-                <TouchableOpacity 
+                <Pressable 
                 style={[styles.TOBasic, GlobalStyles.bgColorMain]}
-                onPress={() => onClickFunc()}>
+                onPress={() => onClickFunc()}
+                hitSlop={10}>
                     {/* <Icon style={{marginRight: 5, marginLeft: 5}} width='50' height='50' fill='white' name='arrow-forward-outline'/> */}
-                    <RightIcon size={50} style={{marginRight: 5, marginLeft: 5, color: 'white'}}/>
-                 </TouchableOpacity>
+                    <RightIcon size={40} style={{color: 'white'}}/>
+                 </Pressable>
                  )
             }
         </View>
@@ -67,9 +68,9 @@ export const NextButton = ({disabledHook, navpath, extraFunc}) => {
 
 const styles = StyleSheet.create({
     TOBasic: {
-        height: 70,
-        width: 70,
-        margin: 20,
+        height: 50,
+        width: 50,
+        margin: 15,
         borderRadius: 5,
         justifyContent: 'center',
         alignItems:'center',

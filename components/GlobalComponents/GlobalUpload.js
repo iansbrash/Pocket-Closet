@@ -359,7 +359,7 @@ export const GlobalUpload = (
                     disabled={fileUri.length === 0 || awaitingResponse || uploadSuccess}
                     icon={!awaitingResponse ? 
                     <PlusIcon style={{marginRight: 15, marginLeft: 5, 
-                        color: imgurUrl.length !== 0 || fileUri.length === maxUploadAmount || awaitingResponse ? 'lightgray' : 'black'}} name="plus" size={30} 
+                        color: !checked || imgurUrl.length !== 0 || fileUri.length === 0 || awaitingResponse || uploadSuccess ? 'lightgray' : 'black'}} name="plus" size={30} 
                     /> : 
                     <View style={{marginRight: 15}}><ActivityIndicator size="small" color="lightgray"/></View>}
                 />

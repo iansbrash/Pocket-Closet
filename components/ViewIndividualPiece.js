@@ -164,7 +164,7 @@ const ThreeAttributeHeader = ({pieceType, brandsLength, price, description, colo
                 marginBottom: 10
             }}>
                 <Text style={[GlobalStyles.lighterHint, GlobalStyles.h5,]}>
-                    {description && description !== '' ? description : 'No description. No description. No description. No description. No description. No description. No description.'}
+                    {description && description !== '' ? description : 'No description.'}
                 </Text> 
             </View>
            

@@ -332,13 +332,13 @@ const VerbalStats = ({reRender, setReRender, modalVisible, setModalVisible}) => 
                     backgroundColor: 'white',
                     borderRadius: 10
                 }, GlobalStyles.shadowLightest]}>
-                    <VerbalContainerTwo stat={'Closet worth'} value={`$${closetWorth}`}/>
+                    <VerbalContainerTwo stat={'Closet worth'} value={`$${closetWorth.toFixed(2)}`}/>
 
                     <VerbalContainerTwo stat={'Average clothing price'} 
-                        value={`$${closetSize !== 0 ? (closetWorth / closetSize) : 0}`}/>
+                        value={`$${closetSize !== 0 ? (closetWorth / closetSize).toFixed(2) : 0}`}/>
 
                     <VerbalContainerTwo stat={'Average times worn'} 
-                        value={`${closetSize !== 0 ? (totalTimesWorn / closetSize) : 0} times`}/>
+                        value={`${closetSize !== 0 ? (totalTimesWorn / closetSize).toFixed(2) : 0} times`}/>
 
                     <VerbalContainerTwo stat={'Number of brands'} value={`${totalNumberOfBrands} brands`}/>
                 </View>
