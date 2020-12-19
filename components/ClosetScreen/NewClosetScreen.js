@@ -197,6 +197,8 @@ const ClosetSearch = ({searchInput, setSearchInput}) => {
 
 export const NewClosetScreen = () => {
 
+    console.log('NewClosetScreen being re-rendered')
+
     let src = { uri: 'https://randomuser.me/api/portraits/men/1.jpg' }
 
     const outfitsArray = useSelector(state => state.outfits.outfitsArray);

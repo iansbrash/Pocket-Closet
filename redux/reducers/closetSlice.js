@@ -1,9 +1,4 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
-import { ActivityIndicatorComponent } from 'react-native';
-import {batchActions} from 'redux-batched-actions';
- 
-
-import store from '../store'
 
 
 // TODO
@@ -449,27 +444,28 @@ export const {
 
 //we export this instead of clothingDeletedFromCloset because it lets us
 //abstract the deletion process (as we have to delete many things)
-export const deleteClothingFromCloset = (_id, clothingType, tagsArray, colorsArray, brandsArray) => {
-    console.log(`_id: ${_id}`)
-    console.log(`clothingType: ${clothingType}`)
-    console.log(`tagsArray: ${tagsArray}`)
-    console.log(`colorsArray: ${colorsArray}`)
-    console.log(`brandsArray: ${brandsArray}`)
+// export const deleteClothingFromCloset = (_id, clothingType, tagsArray, colorsArray, brandsArray) => {
+//     console.log(`_id: ${_id}`)
+//     console.log(`clothingType: ${clothingType}`)
+//     console.log(`tagsArray: ${tagsArray}`)
+//     console.log(`colorsArray: ${colorsArray}`)
+//     console.log(`brandsArray: ${brandsArray}`)
 
-    // man
-    clothingType = clothingType.toLowerCase();
+//     // man
+//     clothingType = clothingType.toLowerCase();
 
 
-    const {
-        clothingDeletedFromCloset,
-        removeAttributesFromAttributedClothing
-    } = closetSlice.actions;
+//     const {
+//         clothingDeletedFromCloset,
+//         removeAttributesFromAttributedClothing
+//     } = closetSlice.actions;
 
-    store.dispatch(batchActions([
-        clothingDeletedFromCloset(_id, clothingType),
-        removeAttributesFromAttributedClothing(_id, clothingType, 'taggedClothing', tagsArray),
-        removeAttributesFromAttributedClothing(_id, clothingType, 'coloredClothing', colorsArray),
-        // uncomment when uninstalling expo (not in initialstate)
-        // removeAttributesFromAttributedClothing(_id, clothingType, 'brandedClothing', brandsArray)
-    ]))
-}
+//     //this (store) makes a 'require' cycle... can result in errors... possible export this function elsewhere
+//     store.dispatch(batchActions([
+//         clothingDeletedFromCloset(_id, clothingType),
+//         removeAttributesFromAttributedClothing(_id, clothingType, 'taggedClothing', tagsArray),
+//         removeAttributesFromAttributedClothing(_id, clothingType, 'coloredClothing', colorsArray),
+//         // uncomment when uninstalling expo (not in initialstate)
+//         // removeAttributesFromAttributedClothing(_id, clothingType, 'brandedClothing', brandsArray)
+//     ]))
+// }

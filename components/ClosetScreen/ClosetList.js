@@ -100,9 +100,10 @@ export const RenderSingleLineClosetItem = ({item, debugId}) => {
                                 flexDirection: 'row',
                                 borderColor: 'white',
                                 borderWidth: 0.5,
-                                borderStyle: 'solid' 
+                                borderStyle: 'solid',
+                                backgroundColor: 'black' //maybe can be a question mark if we don't know the color
                             }}>
-                                {item.color.slice(0, 4).map(col => (
+                                {item.color.slice(0, 4).map((col, index) => (
                                     <View style={{
                                         backgroundColor: col.toLowerCase(),
                                         height: 10,
@@ -110,7 +111,8 @@ export const RenderSingleLineClosetItem = ({item, debugId}) => {
                                         borderColor: 'white',
                                         borderWidth: 0.5,
                                         borderStyle: 'solid'
-                                    }}></View>
+                                    }}
+                                    key={col}></View>
                                 ))}
                             </View>
                         </View>
@@ -215,7 +217,7 @@ export const RenderSingleLineClosetItem = ({item, debugId}) => {
                                         GlobalStyles.h6,
                                         {fontWeight: 'bold', width: 180}
                                     ]}>
-                                        {item.color.map((col, index) => <Text>{index === 0 ? col : ', ' + col}</Text>)}
+                                        {item.color.map((col, index) => <Text key={col}>{index === 0 ? col : ', ' + col}</Text>)}
                                     </Text>
                                 </View>
                                 {/* Tags under the colors */}
@@ -290,6 +292,8 @@ export const RenderSingleLineClosetItem = ({item, debugId}) => {
 
 
 export const ClosetList = ({searchInput, filtersEnabled, heartToggleChecked}) => {
+    console.log('ClosetList being re-rendered')
+
     const closetObject = useSelector(state => state.closet.closetObject);
     const closetObjectKeys = Object.keys(closetObject);
 
@@ -325,9 +329,10 @@ export const ClosetList = ({searchInput, filtersEnabled, heartToggleChecked}) =>
             keyExtractor={obj => obj._id.toString()}
             renderItem={object => <RenderSingleLineClosetItem {...object}/>}
             ListEmptyComponent={<Text>Add some items! (change this)</Text>}
+            showsVerticalScrollIndicator={false}
 
             // Below are possible optimizations
-            removeClippedSubviews={true} // TEMP
+            // removeClippedSubviews={true} // TEMP
             getItemLayout={(data, index) => (
                 {length: 120, offset: 120 * index, index}
             )}

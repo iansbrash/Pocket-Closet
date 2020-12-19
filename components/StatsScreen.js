@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import {
     View,
     Text,
@@ -21,7 +21,7 @@ import {
     LineChart
 } from 'react-native-chart-kit'
 import { useSelector, useDispatch } from 'react-redux'
-
+import { useFocusEffect } from '@react-navigation/native'
 import * as Haptics from 'expo-haptics';
 
 
@@ -437,6 +437,7 @@ const VariableChart = ({reRender, setReRender}) => {
 
     console.log(dataArray)
     console.log(labelsArray)
+    console.log('VariableChart rerender')
 
 
     useEffect(() => {

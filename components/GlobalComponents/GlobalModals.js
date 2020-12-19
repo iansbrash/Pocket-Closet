@@ -402,11 +402,12 @@ export const ImageScrollModal = ({setModalVisible, modalVisible, imageArray, ima
                         decelerationRate="fast"
                         pagingEnabled
                         >
-                            {imageArray.map(imageUrl => (
+                            {imageArray.map((imageUrl, index) => (
                                 <View style={{
                                     width: `${100/imageArray.length}%`,
                                     height: '90%'
-                                }}>
+                                }}
+                                key={index}>
                                     <Image 
                                     source={{uri: imageType === 'imgur' ? makeHugeImage(imageUrl) : imageUrl}} 
                                     resizeMode={'contain'} //this is exactly what i needed

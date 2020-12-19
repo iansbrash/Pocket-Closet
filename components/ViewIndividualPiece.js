@@ -19,13 +19,12 @@ import { HeartIcon, ArchiveIcon, DeleteIcon, ShareIcon, CheckIcon, XIcon } from 
 import { 
     itemFavoriteToggled, 
     clothingDeletedFromCloset,//we used this action to delete previously. now trying the below function which bundles actions
-    deleteClothingFromCloset, //this is a function, not an action
     itemArchiveToggled
 } from '../redux/reducers/closetSlice'
 import { useNavigation, useFocusEffect } from '@react-navigation/native'
 import { YesNoModal, ImageScrollModal } from './GlobalComponents/GlobalModals'
 import { TogglableDrawer } from './GlobalComponents/GlobalDrawers'
-import { makeSmallImage, makeMediumImage, makeMediumSmallImage } from './GlobalFunctions/ImgurResize'
+import { makeSmallImage, makeMediumImage, makeMediumSmallImage, deleteClothingFromCloset } from './GlobalFunctions/ImgurResize'
 
 const windowWidth = Dimensions.get('window').width;
 //edit these instead of numbers in handleScroll
@@ -514,10 +513,10 @@ const OutfitScroll = React.memo(({outfitsWornIn}) => {
                     
                     <ClothingIcon key={outfitId} outfitObject={outfitsArray.find(outfitObj => outfitObj._id === outfitId)} />
                 )) 
-                    :
-                (mockOutfitsThisClothingIsUsedInArray.map(outfitObject => (
-                    <ClothingIcon key={outfitObject._id} outfitObject={outfitObject}/>
-                )))
+                    : null
+                // (mockOutfitsThisClothingIsUsedInArray.map(outfitObject => (
+                //     <ClothingIcon key={outfitObject._id} outfitObject={outfitObject}/>
+                // )))
                 }
             </ScrollView>
         </View>

@@ -170,12 +170,15 @@ const TabNavTwo = () => {
         tabBarOptions={{
             keyboardHidesTabBar: true,
         }}
-        tabBar={(props, i) => <TabNavTwoProp {...props} key={i}/>}
+        initialRouteName="HOME"
+        tabBar={(props, i) => <TabNavTwoProp {...props} key={i} />}
         >
-            {/* <Screen name='HISTORY'  component={HistoryNav}/> */}
-            <Screen name='STATS' component={StatsNav} />
-            <Screen name='HOME'  component={HomeNav} />
-            <Screen name='CLOSET'  component={ClosetNav} />
+            <Screen name='STATS' key={'STATS'}component={StatsNav}
+            options={{ //TEMP
+                unmountOnBlur: true, //stops re-rendering... maybe should implement a useFocusEffect solution...
+            }}/>
+            <Screen name='HOME'  key={'HOME'} component={HomeNav} />
+            <Screen name='CLOSET' key={'CLOSET'} component={ClosetNav} />
         </BottomTab.Navigator>
     )
 }
@@ -192,7 +195,7 @@ const TabNavTwoProp = ({ state, descriptors, navigation }) => {
     }
   
     return (
-      <View style={{ flexDirection: 'row' }}>
+      <View style={{ flexDirection: 'row' }} key={state.index}>
 
 
     {keyboardOpen ? null : (state.routes.map((route, index) => {
@@ -210,13 +213,13 @@ const TabNavTwoProp = ({ state, descriptors, navigation }) => {
               
             switch (label) {
                 case 'STATS':
-                    icon = <CalendarIcon size={25} style={isFocused ? GlobalStyles.colorMain : GlobalStyles.hint} />
+                    icon = <CalendarIcon size={25} key={index} style={isFocused ? GlobalStyles.colorMain : GlobalStyles.hint} />
                     break;
                 case 'HOME':
-                    icon = <HomeIcon size={25} style={isFocused ? GlobalStyles.colorMain : GlobalStyles.hint}/>
+                    icon = <HomeIcon size={25} key={index} style={isFocused ? GlobalStyles.colorMain : GlobalStyles.hint}/>
                     break;    
                 case 'CLOSET':
-                    icon = <HangerIcon size={25} style={isFocused ? GlobalStyles.colorMain : GlobalStyles.hint}/>
+                    icon = <HangerIcon size={25} key={index} style={isFocused ? GlobalStyles.colorMain : GlobalStyles.hint}/>
                     break;
             }
 
@@ -243,6 +246,7 @@ const TabNavTwoProp = ({ state, descriptors, navigation }) => {
   
           return (
             <TouchableOpacity
+            key={index}
               accessibilityRole="button"
               accessibilityState={isFocused ? { selected: true } : {}}
               accessibilityLabel={options.tabBarAccessibilityLabel}
@@ -273,18 +277,18 @@ const TabNavTwoProp = ({ state, descriptors, navigation }) => {
     );
   }
 
-const TabNavigator = () => {
-    return (  
-        <Navigator 
-        tabBarOptions={{
-            keyboardHidesTabBar: true,
-        }}  tabBar={(props, i) => <BottomTabBar {...props} key={i}/>}>
-            <Screen name='HISTORY'  component={HistoryNav}/>
-            <Screen name='HOME'  component={HomeNav}/>
-            <Screen name='CLOSET'  component={ClosetNav} />
-        </Navigator> 
-    )
-}
+// const TabNavigator = () => {
+//     return (  
+//         <Navigator 
+//         tabBarOptions={{
+//             keyboardHidesTabBar: true,
+//         }}  tabBar={(props, i) => <BottomTabBar {...props} key={i}/>}>
+//             <Screen name='HISTORY'  component={HistoryNav}/>
+//             <Screen name='HOME'  component={HomeNav}/>
+//             <Screen name='CLOSET'  component={ClosetNav} />
+//         </Navigator> 
+//     )
+// }
 
 // tabBarOptions={{
 //     keyboardHidesTabBar: true,

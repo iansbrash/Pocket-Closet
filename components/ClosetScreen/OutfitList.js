@@ -19,6 +19,8 @@ import { makeSmallImage, makeMediumImage } from '../GlobalFunctions/ImgurResize'
 // onClickFunc looks like:   function (outfitObject) { ... }
 export const OutfitList = ({outfitsArray, onClickFunc}) => {
 
+    console.log('OutfitList being re-rendered')
+
     //temp
     let src = { uri: 'https://randomuser.me/api/portraits/men/1.jpg' }
 
@@ -303,9 +305,9 @@ export const OutfitList = ({outfitsArray, onClickFunc}) => {
                 data={outfitsArray}
                 renderItem={(object, index) => <RenderOutfit  {...object} />}
                 keyExtractor={(obj, index) => obj._id.toString()} //obj._id.. not all obj has _id rn
-
+                showsVerticalScrollIndicator={false}
                 // Below are possible optimizations
-                removeClippedSubviews={true} // TEMP
+                // removeClippedSubviews={true} // TEMP
                 getItemLayout={(data, index) => (
                     {length: 200, offset: 200 * index, index}
                 )}

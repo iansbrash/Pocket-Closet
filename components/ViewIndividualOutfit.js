@@ -39,8 +39,10 @@ import { makeSmallImage, makeMediumImage, makeMediumSmallImage } from './GlobalF
  *  @param {Object} fetchedOutfitObject - React hook that includes all of our outfitObject's updated properties
  *  @param {Object} outfitObject - route.params.item that contains an outfitArr filled with ____Array's with only _ids
  */
-const DisplayClothingTypeFour = React.memo(({fetchedOutfitObject, outfitObject}) => {
+const DisplayClothingTypeFour = React.memo(({fetchedOutfitObjectOutfitArr, outfitObject}) => {
     console.log(`DisplayClothingTypeFour being re-rendered.`)
+
+
 
     const navigation = useNavigation();
 
@@ -68,7 +70,7 @@ const DisplayClothingTypeFour = React.memo(({fetchedOutfitObject, outfitObject})
                 horizontal={true}
                 showsHorizontalScrollIndicator={false}
                 >
-                        {fetchedOutfitObject.outfitArr[`${type}Array`].map(clothingObject => (
+                        {fetchedOutfitObjectOutfitArr[`${type}Array`].map(clothingObject => (
                             <ClothingIcon clothingObject={clothingObject}/>
                         ))}
                 </ScrollView>
@@ -198,28 +200,28 @@ const DisplayClothingTypeFour = React.memo(({fetchedOutfitObject, outfitObject})
                 justifyContent: 'center', alignItems: 'center', flexDirection: 'row'
             }}>
                 <TypesDrawer 
-                    disabled={fetchedOutfitObject.outfitArr.topsArray.length === 0}
+                    disabled={fetchedOutfitObjectOutfitArr.topsArray.length === 0}
                     clothingType={'tops'} 
                     icon={<ShirtIcon size={30} 
-                        style={fetchedOutfitObject.outfitArr.topsArray.length !== 0 ? 
+                        style={fetchedOutfitObjectOutfitArr.topsArray.length !== 0 ? 
                             (type === 'tops' ? GlobalStyles.colorMain : {color: 'lightgray'}) : {color: '#ededed'}}/>}/>
                 <TypesDrawer 
-                    disabled={fetchedOutfitObject.outfitArr.bottomsArray.length === 0}
+                    disabled={fetchedOutfitObjectOutfitArr.bottomsArray.length === 0}
                     clothingType={'bottoms'}
                     icon={<LegIcon size={30} 
-                        style={fetchedOutfitObject.outfitArr.bottomsArray.length !== 0 ? 
+                        style={fetchedOutfitObjectOutfitArr.bottomsArray.length !== 0 ? 
                             (type === 'bottoms' ? GlobalStyles.colorMain : {color: 'lightgray'}) : {color: '#ededed'}}/>}/>
                 <TypesDrawer 
-                    disabled={fetchedOutfitObject.outfitArr.footwearArray.length === 0}
+                    disabled={fetchedOutfitObjectOutfitArr.footwearArray.length === 0}
                     clothingType={'footwear'}
                     icon={<ShoeIcon size={30} 
-                        style={fetchedOutfitObject.outfitArr.footwearArray.length !== 0  ?
+                        style={fetchedOutfitObjectOutfitArr.footwearArray.length !== 0  ?
                             (type === 'footwear' ? GlobalStyles.colorMain : {color: 'lightgray'}) : {color: '#ededed'}}/>}/>
                 <TypesDrawer 
-                    disabled={fetchedOutfitObject.outfitArr.otherArray.length === 0}
+                    disabled={fetchedOutfitObjectOutfitArr.otherArray.length === 0}
                     clothingType={'other'}
                     icon={<BagIcon size={30} 
-                        style={fetchedOutfitObject.outfitArr.otherArray.length !== 0 ? 
+                        style={fetchedOutfitObjectOutfitArr.otherArray.length !== 0 ? 
                             (type === 'other' ? GlobalStyles.colorMain : {color: 'lightgray'}) : {color: '#ededed'}}/>}/>
             </View>
             <View style={{
@@ -408,7 +410,6 @@ const TopButtonsStyleTwo = ({outfitObject, setModalVisible}) => {
                             <View style={{
                                 height: '100%',
                                 aspectRatio: 1,
-                                marginLeft: 5,
                                 justifyContent: 'center',
                                 alignItems: 'center'
                             }}>
@@ -419,7 +420,7 @@ const TopButtonsStyleTwo = ({outfitObject, setModalVisible}) => {
                             }}>  
                                 <Text style={[{
                                     fontWeight: 'bold'
-                                }, GlobalStyles.h4]}>
+                                }, GlobalStyles.h4, GlobalStyles.colorMain]}>
                                     {title}
                                 </Text>
                             </View>
@@ -441,7 +442,7 @@ const TopButtonsStyleTwo = ({outfitObject, setModalVisible}) => {
                 flexDirection: 'column'
             }}>
                 <IndividualThirdButton 
-                    title={'Favorite'} 
+                    title={isFavorited ? 'Unfavorite' : 'Favorite'} 
                     icon={<HeartIcon 
                         style={[isFavorited ? {color: 'red'} : GlobalStyles.colorMain]} 
                         size={35} />}
@@ -731,9 +732,10 @@ export const ViewIndividualOutfit = ({ route }) => {
             {/* This is the 4 drawers, and the icons that show underneath them */}
             {isFocused ? //only renders when useFocusEffect is called and updates isFocused hook (when we can see it)
                 <DisplayClothingTypeFour 
-                    fetchedOutfitObject={fetchedOutfitObjectHook}
-                    outfitObject={route.params.item} /> //this might cause errors, because when navigating backwards, sometimes route.params isn't available
-                    : null}
+                    fetchedOutfitObjectOutfitArr={fetchedOutfitObjectHook.outfitArr}
+                    outfitObject={route.params.item} 
+                /> //this might cause errors, because when navigating backwards, sometimes route.params isn't available
+            : null}
         </View>
     )
 }
