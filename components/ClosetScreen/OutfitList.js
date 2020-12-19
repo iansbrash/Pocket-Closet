@@ -161,13 +161,23 @@ export const OutfitList = ({outfitsArray, onClickFunc}) => {
                                 {`${new Date(item.date).toLocaleString('en-GB').substr(0, 10)}`}
                             </Text>
                         </View>
-                        <View 
-                        style={{
-                            height: 10, 
-                            borderTopLeftRadius: 10, 
-                            borderTopRightRadius: 10, 
-                            backgroundColor: '#09122b',
-                            width: '100%'}}></View>
+                        <View style={{
+                            height: 10,
+                            width: '100%',
+                            zIndex: 0
+                        }}>
+                            <View 
+                            style={[{
+                                position: 'absolute',
+                                top: 0,
+                                height: 20,
+                                borderTopLeftRadius: 10, 
+                                borderTopRightRadius: 10, 
+                                width: '100%'}, 
+                                GlobalStyles.bgColorMain]}>
+                            </View>
+                        </View>
+                        
                         <View style={{
                             //height: 180, //origLength > 4 ? 180 : 95,
                             width: '100%',
@@ -175,6 +185,8 @@ export const OutfitList = ({outfitsArray, onClickFunc}) => {
                             justifyContent: 'space-between',
                             alignItems: 'center',
                             flexDirection: 'column',
+                            backgroundColor: 'white',
+                            zIndex: 1
                         }}>
                             <View style={{
                                 justifyContent: 'flex-start',

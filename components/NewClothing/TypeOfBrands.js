@@ -223,15 +223,33 @@ export const TypeOfBrands = () => {
                 [styles.TOBasic, GlobalStyles.shadowLight]}
                 onLongPress={() => onLongPressDelete(item)}
                 >
-                    <View style={[{
-                        borderTopLeftRadius: 5, borderTopRightRadius: 5, height: 5, width: '100%'
-                    }, inSelectedBrands ? {backgroundColor: 'white'} :GlobalStyles.bgColorMain]}></View>
+                    {/* Bar */}
                     <View style={{
+                        height: 5,
+                        width: '100%',
+                        zIndex: 0,
+                    }}>
+                        <View style={[{
+                            borderTopLeftRadius: 5, 
+                            borderTopRightRadius: 5, 
+                            height: 10, 
+                            position: 'absolute',
+                            width: '100%'
+                        }, inSelectedBrands ? {backgroundColor: 'white'} : GlobalStyles.bgColorMain]}></View>
+                    </View>
+                    
+                    <View style={[{
+                        zIndex: 1,
                         height: 45, 
                         justifyContent: 'space-between', 
                         alignItems: 'center', 
                         flexDirection: 'row', 
-                        width: '100%'}}>
+                        width: '100%',
+                        borderBottomLeftRadius: 5,
+                        borderBottomRightRadius: 5},
+                        inSelectedBrands ? 
+                            [GlobalStyles.bgColorMain] : 
+                            [{backgroundColor: 'white'}]]}>
                         <Text category='h5' status='basic' 
                         style={inSelectedBrands ? 
                             [styles.TextSelected, GlobalStyles.h5] : [styles.TextUnselected, GlobalStyles.h5]}>
@@ -309,13 +327,13 @@ const styles = StyleSheet.create({
         backgroundColor: 'white'
     },
     TOSelected: {
-        backgroundColor: 'black'
+        // backgroundColor: 'black'
     },
     TOBasic: {
         elevation: 1,
         justifyContent: 'space-between',
         alignItems:'center',
-        backgroundColor: 'white',
+        // backgroundColor: 'white',
         flexDirection: 'column',
         width: 'auto', 
         height: 50, 

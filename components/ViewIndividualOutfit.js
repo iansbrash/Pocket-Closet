@@ -93,9 +93,28 @@ const DisplayClothingTypeFour = React.memo(({fetchedOutfitObject, outfitObject})
                         borderRadius: 5,
                         backgroundColor: 'white',
                     }, GlobalStyles.shadowLight]}>
-                        <View style={[GlobalStyles.bgColorMain, {width: '100%', borderTopLeftRadius: 5, borderTopRightRadius: 5, height: 5}]}></View>
                         <View style={{
-                            margin: 5,
+                            height: 5,
+                            width: '100%',
+                            zIndex: 0
+                        }}>
+                            <View 
+                            style={[
+                                GlobalStyles.bgColorMain, 
+                                {width: '100%', 
+                                position: 'absolute',
+                                height: 10,
+                                top: 0,
+                                borderTopLeftRadius: 5, 
+                                borderTopRightRadius: 5
+                                }]}></View>
+                        </View>
+                        <View style={{
+                            paddingTop: 5,
+                            paddingLeft: 5,
+                            paddingRight: 5,
+                            marginBottom: 5,
+                            backgroundColor: 'white',
                             width: 'auto',
                             height: 'auto'
                         }}>

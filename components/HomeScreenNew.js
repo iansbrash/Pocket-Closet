@@ -24,20 +24,40 @@ const StatContainer = (props) => {
                 width: 'auto',
                 height: 'auto',
                 margin: 10,
-                borderRadius: 5,
+                borderRadius: 10,
                 elevation: 5,
                 backgroundColor: 'white',
                 justifyContent: 'flex-start',
                 alignItems: 'center',
                 flexDirection: 'column'
             }, GlobalStyles.shadowLight]}>
-                <View style={{
-                borderTopLeftRadius: 10, 
-                borderTopRightRadius: 10, 
-                backgroundColor: 'black', //this is just the black cap
-                height: 10,
-                width: '100%',}}></View>
-                <View style={{width: '100%', aspectRatio: 1, alignItems: 'center', justifyContent: 'flex-start'}}>
+                <View style={
+                    {height: 10,
+                    width: '100%',
+                    zIndex: 0}
+                }>
+                    <View 
+                    style={{
+                        position: 'absolute',
+                        borderTopLeftRadius: 10, 
+                        borderTopRightRadius: 10, 
+                        backgroundColor: 'black', //this is just the black cap
+                        height: 20,
+                        width: '100%',}}>
+
+                    </View>
+                </View>
+                
+                <View 
+                style={{
+                    width: '100%', 
+                    aspectRatio: 1, 
+                    alignItems: 'center', 
+                    justifyContent: 'flex-start',
+                    zIndex: 1,
+                    backgroundColor: 'white',
+                    borderBottomLeftRadius: 10,
+                    borderBottomRightRadius: 10}}>
                     <Text category='h5' style={{marginTop: 0, fontWeight: 'bold'}}>{props.title}</Text>
                     <View>
                         <Text>Something Else</Text>

@@ -76,13 +76,21 @@ export const YesNoModal = ({setModalVisible, modalVisible, onPressFunc, title}) 
                       borderRadius: 10,
 
                   }, GlobalStyles.shadowLight]}>
-                          <View 
-                          style={[{
-                            height: 10, 
-                            borderTopLeftRadius: 10, 
-                            borderTopRightRadius: 10,
+                        {/* The Bar */}
+                        <View style={{
+                            height: 10,
                             width: '100%'
-                        }, GlobalStyles.bgColorMain]}></View>
+                        }}>
+                        <View 
+                            style={[{
+                                position: 'absolute',
+                                zIndex: 0,
+                                height: 20, 
+                                borderTopLeftRadius: 10, 
+                                borderTopRightRadius: 10,
+                                width: '100%'
+                            }, GlobalStyles.bgColorMain]}></View>
+                        </View>
                         <View style={[
                       {
                           height: 'auto', 
@@ -208,13 +216,22 @@ export const TextInputModal = ({setModalVisible, modalVisible, onPressFunc, titl
                       borderRadius: 10,
 
                   }, GlobalStyles.shadowLight]}>
-                          <View 
-                          style={[{
-                            height: 10, 
-                            borderTopLeftRadius: 10, 
-                            borderTopRightRadius: 10,
-                            width: '100%'
-                        }, GlobalStyles.bgColorMain]}></View>
+                      {/* The Bar */}
+                      <View style={{
+                          height: 10,
+                          width: '100%'
+                      }}>
+                        <View 
+                            style={[{
+                                position: 'absolute',
+                                zIndex: 0,
+                                height: 20, 
+                                borderTopLeftRadius: 10, 
+                                borderTopRightRadius: 10,
+                                width: '100%'
+                            }, GlobalStyles.bgColorMain]}></View>
+                      </View>
+                        
                         <View style={[
                       {
                           height: 'auto', 

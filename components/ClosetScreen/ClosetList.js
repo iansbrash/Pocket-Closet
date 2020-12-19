@@ -93,7 +93,7 @@ export const RenderSingleLineClosetItem = ({item, debugId}) => {
                             right: 5, //orig 10, will look better when we fix borderRadius problem
                             height: 'auto',
                             width: 'auto',
-                            zIndex: 1,}]}>
+                            zIndex: 2,}]}>
                             <View style={{
                                 justifyContent: 'flex-start',
                                 alignItems: 'center',
@@ -117,19 +117,33 @@ export const RenderSingleLineClosetItem = ({item, debugId}) => {
                     : null }
 
 
-                    <View 
-                    style={{
-                        height: 10, 
-                        borderTopLeftRadius: 10, 
-                        borderTopRightRadius: 10, 
-                        backgroundColor: '#09122b',
-                        width: '100%'}}></View>
+                    <View style={{
+                        height: 10,
+                        width: '100%',
+                        zIndex: 0
+                    }}>
+                        <View 
+                        style={{
+                            position: 'absolute',
+                            top: 0,
+                            height: 20,
+                            borderTopLeftRadius: 10, 
+                            borderTopRightRadius: 10, 
+                            backgroundColor: '#09122b',
+                            width: '100%'}}>
+                        </View>
+                    </View>
+                    
                     <View style={{
                         height: 100,
                         width: '100%',
                         justifyContent: 'space-between',
                         alignItems: 'center',
                         flexDirection: 'row',
+                        zIndex: 1,
+                        backgroundColor: 'white',
+                        borderBottomRightRadius: 10,
+                        borderBottomLeftRadius: 10
                     }}>
                         <View style={{
                             justifyContent: 'flex-start',

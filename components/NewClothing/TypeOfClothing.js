@@ -97,9 +97,21 @@ export const TypeOfClothing = () => {
                 onPress={() => SpecificTypeFunction(title)}
                 onLongPress={() => deleteModalFunction(title)}
                 >
-
-                    <View style={[specificSelected === title ? {backgroundColor: 'white'} : GlobalStyles.bgColorMain, 
-                        {borderTopLeftRadius: 5, borderTopRightRadius: 5, height: 5, width: '100%'}]}></View>
+                    
+                    <View style={{
+                        height: 5,
+                        width: '100%'
+                    }}>
+                        <View style={[specificSelected === title ? {backgroundColor: 'white'} : GlobalStyles.bgColorMain, 
+                        {borderTopLeftRadius: 5, 
+                        borderTopRightRadius: 5, 
+                        height: 10, 
+                        width: '100%',
+                        position: 'absolute',
+                        top: 0,
+                        zIndex: 0}]}></View>
+                    </View>
+                    
 
                     <View style={specificSelected === title ?
                         [styles.button, styles.buttonActive] : [styles.button]}>
@@ -128,8 +140,20 @@ export const TypeOfClothing = () => {
                 }, GlobalStyles.shadowLight]}
                 onPress={() => TypeOfButtonFunction(title)}>
 
-                    <View style={[typeSelected === title ? {backgroundColor: 'white'} : GlobalStyles.bgColorMain, 
-                        {borderTopLeftRadius: 5, borderTopRightRadius: 5, height: 5, width: '100%'}]}></View>
+                    <View style={{
+                        height: 5,
+                        width: '100%'
+                    }}>
+                        <View style={[typeSelected === title ? {backgroundColor: 'white'} : GlobalStyles.bgColorMain, 
+                        {borderTopLeftRadius: 5, 
+                        borderTopRightRadius: 5, 
+                        height: 10, 
+                        width: '100%',
+                        position: 'absolute',
+                        top: 0,
+                        zIndex: 0}]}></View>
+                    </View>
+                    
 
                     <View style={typeSelected === title ?
                         [styles.button, styles.buttonActive] : [styles.button]}>
@@ -158,8 +182,21 @@ export const TypeOfClothing = () => {
                 }, GlobalStyles.shadowLight]}
                 onPress={() => onPressFunc()}>
 
-                    <View style={[GlobalStyles.bgColorMain, 
-                        {borderTopLeftRadius: 5, borderTopRightRadius: 5, height: 5, width: '100%'}]}></View>
+                    <View style={{
+                        height: 5,
+                        width: '100%'
+                    }}>
+                        <View 
+                        style={[GlobalStyles.bgColorMain, 
+                            {borderTopLeftRadius: 5, 
+                                borderTopRightRadius: 5, 
+                                height: 10, 
+                                width: '100%',
+                                position: 'absolute',
+                                top: 0,
+                                zIndex: 0}]}></View>
+                    </View>
+                    
 
                     <View style={[styles.button, {justifyContent: 'center', alignItems: 'center', flexDirection: 'row'}]}>
                         <Text style={[styles.boldText, GlobalStyles.h4]}>
