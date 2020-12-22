@@ -71,7 +71,7 @@ const DisplayClothingTypeFour = React.memo(({fetchedOutfitObjectOutfitArr, outfi
                 showsHorizontalScrollIndicator={false}
                 >
                         {fetchedOutfitObjectOutfitArr[`${type}Array`].map(clothingObject => (
-                            <ClothingIcon clothingObject={clothingObject}/>
+                            <ClothingIcon clothingObject={clothingObject} key={clothingObject._id}/>
                         ))}
                 </ScrollView>
             </View>

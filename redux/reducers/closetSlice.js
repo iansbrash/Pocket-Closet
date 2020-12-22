@@ -150,9 +150,8 @@ const closetSlice = createSlice({
         },
         itemFavoriteToggled: {
             reducer(state, action) {
-                console.log(action.payload);
-                console.log('the full array of that type')
-                console.log(state.closetObject[action.payload.clothingType.toLowerCase() + 'Array'])
+                // console.log(action.payload);
+                // console.log(state.closetObject[action.payload.clothingType.toLowerCase() + 'Array'])
 
                 let itemToEdit = state.closetObject[action.payload.clothingType.toLowerCase() + 'Array']
                 .find(clothingObj => clothingObj._id === action.payload._id);

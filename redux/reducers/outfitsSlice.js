@@ -1,5 +1,4 @@
 import { createSlice } from '@reduxjs/toolkit'
-import { ActivityIndicatorComponent } from 'react-native';
 
 
 

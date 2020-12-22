@@ -201,7 +201,6 @@ export const NewClosetScreen = () => {
 
     let src = { uri: 'https://randomuser.me/api/portraits/men/1.jpg' }
 
-    const outfitsArray = useSelector(state => state.outfits.outfitsArray);
 
     const [searchInput, setSearchInput] = useState('')
 
@@ -249,9 +248,7 @@ export const NewClosetScreen = () => {
         setHeartToggleChecked(!heartToggleChecked);
     }
 
-    const outfitListOnClick = (outfitObject) => {
-        navigation.navigate("VIEWINDIVIDUALOUTFIT", {item: outfitObject})
-    }
+    
 
 
     return (
@@ -284,16 +281,31 @@ export const NewClosetScreen = () => {
                 </View>
                 <View style={{flex: 1}}>
                     <View 
-                            style={{
-                                height: '100%', }}>
-                            {closetIsActive ? <ClosetList  //can change between ClosetListOneCol and TwoCol
+                        style={{
+                            height: '100%', }}>
+                            {/* {closetIsActive ? <ClosetList  //can change between ClosetListOneCol and TwoCol
                                         searchInput={searchInput}
                                         filtersEnabled={filtersEnabled}
                                         heartToggleChecked={heartToggleChecked}/>
-                                    : <OutfitList 
-                                        outfitsArray={outfitsArray}
-                                        onClickFunc={outfitListOnClick}/>
-                                }
+                                    : <OutfitList />
+                                } */}
+                                <View style={{
+                                    display: closetIsActive ? 'flex' : 'none'
+                                }}
+                                pointerEvents={closetIsActive ? 'auto' : 'none'}>
+                                    <ClosetList  //can change between ClosetListOneCol and TwoCol
+                                        searchInput={searchInput}
+                                        filtersEnabled={filtersEnabled}
+                                        heartToggleChecked={heartToggleChecked}/>
+                                </View>
+                                <View style={{
+                                    display: closetIsActive ? 'none' : 'flex'
+
+                                }}
+                                pointerEvents={closetIsActive ? 'none' : 'auto'}>
+                                    <OutfitList />
+                                </View>
+                            
                                 {/* <ShittyModal /> currently doesnt work we need to rework */}
                         </View>
                 </View>

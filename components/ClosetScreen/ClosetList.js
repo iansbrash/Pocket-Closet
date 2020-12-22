@@ -15,7 +15,9 @@ import { makeSmallImage } from '../GlobalFunctions/ImgurResize'
 
 
 // used as render method for FlatList in ClosetListOneCol
-export const RenderSingleLineClosetItem = ({item, debugId}) => {
+export const RenderSingleLineClosetItem = React.memo(({item, debugId}) => {
+
+    console.log(`'rendering RenderSingleLineClosetItem with _id ${item._id}'`)
 
     if (!item){
         console.log('RenderSingleLineClosetItem was passed null as its item arguement.')
@@ -287,18 +289,16 @@ export const RenderSingleLineClosetItem = ({item, debugId}) => {
             </TouchableOpacity>
         </View>
     )
-}
+})
 
 
 
-export const ClosetList = ({searchInput, filtersEnabled, heartToggleChecked}) => {
+export const ClosetList = ({searchInput, filtersEnabled, heartToggleChecked}, props) => {
     console.log('ClosetList being re-rendered')
 
     const closetObject = useSelector(state => state.closet.closetObject);
-    const closetObjectKeys = Object.keys(closetObject);
 
     const navigation = useNavigation();
-    let src = { uri: 'https://randomuser.me/api/portraits/men/1.jpg' }
     // Renders all the clothing under the search bar.
     // called by the <List /> 
 
@@ -312,9 +312,9 @@ export const ClosetList = ({searchInput, filtersEnabled, heartToggleChecked}) =>
 
         <View style={{
             width: '100%',
-            height: '100%'
-        }}>
-            
+            height: '100%',
+        }}
+        >
             <FlatList
             data={combinedArrays.filter((item, index) => 
                 (
@@ -326,8 +326,10 @@ export const ClosetList = ({searchInput, filtersEnabled, heartToggleChecked}) =>
                     )  //this might be a little innefficent.\ xdddd
                 )
             )}
-            keyExtractor={obj => obj._id.toString()}
+            
             renderItem={object => <RenderSingleLineClosetItem {...object}/>}
+
+            keyExtractor={obj => obj._id.toString()}
             ListEmptyComponent={<Text>Add some items! (change this)</Text>}
             showsVerticalScrollIndicator={false}
 
@@ -338,8 +340,6 @@ export const ClosetList = ({searchInput, filtersEnabled, heartToggleChecked}) =>
             )}
             initialNumToRender={5}
             />
-            
-            
         </View>
     )
 }
