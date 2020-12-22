@@ -23,11 +23,15 @@ import { useEffect } from 'react/cjs/react.development'
  *  topsArray, bottomsArray, footwearArray, otherArray 
  *  in the outfitArr property, and also contains
  *  description, date, tags, favorite, in the base properties */
-const RenderOutfit = React.memo(({item, closetObject}) => {
+const RenderOutfit = React.memo(({item, closetObject
+}) => {
     //we shouldnt need to check for change in the closetObject...
     //because on clothingObject deletion, we also track down the _id in it's corresponding
     //outfitObjects and delete it's _id from its outfitArr
     console.log(`rerendering RenderOutfit with id ${item._id}`)
+
+    // const closetObject = useSelector(state => state.closet.closetObject);
+
 
 
     const [imageArrayFromIdsHook, setImageArrayFromIdsHook] = useState([])
@@ -52,7 +56,82 @@ const RenderOutfit = React.memo(({item, closetObject}) => {
     //imageArrayFromIds
 
 
-    
+            // return <View><Text>wtf</Text></View>
+
+            useEffect(() => {
+        
+
+                //RenderOutfit relies on a useSelector hook to update
+
+                // console.log('useEffect triggering')
+
+                let outfitArray = item.outfitArr;
+        
+                //this is now one big list of IDs
+                let combinedClothingItemsArray = [
+                    ...outfitArray.topsArray,
+                    ...outfitArray.bottomsArray,
+                    ...outfitArray.footwearArray,
+                    ...outfitArray.otherArray
+                ]
+        
+                const origLength = combinedClothingItemsArray.length 
+        
+                const needsCrop = combinedClothingItemsArray.length > 4;
+        
+                if (needsCrop){
+                    combinedClothingItemsArray = combinedClothingItemsArray.slice(0, 3) // should only include the first 3 terms
+                }
+        
+        
+                
+                let dummySrc = {
+                    type: '',
+                    images: `https://randomuser.me/api/portraits/men/${Math.floor(Math.random() * 100 % 100 + 1)}.jpg`
+                }
+        
+        
+        
+                //this used to be const but we are pushing to it
+                let imageArrayFromIds = [];
+        
+                //what is this spaghettii...
+                //this should definitely be in some sort of hook...
+                for (const key of Object.keys(outfitArray)){
+                    for (const id of outfitArray[key]){
+                        //the clothingObject we find using the ID
+                        const temp = closetObject[key].find(clothingObj => clothingObj._id === id);
+                        if (!temp){
+                            console.log(`Cannot find clothingObject with id: ${id}`)
+                        }
+                        else if (Array.isArray(temp.images)){
+                            imageArrayFromIds.push(dummySrc)
+        
+                        } else if (temp.images.images.length === 0){
+                            imageArrayFromIds.push(dummySrc)
+                        } else {
+                            imageArrayFromIds.push({
+                                type: temp.images.type,
+                                images: temp.images.images[0]
+                            })
+                        }
+                        
+                        if (imageArrayFromIds.length >= combinedClothingItemsArray.length){
+                            break;
+                        }
+                    }
+                }
+        
+                setCombinedClothingItemsArrayHook(combinedClothingItemsArray)
+                setImageArrayFromIdsHook(imageArrayFromIds)
+                setNeedsCropHook(needsCrop)
+        
+        
+                // when unloading
+                return () => {
+                    console.log('blurred OutfitList')
+                }
+            }, [])
 
 
     
@@ -67,7 +146,7 @@ const RenderOutfit = React.memo(({item, closetObject}) => {
 
     const navigation = useNavigation();
 
-    const IndividualClothingImage = ({index}) => {
+    const IndividualClothingImage = React.memo(({index}) => {
         return (
             <View style={[{
                 width: '50%', 
@@ -95,84 +174,65 @@ const RenderOutfit = React.memo(({item, closetObject}) => {
             </View>
         </View>
         )
-    }
+    })
 
-    const PiecePreview = React.memo(({outfitArr}) => {
-
-
-        useEffect(() => {
-        
-
-
-            let outfitArray = item.outfitArr;
-    
-            //this is now one big list of IDs
-            let combinedClothingItemsArray = [
-                ...outfitArray.topsArray,
-                ...outfitArray.bottomsArray,
-                ...outfitArray.footwearArray,
-                ...outfitArray.otherArray
-            ]
-    
-            const origLength = combinedClothingItemsArray.length
-    
-            const needsCrop = combinedClothingItemsArray.length > 4;
-    
-            if (needsCrop){
-                combinedClothingItemsArray = combinedClothingItemsArray.slice(0, 3) // should only include the first 3 terms
-            }
-    
-    
-            
-            let dummySrc = {
-                type: '',
-                images: `https://randomuser.me/api/portraits/men/${Math.floor(Math.random() * 100 % 100 + 1)}.jpg`
-            }
-    
-    
-    
-            //this used to be const but we are pushing to it
-            let imageArrayFromIds = [];
-    
-            //what is this spaghettii...
-            //this should definitely be in some sort of hook...
-            for (const key of Object.keys(outfitArray)){
-                for (const id of outfitArray[key]){
-                    //the clothingObject we find using the ID
-                    const temp = closetObject[key].find(clothingObj => clothingObj._id === id);
-                    if (!temp){
-                        console.log(`Cannot find clothingObject with id: ${id}`)
+    const OutfitDateFavoriteBadge = React.memo(({item}) => {
+        return (
+            <View style={[{
+                position: 'absolute',
+                width: 'auto',
+                height: 'auto',
+                borderRadius: 10,
+                top: 0,
+                right: 0,
+                zIndex: 3,
+                padding: 5,
+                flexDirection: 'row'
+            }, GlobalStyles.bgColorMain]}>
+                <View style={{
+                    justifyContent: 'center',
+                    alignItems: 'center'
+                }}>
+                    {
+                        item.favorite ? <HeartIcon size={22} style={{color: '#ff4040', marginRight: 2}}/> : null
                     }
-                    else if (Array.isArray(temp.images)){
-                        imageArrayFromIds.push(dummySrc)
-    
-                    } else if (temp.images.images.length === 0){
-                        imageArrayFromIds.push(dummySrc)
-                    } else {
-                        imageArrayFromIds.push({
-                            type: temp.images.type,
-                            images: temp.images.images[0]
-                        })
-                    }
-                    
-                    if (imageArrayFromIds.length >= combinedClothingItemsArray.length){
-                        break;
-                    }
-                }
-            }
-    
-            setCombinedClothingItemsArrayHook(combinedClothingItemsArray)
-            setImageArrayFromIdsHook(imageArrayFromIds)
-            setNeedsCropHook(needsCrop)
-    
-    
-            //when unloading
-            return () => {
-                console.log('blurred OutfitList')
-            }
-        }, [outfitArr])
+                </View>
+                <Text style={[{color: 'white', fontWeight: 'bold'}, GlobalStyles.h5]}>
+                    {`${new Date(item.date).toLocaleString('en-GB').substr(0, 10)}`}
+                </Text>
+            </View>
+        )
+    })
 
+    const OutfitFitpic = React.memo(({item}) => {
+        return (
+            <View style={{
+                width: '50%',
+                height: 'auto'}}>
+                <View style={{
+                    width: 'auto',
+                    marginLeft: 10,
+                    marginTop: 10,
+                    marginBottom: 10,
+                    height: 'auto'
+                }}>
+                    <View style={[{
+                        marginRight: 5,
+                        width: 'auto',
+                        aspectRatio: 1,
+                        backgroundColor: 'white',
+                        borderRadius: 10
+                    }, GlobalStyles.shadowLight]}>
+                        <Image source={item.fitpic !== '' && item.fitpic.fitpic !== '' ? (item.fitpic.type === 'imgur' ?
+                        { uri: makeMediumImage(item.fitpic.fitpic)} : {uri: item.fitpic.fitpic}) : null}
+                            style={{height: '100%', width: '100%', borderRadius: 10}}/>
+                    </View>
+                </View>
+            </View>
+        )
+    })
 
+    const PiecePreview = React.memo(({outfitArray}) => {
         return (
             <View style={{
                 width: '50%',
@@ -216,7 +276,10 @@ const RenderOutfit = React.memo(({item, closetObject}) => {
                 </View>
             </View>
         )
-    }, (prevProps, nextProps) => prevProps.outfitArr == nextProps.outfitArr)
+    }, (prevProps, nextProps) => 
+            prevProps.outfitArray == nextProps.outfitArray &&
+            prevProps.favorite == nextProps.favorite)
+    
 
 
     return (
@@ -245,29 +308,7 @@ const RenderOutfit = React.memo(({item, closetObject}) => {
                     alignItems: 'center',
                     flexDirection: 'column',
                 }}>
-                    <View style={[{
-                        position: 'absolute',
-                        width: 'auto',
-                        height: 'auto',
-                        borderRadius: 10,
-                        top: 0,
-                        right: 0,
-                        zIndex: 3,
-                        padding: 5,
-                        flexDirection: 'row'
-                    }, GlobalStyles.bgColorMain]}>
-                        <View style={{
-                            justifyContent: 'center',
-                            alignItems: 'center'
-                        }}>
-                            {
-                                item.favorite ? <HeartIcon size={22} style={{color: '#ff4040', marginRight: 2}}/> : null
-                            }
-                        </View>
-                        <Text style={[{color: 'white', fontWeight: 'bold'}, GlobalStyles.h5]}>
-                            {`${new Date(item.date).toLocaleString('en-GB').substr(0, 10)}`}
-                        </Text>
-                    </View>
+                    <OutfitDateFavoriteBadge item={item}/>
                     <View style={{
                         height: 10,
                         width: '100%',
@@ -304,39 +345,19 @@ const RenderOutfit = React.memo(({item, closetObject}) => {
                             flexWrap: 'wrap',
 
                         }}>
-                            <View style={{
-                                width: '50%',
-                                height: 'auto'}}>
-                                <View style={{
-                                    width: 'auto',
-                                    marginLeft: 10,
-                                    marginTop: 10,
-                                    marginBottom: 10,
-                                    height: 'auto'
-                                }}>
-                                    <View style={[{
-                                        marginRight: 5,
-                                        width: 'auto',
-                                        aspectRatio: 1,
-                                        backgroundColor: 'white',
-                                        borderRadius: 10
-                                    }, GlobalStyles.shadowLight]}>
-                                        <Image source={item.fitpic !== '' && item.fitpic.fitpic !== '' ? (item.fitpic.type === 'imgur' ?
-                                        { uri: makeMediumImage(item.fitpic.fitpic)} : {uri: item.fitpic.fitpic}) : null}
-                                            style={{height: '100%', width: '100%', borderRadius: 10}}/>
-                                    </View>
-                                </View>
-                            </View>
+                            {/* Fitpic */}
+                            <OutfitFitpic item={item}/>
                             
                             {/* The images of the pieces in the outfit */}
-                            <PiecePreview />
+                            <PiecePreview outfitArray={item.outfitArr}/>
                         </View>
                     </View>
                 </View> 
             </TouchableOpacity>
         </View>
     )
-}, (prevProps, nextProps) => prevProps.item._id == nextProps.item._id)
+}, (prevProps, nextProps) => prevProps.item == nextProps.item
+    )
 
 
 
@@ -358,10 +379,22 @@ export const OutfitList = (props) => {
     const outfitsArray = useSelector(state => state.outfits.outfitsArray);
 
     // const outfitsArray = useSelector(state => state.outfits.outfitsArray);
-    // const closetObject = useSelector(state => state.closet.closetObject);
+    const closetObject = useSelector(state => state.closet.closetObject);
 
 
-    const closetObject = store.getState().closet.closetObject
+
+    // const [closetObject, setClosetObject] = useState(store.getState().closet.closetObject)
+
+    // useFocusEffect(
+    //     useCallback(() => {
+    //         console.log('focusing OutfitList')
+    //         setClosetObject(store.getState().closet.closetObject)
+
+    //         return () => {
+    //             console.log('blurring OutfitList')
+    //         }
+    //     }, [])
+    // )
 
     
     return (
@@ -375,7 +408,8 @@ export const OutfitList = (props) => {
 
                 renderItem={(object, index) => (
                     <>
-                        <RenderOutfit {...object} closetObject={closetObject}/>
+                        <RenderOutfit {...object} closetObject={closetObject}
+                        />
                     </>
                 )}
                 // renderItem={(object, index) => <RenderOutfit  item={object} />}

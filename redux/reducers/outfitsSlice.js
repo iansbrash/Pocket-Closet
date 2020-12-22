@@ -223,6 +223,7 @@ const outfitsSlice = createSlice({
         },
         outfitFavoriteToggled: {
             reducer(state, action) {
+                console.log(`'toggling outfitFavorite for outfit ${action.payload._id}'`)
                 let itemToEdit = state.outfitsArray.find(outfitObject => outfitObject._id === action.payload._id)
                 itemToEdit.favorite = !itemToEdit.favorite;
             },
