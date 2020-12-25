@@ -26,58 +26,32 @@ import * as ImageManipulator from 'expo-image-manipulator';
  *  topsArray, bottomsArray, footwearArray, otherArray 
  *  in the outfitArr property, and also contains
  *  description, date, tags, favorite, in the base properties */
-const RenderOutfit = React.memo(({item, closetObject, onClickFunc
-}) => {
-    //we shouldnt need to check for change in the closetObject...
-    //because on clothingObject deletion, we also track down the _id in it's corresponding
-    //outfitObjects and delete it's _id from its outfitArr
+const RenderOutfit = React.memo(({item, closetObject, onClickFunc}) => {
     console.log(`rerendering RenderOutfit with id ${item._id}`)
 
-    // const closetObject = useSelector(state => state.closet.closetObject);
-
-
-
+    // array of image objects: 
+    //      {images: 'https://imgur.com/...', type: 'imgur'}
     const [imageArrayFromIdsHook, setImageArrayFromIdsHook] = useState([])
-    const [combinedClothingItemsArrayHook, setCombinedClothingItemsArrayHook] = useState([])
-    const [needsCropHook, setNeedsCropHook] = useState(false)
 
+    // takes all _ids from topsArray, bottomsArray, etc, uses spread operator and combines them.
+    // possibly don't have to do this in the useEffect hook?
+    const [combinedClothingItemsArrayHook, setCombinedClothingItemsArrayHook] = useState([])
+    
+    // whether or not we have more than 4 _ids to work with
+    const [needsCropHook, setNeedsCropHook] = useState(false)
+    
+    // original number of _ids we are working with
+    const [origLengthHook, setOrigLengthHook] = useState(0)
+
+    // leaving this comment here for fun
     // wow. i understand how hooks work now 4 months later. this was causing re rendering
     // const outfitsArray = useSelector(state => state.outfits.outfitsArray)
 
-
-    // This causes the re-renders. Need to figure out how to circumnavigate this
-    // const closetObject = useSelector(state => state.closet.closetObject)
-
-
-    
-
-
-    //need to put all this spaghettin into here
-    //combinedClothingItemsArray
-    //imageArrayFromIds
-
-
-    // const ClothingItemCollection = ({
-    //     outfitArray,
-    //     setCombinedClothingItemsArrayHook, 
-    //     setImageArrayFromIdsHook, 
-    //     setNeedsCropHook
-    // }) => {
-    //     return (
-
-    //     )
-    // }
-
-            // return <View><Text>wtf</Text></View>
-
     useEffect(() => {
 
-
-        //RenderOutfit relies on a useSelector hook to update
-
-        // console.log('useEffect triggering')
-
+        //can't just run the code because of useEffect quirk
         const loadImages = async () => {
+            //convenience
             let outfitArray = item.outfitArr;
 
             //this is now one big list of IDs
@@ -87,117 +61,108 @@ const RenderOutfit = React.memo(({item, closetObject, onClickFunc
                 ...outfitArray.footwearArray,
                 ...outfitArray.otherArray
             ]
+            
+            //used for the '+#' icon
             const origLength = combinedClothingItemsArray.length 
+
+            //used to check if we need the above icon
             const needsCrop = combinedClothingItemsArray.length > 4;
+
+            //we only need to examine the first 3 _ids if we know we are dealing with
+            //more than 4 clothingObjects
             if (needsCrop){
                 combinedClothingItemsArray = combinedClothingItemsArray.slice(0, 3) // should only include the first 3 terms
             }
+
+            //should replace this. we push this in case of an error.
             let dummySrc = {
                 type: '',
                 images: `https://randomuser.me/api/portraits/men/${Math.floor(Math.random() * 100 % 100 + 1)}.jpg`
             }
     
-            //this used to be const but we are pushing to it
+            //temporary variable we use to update our state hook later
             let imageArrayFromIds = [];
     
-            //what is this spaghettii...
-            //this should definitely be in some sort of hook...
+            //we don't use combinedClothingItemsArray because we need the topsArray, bottomsArray (keys)
+            //because we need to search our redux store for the clothingObjects that correspond to the _id
+            //we're searching with
             for (const key of Object.keys(outfitArray)){
+
+                //for each id in our outfits outfitArray
                 for (const id of outfitArray[key]){
-                    //the clothingObject we find using the ID
-                    const temp = closetObject[key].find(clothingObj => clothingObj._id === id);
-                    if (!temp){
+
+                    //attempt to find the corresponding clothingObject for our _id
+                    const tempClothingObject = closetObject[key].find(clothingObj => clothingObj._id === id);
+
+                    //if we couldn't find the clothingObject
+                    if (!tempClothingObject){
                         console.log(`Cannot find clothingObject with id: ${id}`)
                     }
-                    else if (Array.isArray(temp.images)){
+
+                    //if we find the clothingObject, but it has no images associated with it
+                    else if (tempClothingObject.images.images.length === 0){
                         console.log('pushing dummysrc')
                         imageArrayFromIds.push(dummySrc)
-    
-                    } else if (temp.images.images.length === 0){
-                        console.log('pushing dummysrc')
-                        imageArrayFromIds.push(dummySrc)
-                    } else {
-    
-                        console.log('in createdResizedImage asdasd')
-                        // if (true) {
-                        //     imageArrayFromIds.push({
-                        //         type: temp.images.type,
-                        //         images: temp.images.images[0]
-                        //     })
-                        // }
-                        // else 
-                        if (temp.images.type === 'imgur'){
-                            console.log('in first if')
+                    } 
+
+                    else {
+
+                        //if it's an imgur image, just push it, because we can resize the image by appending
+                        //the appropriate letter to the end of the url
+                        if (tempClothingObject.images.type === 'imgur'){
                             imageArrayFromIds.push({
-                                type: temp.images.type,//temp.images.type,
-                                images: temp.images.images[0] //temp.images.images[0]
+                                type: tempClothingObject.images.type,//temp.images.type,
+                                images: tempClothingObject.images.images[0] //temp.images.images[0]
                             })
-                        } else {
-                            console.log('in second if')
-                            console.log(temp.images.images[0])
-    
+                        } 
+                        
+                        //we know it is local now. we need to resize it with expo image manipulator
+                        else {
+                            //expo image manipulator.
+                            //scale down to 80x__ (preserve aspect ratio)
                             const manipResult = await ImageManipulator.manipulateAsync(
                                 // image.localUri || image.uri
-                                temp.images.images[0],
+                                tempClothingObject.images.images[0],
                                 [{ resize: {width: 80} }],
                                 { compress: 0.75, format: ImageManipulator.SaveFormat.JPEG }
                             );
+
+                            //push into imageArrayFromIds
+                            //we know at this point it isn't an imgur image, so assuming 'local' is fine
                             imageArrayFromIds.push({
-                                type: 'local',//temp.images.type,
-                                images: manipResult.uri //temp.images.images[0]
+                                type: 'local', //temp.images.type,
+                                images: manipResult.uri,  //temp.images.images[0]
                             })
-    
-                            /**
-                            ImageResizer.createResizedImage(
-                                // temp.images.images[0], 100, 100, 'JPEG', 50, 0, null
-                                temp.images.images[0], 100, 100, 'JPEG', 100, 0, undefined, false, //{ mode, onlyScaleDown }
-                                
-                                )
-                                .then(response => {
-                                    
-                                    // imageArrayFromIds.push({
-                                    //     type: 'local',//temp.images.type,
-                                    //     images: response.path //temp.images.images[0]
-                                    // })
-                                    imageArrayFromIds = [...imageArrayFromIds, {
-                                        type: 'local',//temp.images.type,
-                                        images: response.path //temp.images.images[0]
-                                    }]
-                                    // response.uri
-                                    // response.uri is the URI of the new image that can now be displayed, uploaded...
-                                    // response.path is the path of the new image
-                                    // response.name is the name of the new image with the extension
-                                    // response.size is the size of the new image
-                                }).catch(err => {
-                                    // console.log('wtf')
-                                    console.log(err)
-                            })  */
                         }
-                        
-    
-    
-                        // imageArrayFromIds.push({
-                        //     type: temp.images.type,
-                        //     images: temp.images.images[0]
-                        // })
                     }
                     
+                    //if we push as many image objects into our imageArrayFromIds array as
+                    //there are images to push, stop pushing (makes sense)
                     if (imageArrayFromIds.length >= combinedClothingItemsArray.length){
                         break;
                     }
                 }
             }
     
+            // array of all clothingObjects, without the usual divides with topsArray, bottomsArray, etc
             setCombinedClothingItemsArrayHook(combinedClothingItemsArray)
+
+            // array of objects that look like {images: 'https://imgur.com/asdasd', type: 'imgur'}
+            // yes, we say 'images' instead of 'image' even though it is a single link
             setImageArrayFromIdsHook(imageArrayFromIds)
+
+            // whether we have more than 4 clothing pieces or not
             setNeedsCropHook(needsCrop)
-    
+
+            // original # of clothing items, so we can properly add the '+#' icon
+            setOrigLengthHook(origLength)
         }
 
+        // because we are using the async expo image manupulator, we need to first create the async function,
+        // then call it (because we are in useEffect)
+        // possible: use useFocusEffect with useCallback instead of useEffect
         loadImages();
-
         
-
         // when unloading
         return () => {
             console.log('blurred OutfitList')
@@ -205,19 +170,10 @@ const RenderOutfit = React.memo(({item, closetObject, onClickFunc
     }, [])
 
 
-    
-
-    // console.log(combinedClothingItemsArray)
-    // return (
-    //     <View>
-    //         <Text>{item._id}</Text>
-    //     </View>
-    // )
-    
-
     const navigation = useNavigation();
 
-    
+    // The absolutely positioned date and heart badge and the top right
+    // <3 11/12/13
     const OutfitDateFavoriteBadge = React.memo(({item}) => {
         return (
             <View style={[{
@@ -246,6 +202,7 @@ const RenderOutfit = React.memo(({item, closetObject, onClickFunc
         )
     })
 
+    // The roughly 180x180 image of the outfit's fitpic on the left
     const OutfitFitpic = React.memo(({item}) => {
         return (
             <View style={{
@@ -274,6 +231,8 @@ const RenderOutfit = React.memo(({item, closetObject, onClickFunc
         )
     })
 
+    // roughly 80x80 image of an outfit's individual clothing pieces
+    // mapped out in PieceView
     const IndividualClothingImage = React.memo(({index}) => {
         return (
             <View style={[{
@@ -289,7 +248,7 @@ const RenderOutfit = React.memo(({item, closetObject, onClickFunc
                 backgroundColor: 'white'
             }, GlobalStyles.shadowLight]}
             key={index}>
-            {  imageArrayFromIdsHook[index] ?  <Image  
+            {imageArrayFromIdsHook[index] ? <Image  
                     key={index}
                     source={
                         imageArrayFromIdsHook[index].type === 'imgur' ? 
@@ -297,16 +256,7 @@ const RenderOutfit = React.memo(({item, closetObject, onClickFunc
                             {uri: makeSmallImage(imageArrayFromIdsHook[index].images)} :
                         // Local
                             {uri: imageArrayFromIdsHook[index].images
-                                
-                                    // .catch(err => {
-                                    //     // Oops, something went wrong. Check that the filename is correct and
-                                    //     // inspect err to get more details.
-                                    // })
-                            }  //imageArrayFromIdsHook[index].images
-                                
-                                
-                                
-
+                        }  
                     } 
                     style={{height: '100%', aspectRatio: 1, borderRadius: 10}} /> : null}
             </View>
@@ -314,7 +264,8 @@ const RenderOutfit = React.memo(({item, closetObject, onClickFunc
         )
     })
 
-
+    // The 1-4 IndividualClothingImage icons mapped out into a 2x2 area
+    // adds a '+#' icon if there are more than 4 clothing items
     const PiecePreview = React.memo(({outfitArray}) => {
         return (
             <View style={{
@@ -328,10 +279,12 @@ const RenderOutfit = React.memo(({item, closetObject, onClickFunc
                     flexWrap: 'wrap',
                     alignItems: 'center'
                 }}>
+                    {/* Maps out the first 1-4 clothing images */}
                     {combinedClothingItemsArrayHook.map((clothingObject, index) => (
                         <IndividualClothingImage key={clothingObject._id} index={index}/>
                         )
                     )}
+                    {/* Adds the  '+#' if needed */}
                     {needsCropHook ? (
                         <View style={[{
                             height: 'auto', 
@@ -349,7 +302,7 @@ const RenderOutfit = React.memo(({item, closetObject, onClickFunc
                                 justifyContent: 'center',
                                 alignItems: 'center'}} >
                                     <Text style={[GlobalStyles.h3, {fontWeight: 'bold'}]}>
-                                        {`+${origLength - 3}`}
+                                        {`+${origLengthHook - 3}`}
                                     </Text>
                             </View>
                     </View>
@@ -359,13 +312,14 @@ const RenderOutfit = React.memo(({item, closetObject, onClickFunc
         )
     }, (prevProps, nextProps) => 
             prevProps.outfitArray == nextProps.outfitArray &&
-            prevProps.favorite == nextProps.favorite)
+            prevProps.favorite == nextProps.favorite) //memo equal function
     
 
-
+    
+    //RenderOutfit return
     return (
         <View style={{
-            height: 200, //origLength > 4 ? 200 : 115, //was 120
+            height: 200, 
             width: '100%',
             borderRadius: 10
         }}>
@@ -411,6 +365,7 @@ const RenderOutfit = React.memo(({item, closetObject, onClickFunc
                         </View>
                     </View>
                     
+                    {/* Fitpic and PiecePreview */}
                     <View style={{
                         //height: 180, //origLength > 4 ? 180 : 95,
                         width: '100%',
@@ -456,8 +411,7 @@ const RenderOutfit = React.memo(({item, closetObject, onClickFunc
             </TouchableOpacity>
         </View>
     )
-}, (prevProps, nextProps) => prevProps.item == nextProps.item
-    )
+}, (prevProps, nextProps) => prevProps.item == nextProps.item) //memo equal function
 
 
 
@@ -467,34 +421,11 @@ const RenderOutfit = React.memo(({item, closetObject, onClickFunc
  *  topsArray, bottomsArray, footwearArray, otherArray */
 // onClickFunc looks like:   function (outfitObject) { ... }
 export const OutfitList = ({customFilter, onClickFunc}, props) => {
-
     console.log('OutfitList being re-rendered')
 
     const navigation = useNavigation()
-
-    
-    //temp
-    let src = { uri: 'https://randomuser.me/api/portraits/men/1.jpg' }
-
     const outfitsArray = useSelector(state => state.outfits.outfitsArray);
-
-    // const outfitsArray = useSelector(state => state.outfits.outfitsArray);
     const closetObject = useSelector(state => state.closet.closetObject);
-
-
-
-    // const [closetObject, setClosetObject] = useState(store.getState().closet.closetObject)
-
-    // useFocusEffect(
-    //     useCallback(() => {
-    //         console.log('focusing OutfitList')
-    //         setClosetObject(store.getState().closet.closetObject)
-
-    //         return () => {
-    //             console.log('blurring OutfitList')
-    //         }
-    //     }, [])
-    // )
 
     
     return (
@@ -510,23 +441,17 @@ export const OutfitList = ({customFilter, onClickFunc}, props) => {
                     <RenderOutfit {...object} closetObject={closetObject} onClickFunc={onClickFunc}
                     />
                 )}
-                // renderItem={(object, index) => <RenderOutfit  item={object} />}
                 
-                keyExtractor={(obj, index) => obj._id.toString()} //obj._id.. not all obj has _id rn
+                keyExtractor={(obj, index) => obj._id.toString()} 
                 showsVerticalScrollIndicator={false}
+
                 // Below are possible optimizations
-                removeClippedSubviews={false} // TEMP
+                removeClippedSubviews={false} // causes FlatList to sometimes not render until scrolled.. so we disabled
                 getItemLayout={(data, index) => (
                     {length: 200, offset: 200 * index, index}
                 )}
                 initialNumToRender={3}
             />
-            {/* {outfitsArray.map((item, i) => (
-                <>
-                    <RenderOutfit item={item} key={i}/>
-                </>
-            ))} */}
-            
         </View>
     )
 }
