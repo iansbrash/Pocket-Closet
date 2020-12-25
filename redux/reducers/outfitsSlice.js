@@ -235,6 +235,28 @@ const outfitsSlice = createSlice({
                 }
             }
         },
+        createdOutfitTagged: {
+            reducer (state, action) {
+                console.log(`in createdOutfitTagged with _id ${_id}`)
+                const { tagsArray, _id } = action.payload
+
+                tagsArray.forEach(tag => {
+                    // add tag if it isnt in the taggedOutfits object
+                    !state.taggedOutfits[tag] ? state.taggedOutfits[tag] = [] : null;
+
+                    state.taggedOutfits[tag].push(_id)
+                })
+
+            },
+            prepare (_id, tagsArray) {
+                return {
+                    payload: {
+                        tagsArray,
+                        _id
+                    }
+                }
+            }
+        }
     }
 
 })
@@ -248,5 +270,6 @@ export const {
     outfitDeletedFromOutfits,
     outfitFavoriteToggled,
     outfitInProgressFitpicAdded,
-    outfitInProgressAttributeAdded
+    outfitInProgressAttributeAdded,
+    createdOutfitTagged
 } = outfitsSlice.actions

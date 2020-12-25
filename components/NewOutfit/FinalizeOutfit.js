@@ -7,7 +7,11 @@ import  {
     Text,
     ScrollView } from 'react-native'
 import { useDispatch, useSelector } from 'react-redux'
-import { outfitCreatedFromHome, outfitInProgressItemDeleted } from '../../redux/reducers/outfitsSlice'
+import { 
+    outfitCreatedFromHome, 
+    outfitInProgressItemDeleted, 
+    createdOutfitTagged 
+} from '../../redux/reducers/outfitsSlice'
 
 import { useNavigation } from '@react-navigation/native'
 import { TopNavScreenHeader } from '../GlobalComponents/TopNav'
@@ -190,7 +194,9 @@ export const FinalizeOutfit = () => {
 
         dispatch(batchActions([
             clothingInOutfitWorn(idArrayObject, nid),
-            outfitCreatedFromHome(idArrayObject, nid, date),]
+            outfitCreatedFromHome(idArrayObject, nid, date),
+            createdOutfitTagged(nid, outfitInProgress.tags)
+        ]
         ))
 
         //we have a prepare: statement in our action, so we just need to pass in these 2 arguments

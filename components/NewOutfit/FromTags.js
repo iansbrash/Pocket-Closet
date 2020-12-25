@@ -43,6 +43,7 @@ export const FromTags = () => {
 
     const taggedOutfits = useSelector(state => state.outfits.taggedOutfits)
     console.log(taggedOutfits)
+    
     return (
         <View style={{
             backgroundColor: 'white',

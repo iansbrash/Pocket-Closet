@@ -178,10 +178,10 @@ const IndividualTag = ({title, deleteFunc}) => {
 
 export const OutfitDescription = () => {
 
-    const nameRef = useRef(null)
+    // const nameRef = useRef(null)
     const descriptionRef = useRef(null)
-    const colorRef = useRef(null)
-    const priceRef = useRef(null)
+    // const colorRef = useRef(null)
+    // const priceRef = useRef(null)
     const tagsRef = useRef(null)
 
     const dispatch = useDispatch()

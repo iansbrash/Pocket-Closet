@@ -248,6 +248,10 @@ export const NewClosetScreen = () => {
         setHeartToggleChecked(!heartToggleChecked);
     }
 
+    const onClickFunc = (outfitObject) => {
+        navigation.navigate("VIEWINDIVIDUALOUTFIT", {item: outfitObject})
+    }
+
     
 
 
@@ -303,10 +307,8 @@ export const NewClosetScreen = () => {
 
                                 }}
                                 pointerEvents={closetIsActive ? 'none' : 'auto'}>
-                                    <OutfitList />
+                                    <OutfitList customFilter={null} onClickFunc={onClickFunc}/>
                                 </View>
-                            
-                                {/* <ShittyModal /> currently doesnt work we need to rework */}
                         </View>
                 </View>
             </View>

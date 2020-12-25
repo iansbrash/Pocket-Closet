@@ -31,13 +31,19 @@ export const FromFavorites = () => {
         console.log(`'clicked!' ${outfitObject._id}`)
     }
 
+    const filterFavorites = (outfitArray) => {
+        return outfitArray.filter(outfitObject => outfitObject.favorite)
+    }
+
     return (
         <View style={{
             backgroundColor: 'white',
             flex: 1
         }}>
             <TopNavScreenHeader title={'From Favorites'} exitDestination={'HOMESCREEN'}/>
-            <OutfitList outfitsArray={favoriteOutfitsArray} onClickFunc={onClickFunc}/>
+            <OutfitList 
+                customFilter={filterFavorites} 
+                onClickFunc={onClickFunc}/>
         </View>
     )
 }
