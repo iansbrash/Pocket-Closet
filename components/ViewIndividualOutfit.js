@@ -9,10 +9,10 @@ import {
     ScrollView, 
     Text, 
     View, 
-    Dimensions,
     Vibration,
     Animated,
-    Pressable
+    Pressable,
+    FlatList
 } from 'react-native'
 import { useSelector, useDispatch} from 'react-redux' 
 import GestureRecognizer, {swipeDirections} from 'react-native-swipe-gestures';
@@ -61,95 +61,7 @@ const DisplayClothingTypeFour = React.memo(({fetchedOutfitObjectOutfitArr, outfi
     //Dummy <Image> source if we don't have a fitpic/image... should change to something different
     const dummySrc = { uri: 'https://randomuser.me/api/portraits/men/1.jpg' }
 
-    // Renders a horizontal list of ClothingIcons, 4 total for each 'drawer'
-    const ScrollClothingList = () => {
-        return (
-            <View style={{width: '100%'}}>
-                <ScrollView
-                style={{height: 'auto', paddingTop: 5, paddingBottom: 5}}
-                horizontal={true}
-                showsHorizontalScrollIndicator={false}
-                >
-                        {fetchedOutfitObjectOutfitArr[`${type}Array`].map(clothingObject => (
-                            <ClothingIcon clothingObject={clothingObject} key={clothingObject._id}/>
-                        ))}
-                </ScrollView>
-            </View>
-        )
-    }
-
-    //Renders ClothingIcon, which display's an individual piece's image, # of brands and colors, and favorite/archive
-    //Tapping navigates to ViewIndividualPiece
-    const ClothingIcon = ({clothingObject}) => {
-        return (
-            <View style={{
-                width: 150, // might just have to do this
-                height: 'auto',
-            }}>
-                <TouchableOpacity
-                onPress={() => navigation.push('VIEWINDIVIDUALPIECE', {item: clothingObject})}>
-                    <View style={[{
-                        margin: 5,
-                        height: 'auto',
-                        width: 'auto',
-                        borderRadius: 5,
-                        backgroundColor: 'white',
-                    }, GlobalStyles.shadowLight]}>
-                        <View style={{
-                            height: 5,
-                            width: '100%',
-                            zIndex: 0
-                        }}>
-                            <View 
-                            style={[
-                                GlobalStyles.bgColorMain, 
-                                {width: '100%', 
-                                position: 'absolute',
-                                height: 10,
-                                top: 0,
-                                borderTopLeftRadius: 5, 
-                                borderTopRightRadius: 5
-                                }]}></View>
-                        </View>
-                        <View style={{
-                            paddingTop: 5,
-                            paddingLeft: 5,
-                            paddingRight: 5,
-                            marginBottom: 5,
-                            backgroundColor: 'white',
-                            width: 'auto',
-                            height: 'auto'
-                        }}>
-                            <Image source={clothingObject.images.images.length !== 0 ? (
-                                clothingObject.images.type === 'imgur' ?
-                                    {uri: makeMediumSmallImage(clothingObject.images.images[0])} :
-                                    {uri: clothingObject.images.images[0]}
-                                )
-                                : dummySrc} 
-                                style={{width: '100%', aspectRatio: 1, borderRadius: 5}}/>
-                        </View>
-                        <View style={{marginLeft: 5, marginBottom: 5}}>
-                            <Text 
-                            numberOfLines={1}
-                            style={[{fontWeight: 'bold'}, GlobalStyles.h7]}>
-                                {clothingObject.clothingName}
-                                </Text>
-                            <Text style={GlobalStyles.h7}>{clothingObject.pieceType}</Text>
-                        </View>
-                        <View style={{
-                            position: 'absolute',
-                            bottom: 5,
-                            right: 5,
-                            flexDirection: 'row'
-                        }}>
-                            {clothingObject.archive ? <ArchiveIcon style={GlobalStyles.lighterHint} size={18}/> : null}
-                            {clothingObject.favorite ? <HeartIcon style={{color: 'red', marginLeft: 2}} size={18}/> : null}
-                        </View>
-                    </View>
-                </TouchableOpacity>
-            </View>
-        )
-    }
+    
 
     //Renders the button you click on to change drawers. Rendered 4 times for each drawer
     const TypesDrawer = ({clothingType, icon, disabled}) => {
@@ -227,9 +139,122 @@ const DisplayClothingTypeFour = React.memo(({fetchedOutfitObjectOutfitArr, outfi
             <View style={{
                 width: '100%'
             }}>
-                <ScrollClothingList />
+                <ScrollClothingList type={type} fetchedOutfitObjectOutfitArr={fetchedOutfitObjectOutfitArr}/>
             </View>
             
+        </View>
+    )
+})
+
+// Renders a horizontal list of ClothingIcons, 4 total for each 'drawer'
+const ScrollClothingList = React.memo(({type, fetchedOutfitObjectOutfitArr}) => {
+    console.log(`ScrollClothingList being re-rendered.`)
+    return (
+        <View style={{width: '100%'}}>
+            <FlatList 
+                data={fetchedOutfitObjectOutfitArr[`${type}Array`]}
+                renderItem={(item, index) => 
+                    // console.log(item)
+                    <ClothingIcon 
+                        clothingObject={item.item} 
+                    />
+                }
+                keyExtractor={clothingObject => clothingObject._id}
+                horizontal={true}
+                showsHorizontalScrollIndicator={false}
+                initialNumToRender={3}
+                
+            
+            />
+            {/* <ScrollView
+            style={{height: 'auto', paddingTop: 5, paddingBottom: 5}}
+            horizontal={true}
+            showsHorizontalScrollIndicator={false}
+            >
+                    {fetchedOutfitObjectOutfitArr[`${type}Array`].map(clothingObject => (
+                        <ClothingIcon clothingObject={clothingObject} key={clothingObject._id}/>
+                    ))}
+            </ScrollView> */}
+        </View> //12/26 problem: This re-renders. Possible fix:
+                                // stop putting all components in the parent component (prevent re-render)
+                                // memoize above component, pass fetchedOutfitObject component to it, only re-render
+                                // on {type} change
+    )
+})
+
+//Renders ClothingIcon, which display's an individual piece's image, # of brands and colors, and favorite/archive
+//Tapping navigates to ViewIndividualPiece
+const ClothingIcon = React.memo(({clothingObject}) => {
+    console.log(`ClothingIcon with clothingObject._id ${clothingObject._id}`)
+
+    const navigation = useNavigation()
+
+    return (
+        <View style={{
+            width: 150, // might just have to do this
+            height: 'auto',
+        }}>
+            <TouchableOpacity
+            onPress={() => navigation.push('VIEWINDIVIDUALPIECE', {item: clothingObject})}>
+                <View style={[{
+                    margin: 5,
+                    height: 'auto',
+                    width: 'auto',
+                    borderRadius: 5,
+                    backgroundColor: 'white',
+                }, GlobalStyles.shadowLight]}>
+                    <View style={{
+                        height: 5,
+                        width: '100%',
+                        zIndex: 0
+                    }}>
+                        <View 
+                        style={[
+                            GlobalStyles.bgColorMain, 
+                            {width: '100%', 
+                            position: 'absolute',
+                            height: 10,
+                            top: 0,
+                            borderTopLeftRadius: 5, 
+                            borderTopRightRadius: 5
+                            }]}></View>
+                    </View>
+                    <View style={{
+                        paddingTop: 5,
+                        paddingLeft: 5,
+                        paddingRight: 5,
+                        marginBottom: 5,
+                        backgroundColor: 'white',
+                        width: 'auto',
+                        height: 'auto'
+                    }}>
+                        <Image source={clothingObject.images.images.length !== 0 ? (
+                            clothingObject.images.type === 'imgur' ?
+                                {uri: makeMediumSmallImage(clothingObject.images.images[0])} :
+                                {uri: clothingObject.images.images[0]}
+                            )
+                            : dummySrc} 
+                            style={{width: '100%', aspectRatio: 1, borderRadius: 5}}/>
+                    </View>
+                    <View style={{marginLeft: 5, marginBottom: 5}}>
+                        <Text 
+                        numberOfLines={1}
+                        style={[{fontWeight: 'bold'}, GlobalStyles.h7]}>
+                            {clothingObject.clothingName}
+                            </Text>
+                        <Text style={GlobalStyles.h7}>{clothingObject.pieceType}</Text>
+                    </View>
+                    <View style={{
+                        position: 'absolute',
+                        bottom: 5,
+                        right: 5,
+                        flexDirection: 'row'
+                    }}>
+                        {clothingObject.archive ? <ArchiveIcon style={GlobalStyles.lighterHint} size={18}/> : null}
+                        {clothingObject.favorite ? <HeartIcon style={{color: 'red', marginLeft: 2}} size={18}/> : null}
+                    </View>
+                </View>
+            </TouchableOpacity>
         </View>
     )
 })

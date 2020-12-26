@@ -64,6 +64,67 @@ const IndividualTag = ({title}) => {
     )
 }
 
+const PriceAndColorAndSize = ({price, colorArray, size}) => {
+    // const colors = ['pink', 'teal', 'coral', 'white', 'black']
+    return (
+        <View style={{
+            position: 'absolute',
+            bottom: -15,
+            right: 15
+        }}>
+            <View style={[{
+                padding: 5,
+                borderRadius: 5,
+                justifyContent: 'flex-end',
+                flexDirection: 'row',
+                alignItems: 'center',
+                backgroundColor: 'white'
+            }, GlobalStyles.shadowLight]}>
+                <Text style={[GlobalStyles.h6, {fontWeight: 'bold', color: 'black'}]}>{`$${price ? price : 0}`}</Text>
+
+                <Text style={[GlobalStyles.h6, {fontWeight: 'bold', color: 'black', marginLeft: 3, marginRight: 3}]}>•</Text>
+                
+                <Text style={[GlobalStyles.h6, {fontWeight: 'bold', color: 'black'}]}>{`Size ${size}`}</Text>
+
+                <Text style={[GlobalStyles.h6, {fontWeight: 'bold', color: 'black', marginLeft: 3, marginRight: 3}]}>•</Text>
+
+                <View style={{
+                    borderRadius: 1,
+                    borderColor: 'black',
+                    borderStyle: 'solid',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    flexDirection: 'row',
+                }}>
+                    {colorArray.map(color => (
+                        <ColorIcon color={color} />
+                    ))} 
+                </View>
+                
+            </View>
+
+        </View>
+    )
+}
+
+const ColorIcon = ({color}) => {
+    return (
+        <View style={GlobalStyles.bgColorMain}>
+            <View style={{
+                height: 20,
+                aspectRatio: 1,
+                // borderWidth: 1,
+                // borderColor: color === 'white' ? 'black' : 'white',
+                // borderStyle: 'solid',
+                backgroundColor: color.toLowerCase().replace(/\s+/g, '')
+            }}>
+
+            </View>
+        </View>
+        
+    )
+}
+
 
 export const FinalizeClothing = () => {
 
@@ -160,6 +221,13 @@ export const FinalizeClothing = () => {
                                 </View>
                             ))}
                         </ScrollView>
+
+
+
+                        <PriceAndColorAndSize 
+                            price={clothingPieceInProgress.price} 
+                            colorArray={clothingPieceInProgress.color}
+                            size={clothingPieceInProgress.size}/>
                     </View>
                     <View>
                         <Text style={
