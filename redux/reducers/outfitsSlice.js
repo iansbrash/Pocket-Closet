@@ -24,6 +24,12 @@ const outfitsSlice = createSlice({
             descrition: '',
             tags: [],
             _id: '',
+            // What if the _id wasn't random, but was instead some hash that
+            // is created from the contents of the tops, bottoms, footwear, and otherArray
+            // this hash is quickly computable, and serves as not only an _id, but a way to check if
+            // an outfit is identical to another that is being created
+            //      This function should give the same output regardless of the order of the clothingObjects
+            //      --Might've been better to use Sets instead of Arrays
             outfitArr: {
                 topsArray: [],
                 bottomsArray: [],
@@ -93,7 +99,11 @@ const outfitsSlice = createSlice({
                 // state.outfitsArray.push(action.payload);
                 console.log('here is state.outfitInProgress before we push it')
                 console.log(state.outfitInProgress)
-                state.outfitsArray = [...state.outfitsArray, state.outfitInProgress]
+                // we previously did the below... (similar to pushing)
+                // state.outfitsArray = [...state.outfitsArray, state.outfitInProgress]
+
+                // now we do this... so the most recent outfit is always nearest the front
+                state.outfitsArray = [state.outfitInProgress, ...state.outfitsArray]
 
 
                 //turns out outfitArr is an object... holding the 4 ararys... kill me

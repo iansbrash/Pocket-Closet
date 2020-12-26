@@ -50,14 +50,16 @@ const TestSearchInput = ({searchInput, setSearchInput, setNewBrandInputModal}) =
     const onBlur = () => {
         Animated.timing(inputLength, {
             toValue: 1,
-            duration: 250
+            duration: 250,
+            useNativeDriver: false
         }).start();
     }
 
     const onFocus = () => {
         Animated.timing(inputLength, {
             toValue: 0,
-            duration: 250
+            duration: 250,
+            useNativeDriver: false
         }).start();
     }
     
@@ -201,7 +203,7 @@ export const TypeOfBrands = () => {
         item = item[0];
 
         /** There might be a '' brand stuck in limbo.. i had to cleanse it with this */
-        if (item === '' || !item || !item.toLowerCase().includes(searchInput)){
+        if (item === '' || !item || !item.toLowerCase().includes(searchInput.toLocaleLowerCase())){
             return null
         }
         let inSelectedBrands = selectedBrandsArray.find(searchItem => searchItem.toLowerCase() === item.toLowerCase())

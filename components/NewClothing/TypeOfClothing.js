@@ -248,7 +248,17 @@ export const TypeOfClothing = () => {
                     
                 </View>
                 <View style={{height: 30}}></View> 
-                {typeSelected !== '' ? <ScreenHeader title={typeSelected.toUpperCase()}/> : null}
+                {typeSelected !== '' ? 
+                    <>
+                        <Text style={[{
+                            fontWeight: 'bold',
+                            marginLeft: 15
+                        }, GlobalStyles.h1]}>
+                            {`${typeSelected}`}
+                        </Text>
+                        {/* <ScreenHeader title={typeSelected}/>  */}
+                    </>
+                : null}
                 <View style={{
                     margin: 5,
                     paddingBottom: 20,

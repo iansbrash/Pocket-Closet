@@ -5,10 +5,10 @@ import {
     Text, 
     View, 
     Dimensions,
-    Alert,
     Vibration,
     Animated,
-    Pressable
+    Pressable,
+    FlatList
 } from 'react-native'
 import { useSelector, useDispatch } from 'react-redux' 
 import GestureRecognizer, {swipeDirections} from 'react-native-swipe-gestures';
@@ -362,16 +362,120 @@ const ColorTags = React.memo(({colorArray}) => {
     )
 })
 
+const ClothingIcon = React.memo(({outfitObject}) => {
+
+    const navigation = useNavigation();
+
+
+    if (!outfitObject){
+        console.log(`didnt find outfitObject... probably got deleted`)
+        return null;
+    }
+    console.log(`ClothingIcon with outfitObject _id of ${outfitObject._id} being re-rendered.`)
+
+    return (
+        <View style={{
+            width: 150, // might just have to do this
+            height: 'auto',
+        }}>
+            <TouchableOpacity
+            onPress={() => navigation.push('VIEWINDIVIDUALOUTFIT', {item: outfitObject})}>
+                <View style={[{
+                    margin: 5,
+                    height: 'auto',
+                    width: 'auto',
+                    borderRadius: 5,
+                    backgroundColor: 'white',
+                }, GlobalStyles.shadowLight]}>
+                    <View style={{
+                        height: 5,
+                        width: '100%',
+                        zIndex: 0
+                    }}>
+                        <View 
+                        style={[
+                            GlobalStyles.bgColorMain, 
+                            {width: '100%', 
+                            position: 'absolute',
+                            height: 10,
+                            top: 0,
+                            borderTopLeftRadius: 5, 
+                            borderTopRightRadius: 5
+                            }]}></View>
+                    </View>
+                    
+                    <View style={{
+                        paddingTop: 5,
+                        paddingLeft: 5,
+                        paddingRight: 5,
+                        marginBottom: 5,
+                        width: 'auto',
+                        height: 'auto',
+                        zIndex: 1,
+                        backgroundColor: 'white'
+                    }}>
+                        <Image source={
+                            (outfitObject.fitpic &&
+                            outfitObject.fitpic.fitpic !== '') ? 
+                                (outfitObject.fitpic.type === 'imgur' ? 
+                                    {uri: makeMediumSmallImage(outfitObject.fitpic.fitpic)} : 
+                                    {uri: outfitObject.fitpic.fitpic}
+                                ) 
+                            : dummySrc}
+                            
+                            style={{width: '100%', aspectRatio: 1, borderRadius: 5}}/>
+                    </View>
+                    <View style={{marginTop: -5, marginLeft: 5, marginBottom: 5, marginRight: 5}}>
+                        <View style={{
+                            justifyContent: 'space-between',
+                            alignItems: 'center',
+                            flexDirection: 'row'
+                        }}>
+                            <Text 
+                            numberOfLines={1}
+                            style={[{fontWeight: 'bold'}, GlobalStyles.h6]}>
+                                {`${new Date(outfitObject.date).toLocaleString('en-GB').substr(0, 10)}`}
+                            </Text>
+                            {
+                                outfitObject.favorite ?  
+                                    <HeartIcon size={20} style={{color: 'red'}}/> : null
+                            }
+                        </View>
+                        <View style={{
+                            justifyContent: 'space-between',
+                            alignItems: 'center',
+                            flexDirection: 'row'
+                        }}>
+                            <Text style={GlobalStyles.h7}>{`${3} pieces`}</Text>
+                            <Text style={[{fontWeight: 'bold'}, GlobalStyles.hint]}>•</Text>
+                            <Text style={GlobalStyles.h7}>{`${3} brands`}</Text>
+                        </View>
+                    </View>
+                    <View style={{
+                        position: 'absolute',
+                        bottom: 5,
+                        right: 5
+                    }}>
+                        {/* <HeartIcon style={{color: clothingObject.favorite ? 'red' : 'black'}} size={20}/> */}
+                    </View>
+                </View>
+            </TouchableOpacity>
+        </View>
+    )
+}, (prevProps, nextProps) => prevProps.key == nextProps.key)
+
+
 //we need to fetch / store the list of outfits this clothing is in somehow
 //wow. this is incredible. React.memo
-const OutfitScroll = React.memo(({outfitsWornIn}) => {
+const OutfitScroll = React.memo(({outfitsWornIn}, props) => {
     
     
 
     const dummySrc = {uri: 'https://randomuser.me/api/portraits/men/1.jpg'}
 
     const outfitsArray = useSelector(state => state.outfits.outfitsArray)
-    const navigation = useNavigation();
+
+    
 
     console.log(outfitsWornIn)
 
@@ -400,128 +504,46 @@ const OutfitScroll = React.memo(({outfitsWornIn}) => {
         }
     ]
 
-    const ClothingIcon = React.memo(({outfitObject}) => {
-
-        if (!outfitObject){
-            console.log(`didnt find outfitObject... probably got deleted`)
-            return null;
-        }
-        console.log("i am being re rendered")
-
-        return (
-            <View style={{
-                width: 150, // might just have to do this
-                height: 'auto',
-            }}>
-                <TouchableOpacity
-                onPress={() => navigation.push('VIEWINDIVIDUALOUTFIT', {item: outfitObject})}>
-                    <View style={[{
-                        margin: 5,
-                        height: 'auto',
-                        width: 'auto',
-                        borderRadius: 5,
-                        backgroundColor: 'white',
-                    }, GlobalStyles.shadowLight]}>
-                        <View style={{
-                            height: 5,
-                            width: '100%',
-                            zIndex: 0
-                        }}>
-                            <View 
-                            style={[
-                                GlobalStyles.bgColorMain, 
-                                {width: '100%', 
-                                position: 'absolute',
-                                height: 10,
-                                top: 0,
-                                borderTopLeftRadius: 5, 
-                                borderTopRightRadius: 5
-                                }]}></View>
-                        </View>
-                        
-                        <View style={{
-                            paddingTop: 5,
-                            paddingLeft: 5,
-                            paddingRight: 5,
-                            marginBottom: 5,
-                            width: 'auto',
-                            height: 'auto',
-                            zIndex: 1,
-                            backgroundColor: 'white'
-                        }}>
-                            <Image source={
-                                (outfitObject.fitpic &&
-                                outfitObject.fitpic.fitpic !== '') ? 
-                                    (outfitObject.fitpic.type === 'imgur' ? 
-                                        {uri: makeMediumSmallImage(outfitObject.fitpic.fitpic)} : 
-                                        {uri: outfitObject.fitpic.fitpic}
-                                    ) 
-                                : dummySrc}
-                                
-                                style={{width: '100%', aspectRatio: 1, borderRadius: 5}}/>
-                        </View>
-                        <View style={{marginTop: -5, marginLeft: 5, marginBottom: 5, marginRight: 5}}>
-                            <View style={{
-                                justifyContent: 'space-between',
-                                alignItems: 'center',
-                                flexDirection: 'row'
-                            }}>
-                                <Text 
-                                numberOfLines={1}
-                                style={[{fontWeight: 'bold'}, GlobalStyles.h6]}>
-                                    {`${new Date(outfitObject.date).toLocaleString('en-GB').substr(0, 10)}`}
-                                </Text>
-                                {
-                                    outfitObject.favorite ?  
-                                        <HeartIcon size={20} style={{color: 'red'}}/> : null
-                                }
-                            </View>
-                            <View style={{
-                                justifyContent: 'space-between',
-                                alignItems: 'center',
-                                flexDirection: 'row'
-                            }}>
-                                <Text style={GlobalStyles.h7}>{`${3} pieces`}</Text>
-                                <Text style={[{fontWeight: 'bold'}, GlobalStyles.hint]}>•</Text>
-                                <Text style={GlobalStyles.h7}>{`${3} brands`}</Text>
-                            </View>
-                        </View>
-                        <View style={{
-                            position: 'absolute',
-                            bottom: 5,
-                            right: 5
-                        }}>
-                            {/* <HeartIcon style={{color: clothingObject.favorite ? 'red' : 'black'}} size={20}/> */}
-                        </View>
-                    </View>
-                </TouchableOpacity>
-            </View>
-        )
-    })
+    
 
 
     return (
-        <View style={{width: '100%'}}>
-            <ScrollView
+        <View style={[{width: '100%'}, props.style]}>
+
+
+            <FlatList 
+                data={outfitsWornIn}
+                keyExtractor={outfitId => outfitId}
+                renderItem={(item, index) => 
+                    <ClothingIcon outfitObject={outfitsArray.find(outfitObj => outfitObj._id === item.item)} />
+                }
+                horizontal={true}
+
+                getItemLayout={(data, index) => (
+                    {length: 150, offset: 150 * index, index}
+                )} //width is 150
+                showsHorizontalScrollIndicator={false}
+                initialNumToRender={3}
+                />
+            {/* <ScrollView
             style={{height: 'auto', paddingTop: 5, paddingBottom: 5}}
             horizontal={true}
             showsHorizontalScrollIndicator={false}
-            >
-
-                {outfitsWornIn ? 
+            > */}
+                {/* {
+                // outfitsWornIn ? 
                 outfitsWornIn.map(outfitId => (
                     
                     <ClothingIcon key={outfitId} outfitObject={outfitsArray.find(outfitObj => outfitObj._id === outfitId)} />
                 )) 
-                    : null
-                // (mockOutfitsThisClothingIsUsedInArray.map(outfitObject => (
-                //     <ClothingIcon key={outfitObject._id} outfitObject={outfitObject}/>
-                // )))
-                }
-            </ScrollView>
+                    // : null
+                } */}
+            {/* </ScrollView> */}
         </View>
     )
-})
+}, (prevProps, nextProps) =>  
+        prevProps.outfitsWornIn == nextProps.outfitsWornIn
+)
 
 
 export const ViewIndividualPiece = ({ route }) => {
@@ -732,7 +754,12 @@ export const ViewIndividualPiece = ({ route }) => {
                     </Text>
                 </View>
                 {/* Need to pass array of all outfitObj that include this piece to this component eventually */}
-                {isFocused ? <OutfitScroll outfitsWornIn={item.outfitsWornIn}/> : null}
+                {/* {isFocused ?  */}
+                    <OutfitScroll 
+                        outfitsWornIn={item.outfitsWornIn} 
+                        // style={{display: isFocused ? 'flex' : 'none'}}
+                    /> 
+                 {/* : null} */}
             </View>
             
             

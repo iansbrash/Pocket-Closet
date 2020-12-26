@@ -238,18 +238,15 @@ const RenderOutfit = React.memo(({item, closetObject, onClickFunc}) => {
             <View style={[{
                 width: '50%', 
                 aspectRatio: 1,
-            }]} 
-            key={index}> 
+            }]} > 
             <View style={[{
                 margin: 5,
                 width: 'auto',
                 height: 'auto',
                 borderRadius: 10,
                 backgroundColor: 'white'
-            }, GlobalStyles.shadowLight]}
-            key={index}>
+            }, GlobalStyles.shadowLight]}>
             {imageArrayFromIdsHook[index] ? <Image  
-                    key={index}
                     source={
                         imageArrayFromIdsHook[index].type === 'imgur' ? 
                         // Imgur
@@ -281,7 +278,7 @@ const RenderOutfit = React.memo(({item, closetObject, onClickFunc}) => {
                 }}>
                     {/* Maps out the first 1-4 clothing images */}
                     {combinedClothingItemsArrayHook.map((clothingObject, index) => (
-                        <IndividualClothingImage key={clothingObject._id} index={index}/>
+                        <IndividualClothingImage index={index} key={index} />
                         )
                     )}
                     {/* Adds the  '+#' if needed */}

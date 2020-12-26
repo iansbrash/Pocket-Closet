@@ -21,7 +21,7 @@ export const FinalizeButton = ({disabledHook, onPressFunc}) => {
                 style={[styles.TOSuccess, GlobalStyles.bgColorMain]}
                 onPress={onPressFunc}>
                     {/* <Icon style={{marginRight: 5, marginLeft: 5}} width='50' height='50' fill='white' name='checkmark-outline'/> */}
-                    <CheckIcon size={50} style={{marginRight: 5, marginLeft: 5, color: 'white'}}/>
+                    <CheckIcon size={40} style={{color: 'white'}}/>
                  </TouchableOpacity>
                  )
             }
@@ -77,8 +77,8 @@ const styles = StyleSheet.create({
         elevation: 10
     },
     TOSuccess: {
-        height: 70,
-        width: 70,
+        height: 50,
+        width: 50,
         margin: 20,
         borderRadius: 5,
         // backgroundColor: '#3366ff',
