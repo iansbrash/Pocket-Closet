@@ -202,7 +202,7 @@ const ThreeAttributeHeader = ({pieceType, brandsLength, price, description, colo
     )
 }
 
-const BrandTags = ({brandsArray}) => {
+export const BrandTags = ({brandsArray}) => {
 
     const navigation = useNavigation();
 
@@ -248,7 +248,7 @@ const BrandTags = ({brandsArray}) => {
     )
 }
 
-const ClothingTags = React.memo(({tagsArray}) => {
+export const ClothingTags = React.memo(({tagsArray}) => {
 
     //const tagsArray = ['Temp', 'Tags', 'Go', 'Here', 'Please', 'Replace']
 

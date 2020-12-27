@@ -15,6 +15,8 @@ import { clothingInProgressCleansed } from '../../redux/reducers/closetSlice'
 import { nanoid } from 'nanoid/async/index.native'
 import {batchActions} from 'redux-batched-actions';
 
+import { BrandTags, ClothingTags } from '../ViewIndividualPiece'
+
 
 const FinalizeDescription = ({title, value}) => {
     return (
@@ -80,24 +82,25 @@ const PriceAndColorAndSize = ({price, colorArray, size}) => {
                 alignItems: 'center',
                 backgroundColor: 'white'
             }, GlobalStyles.shadowLight]}>
-                <Text style={[GlobalStyles.h6, {fontWeight: 'bold', color: 'black'}]}>{`$${price ? price : 0}`}</Text>
+                <Text style={[GlobalStyles.h6, {fontWeight: 'bold', }, GlobalStyles.colorMain]}>{`$${price ? price : 0}`}</Text>
 
-                <Text style={[GlobalStyles.h6, {fontWeight: 'bold', color: 'black', marginLeft: 3, marginRight: 3}]}>•</Text>
+                <Text style={[GlobalStyles.h6, {fontWeight: 'bold', marginLeft: 3, marginRight: 3}, GlobalStyles.lighterHint]}>•</Text>
                 
-                <Text style={[GlobalStyles.h6, {fontWeight: 'bold', color: 'black'}]}>{`Size ${size}`}</Text>
+                <Text style={[GlobalStyles.h6, {fontWeight: 'bold'}, GlobalStyles.colorMain]}>{`Size ${size}`}</Text>
 
-                <Text style={[GlobalStyles.h6, {fontWeight: 'bold', color: 'black', marginLeft: 3, marginRight: 3}]}>•</Text>
+                <Text style={[GlobalStyles.h6, {fontWeight: 'bold', marginLeft: 3, marginRight: 3}, GlobalStyles.lighterHint]}>•</Text>
 
-                <View style={{
-                    borderRadius: 1,
-                    borderColor: 'black',
-                    borderStyle: 'solid',
+                <View style={[{
+                    // borderRadius: 1,
+                    // borderColor: 'black',
+                    // borderStyle: 'solid',
                     justifyContent: 'center',
                     alignItems: 'center',
                     flexDirection: 'row',
-                }}>
+                    backgroundColor: 'white',
+                }, GlobalStyles.shadowLightest]}>
                     {colorArray.map(color => (
-                        <ColorIcon color={color} />
+                        <ColorIcon key={color} color={color} />
                     ))} 
                 </View>
                 
@@ -229,46 +232,75 @@ export const FinalizeClothing = () => {
                             colorArray={clothingPieceInProgress.color}
                             size={clothingPieceInProgress.size}/>
                     </View>
-                    <View>
+                    <View style={{
+                        marginTop: 10,
+                        justifyContent: 'center',
+                        alignItems: 'center'
+                    }}>
                         <Text style={
                             [GlobalStyles.colorMain, GlobalStyles.h3, {fontWeight: 'bold'}]
-                        }>
-                            {clothingPieceInProgress.clothingName + 'asdasdasd'}
+                        }
+                        numberOfLines={1}>
+                            {clothingPieceInProgress.clothingName}
                         </Text>
                     </View>
-                    <FinalizeDescription title={'Type'} 
-                    value={`${clothingPieceInProgress.clothingType} (${clothingPieceInProgress.pieceType})`}/>
-                    {/* <Divider style={{margin: 5}} /> */}
-
-                    <FinalizeDescription title={'Name'} value={clothingPieceInProgress.clothingName}/>
-                    {/* <Divider style={{margin: 5}} /> */}
-
-                    <FinalizeDescription title={'Brand'} value={clothingPieceInProgress.brandName[0]}/>
-                    {/* <Divider style={{margin: 5}} /> */}
-
-                    <FinalizeDescription title={'Description'} value={clothingPieceInProgress.description}/>
-                    {/* <Divider style={{margin: 5}} /> */}
-
-                    <FinalizeDescription title={'Size'} value={clothingPieceInProgress.size}/>
-                    {/* <Divider style={{margin: 5}} /> */}
-
-                    <FinalizeDescription title={'Color'} value={clothingPieceInProgress.color}/>
-                    {/* <Divider style={{margin: 5}} /> */}
                     
-                    <FinalizeDescription title={'Price'} value={clothingPieceInProgress.price}/>
-                    {/* <Divider style={{margin: 5}} /> */}
+                    <View style={{
+                        marginTop: -5,
+                        justifyContent: 'flex-start',
+                        alignItems: 'center',
+                        flexDirection: 'row'
+                    }}>
+                        <Text style={[
+                            GlobalStyles.colorMain,
+                            GlobalStyles.h4
+                        ]}>
+                            {`${clothingPieceInProgress.clothingType}`}
+                        </Text>
+                        <Text style={[
+                            GlobalStyles.lighterHint,
+                            GlobalStyles.h4,
+                            {fontWeight: 'bold', marginLeft: 3, marginRight: 3}
+                        ]}>
+                            {`•`}
+                        </Text>
+                        <Text style={[
+                            GlobalStyles.colorMain,
+                            GlobalStyles.h4
+                        ]}>
+                            {`${clothingPieceInProgress.pieceType}`}
+                        </Text>
+                    </View>
+
+                    <View>
+                        <Text style={[
+                            GlobalStyles.hint,
+                            GlobalStyles.h5
+                        ]}
+                        numberOfLines={2}>
+                            {clothingPieceInProgress.description}
+                        </Text>
+                    </View>
 
                     <View style={{
-                        flexDirection: 'row',
-                        flexWrap: 'wrap',
-                        justifyContent: 'flex-start',
-                        alignItems:'center',
-                        margin: 5
+                        marginLeft: -10
                     }}>
-                        {tags.map((item, index) => (
-                            <IndividualTag title={item} />
-                        ))}
+                        <BrandTags brandsArray={clothingPieceInProgress.brandName}/>
+                        <ClothingTags tagsArray={clothingPieceInProgress.tags}/>
                     </View>
+
+                    {/* Other things we could put (page is kinda empty rn) */}
+                    {/* 
+                        Favorite Button
+                        Archive Button
+                        Advanced Button
+                            # of times worn
+                            Imgur link (if there is one)
+
+                    
+                    
+                    */}
+                    
                 </View>
             </ScrollView>
             <FinalizeButton 

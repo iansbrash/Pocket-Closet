@@ -18,10 +18,16 @@ export const FinalizeButton = ({disabledHook, onPressFunc}) => {
         }}>
             { !disabledHook && (
                 <TouchableOpacity 
-                style={[styles.TOSuccess, GlobalStyles.bgColorMain]}
+                style={[
+                    styles.TOSuccess, 
+                    GlobalStyles.shadowLight,
+                    {backgroundColor: 'white'}    
+                ]}
                 onPress={onPressFunc}>
-                    {/* <Icon style={{marginRight: 5, marginLeft: 5}} width='50' height='50' fill='white' name='checkmark-outline'/> */}
-                    <CheckIcon size={40} style={{color: 'white'}}/>
+                    <CheckIcon size={40} style={[
+                        GlobalStyles.colorMain,
+                        GlobalStyles.shadowLightest
+                    ]}/>
                  </TouchableOpacity>
                  )
             }
@@ -53,13 +59,21 @@ export const NextButton = ({disabledHook, navpath, extraFunc}) => {
         }}>
             {
             !disabledHook && (
-                <Pressable 
-                style={[styles.TOBasic, GlobalStyles.bgColorMain]}
+                <TouchableOpacity 
+                style={[
+                    styles.TOBasic, 
+                    GlobalStyles.shadowLight,
+                    {backgroundColor: 'white'}
+                ]}
                 onPress={() => onClickFunc()}
-                hitSlop={10}>
+                // hitSlop={10}
+                >
                     {/* <Icon style={{marginRight: 5, marginLeft: 5}} width='50' height='50' fill='white' name='arrow-forward-outline'/> */}
-                    <RightIcon size={40} style={{color: 'white'}}/>
-                 </Pressable>
+                    <RightIcon size={40} style={[
+                        GlobalStyles.colorMain,
+                        GlobalStyles.shadowLightest
+                    ]}/>
+                 </TouchableOpacity>
                  )
             }
         </View>
@@ -70,20 +84,17 @@ const styles = StyleSheet.create({
     TOBasic: {
         height: 50,
         width: 50,
-        margin: 15,
-        borderRadius: 5,
+        margin: 20,
+        borderRadius: 10,
         justifyContent: 'center',
         alignItems:'center',
-        elevation: 10
     },
     TOSuccess: {
         height: 50,
         width: 50,
         margin: 20,
-        borderRadius: 5,
-        // backgroundColor: '#3366ff',
+        borderRadius: 10,
         justifyContent: 'center',
         alignItems:'center',
-        elevation: 10
     }
 })
