@@ -8,28 +8,59 @@ export const FinalizeButton = ({disabledHook, onPressFunc}) => {
 
     const navigation = useNavigation();
 
-    
 
     return (
         <View style={{
             position: 'absolute',
-            right: 0,
-            bottom: 0,
+            right: 20,
+            bottom: 20,
         }}>
-            { !disabledHook && (
-                <TouchableOpacity 
-                style={[
-                    styles.TOSuccess, 
-                    GlobalStyles.shadowLight,
-                    {backgroundColor: 'white'}    
-                ]}
-                onPress={onPressFunc}>
-                    <CheckIcon size={40} style={[
-                        GlobalStyles.colorMain,
-                        GlobalStyles.shadowLightest
-                    ]}/>
-                 </TouchableOpacity>
-                 )
+            {
+            !disabledHook && (
+                <View style={{
+                    height: 50,
+                    aspectRatio: 1,
+                    flexDirection: 'column',
+                    justifyContent: 'flex-start',
+                    alignItems: 'center'
+                }}>
+                    <TouchableOpacity 
+                        onPress={() => onPressFunc()}
+                    >
+                        <View style={{
+                            height: 5,
+                            width: 50
+                        }}>
+                            <View style={[{
+                                position: 'absolute',
+                                top: 0,
+                                right: 0,
+                                width: 50,
+                                height: 10,
+                                borderRadius: 5
+                            }, GlobalStyles.bgColorMain]}>
+
+                            </View>
+                        </View>
+                        <View style={[{
+                            backgroundColor: 'white',
+                            height: 45,
+                            width: 50,
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            borderBottomLeftRadius: 5,
+                            borderBottomRightRadius: 5
+                        }, GlobalStyles.shadowLight]}>
+                            
+                            <CheckIcon size={40} style={[
+                                GlobalStyles.colorMain,
+                                GlobalStyles.shadowLightest
+                            ]}/>
+                        </View>
+                    </TouchableOpacity>
+                </View>
+                
+                )
             }
         </View>
     )
@@ -54,27 +85,55 @@ export const NextButton = ({disabledHook, navpath, extraFunc}) => {
     return (
         <View style={{
             position: 'absolute',
-            right: 0,
-            bottom: 0,
+            right: 20,
+            bottom: 20,
         }}>
             {
             !disabledHook && (
-                <TouchableOpacity 
-                style={[
-                    styles.TOBasic, 
-                    GlobalStyles.shadowLight,
-                    {backgroundColor: 'white'}
-                ]}
-                onPress={() => onClickFunc()}
-                // hitSlop={10}
-                >
-                    {/* <Icon style={{marginRight: 5, marginLeft: 5}} width='50' height='50' fill='white' name='arrow-forward-outline'/> */}
-                    <RightIcon size={40} style={[
-                        GlobalStyles.colorMain,
-                        GlobalStyles.shadowLightest
-                    ]}/>
-                 </TouchableOpacity>
-                 )
+                <View style={{
+                    height: 50,
+                    aspectRatio: 1,
+                    flexDirection: 'column',
+                    justifyContent: 'flex-start',
+                    alignItems: 'center'
+                }}>
+                    <TouchableOpacity 
+                        onPress={() => onClickFunc()}
+                    >
+                        <View style={{
+                            height: 5,
+                            width: 50
+                        }}>
+                            <View style={[{
+                                position: 'absolute',
+                                top: 0,
+                                right: 0,
+                                width: 50,
+                                height: 10,
+                                borderRadius: 5
+                            }, GlobalStyles.bgColorMain]}>
+
+                            </View>
+                        </View>
+                        <View style={[{
+                            backgroundColor: 'white',
+                            height: 45,
+                            width: 50,
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            borderBottomLeftRadius: 5,
+                            borderBottomRightRadius: 5
+                        }, GlobalStyles.shadowLight]}>
+                            
+                                <RightIcon size={40} style={[
+                                    GlobalStyles.colorMain,
+                                    GlobalStyles.shadowLightest
+                                ]}/>
+                        </View>
+                    </TouchableOpacity>
+                </View>
+                
+                )
             }
         </View>
     )
@@ -82,12 +141,14 @@ export const NextButton = ({disabledHook, navpath, extraFunc}) => {
 
 const styles = StyleSheet.create({
     TOBasic: {
-        height: 50,
+        height: 45,
         width: 50,
-        margin: 20,
         borderRadius: 10,
         justifyContent: 'center',
         alignItems:'center',
+        // borderWidth: 4,
+        // borderStyle: 'solid',
+        // borderColor: 'black'
     },
     TOSuccess: {
         height: 50,

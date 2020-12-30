@@ -233,7 +233,7 @@ const closetSlice = createSlice({
             reducer (state, action) {
                 state.brandsArray = 
                 state.brandsArray.filter(brandArray => brandArray[0] !== action.payload.brandArrayToRemove[0])
-            }
+            },
         },
         clothingInProgressCleansed: {
             reducer (state, action) {
@@ -417,7 +417,43 @@ const closetSlice = createSlice({
                     }
                 }
             }
-        }
+        },
+        tagDeleted: {
+            reducer (state, action) {
+                console.log(state.clothingPieceInProgress.tags)
+                console.log(`deleting tag ${action.payload.tagToDelete} from clothingPieceInProgress`)
+                state.clothingPieceInProgress.tags = state.clothingPieceInProgress.tags.filter(tag => 
+                    tag !== action.payload.tagToDelete
+                )
+                console.log('about to log state.clothingPieceInProgress.tags')
+                console.log(state.clothingPieceInProgress.tags)
+            },
+            prepare (tagToDelete) {
+                return {
+                    payload: {
+                        tagToDelete
+                    }
+                }
+            }
+        },
+        brandDeletedFromClothingPieceInProgress: {
+            reducer (state, action) {
+                console.log(`deleting brand ${action.payload.brandToDelete} from clothingPieceInProgress`)
+                state.clothingPieceInProgress.brandName = state.clothingPieceInProgress.brandName.filter(brand => 
+                    brand !== action.payload.brandToDelete
+                )
+
+                console.log('logging brands')
+                console.log(state.clothingPieceInProgress.brandName)
+            },
+            prepare (brandToDelete) {
+                return {
+                    payload: {
+                        brandToDelete
+                    }
+                }
+            }
+        },
     },
 })
 
@@ -438,7 +474,9 @@ export const {
     clothingInOutfitWorn,
     pushAttributesToAttributedClothing,
     removeTagsFromTaggedClothing,
-    itemArchiveToggled
+    itemArchiveToggled,
+    tagDeleted,
+    brandDeletedFromClothingPieceInProgress
 } = closetSlice.actions;
 
 //we export this instead of clothingDeletedFromCloset because it lets us
