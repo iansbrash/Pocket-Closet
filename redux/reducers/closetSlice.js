@@ -116,6 +116,8 @@ const closetSlice = createSlice({
         },
         clothingInProgressAttributeAdded: {
             reducer(state, action) {
+                console.log(action.payload)
+
                 let payloadKeys = Object.keys(action.payload);
                 payloadKeys.forEach(key => (
                     state.clothingPieceInProgress[key] = action.payload[key]

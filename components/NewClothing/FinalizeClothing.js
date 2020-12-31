@@ -15,10 +15,11 @@ import {
     clothingAddedToCloset, 
     pushAttributesToAttributedClothing,
     tagDeleted,
-    brandDeletedFromClothingPieceInProgress
+    brandDeletedFromClothingPieceInProgress,
+    clothingInProgressAttributeAdded
  } from '../../redux/reducers/closetSlice'
 import GlobalStyles from '../GlobalComponents/GlobalStyles'
-import { XIcon } from '../GlobalComponents/GlobalIcons'
+import { XIcon, HeartIcon, ArchiveIcon } from '../GlobalComponents/GlobalIcons'
 import { clothingInProgressCleansed } from '../../redux/reducers/closetSlice'
 import { nanoid } from 'nanoid/async/index.native'
 import {batchActions} from 'redux-batched-actions';
@@ -169,7 +170,9 @@ const PriceAndColorAndSize = ({price, colorArray, size}) => {
                 
                 <Text style={[GlobalStyles.h6, {fontWeight: 'bold'}, GlobalStyles.colorMain]}>{`Size ${size}`}</Text>
 
-                <Text style={[GlobalStyles.h6, {fontWeight: 'bold', marginLeft: 3, marginRight: 3}, GlobalStyles.lighterHint]}>•</Text>
+                {colorArray.length !== 0 ? 
+                    <Text style={[GlobalStyles.h6, {fontWeight: 'bold', marginLeft: 3, marginRight: 3}, GlobalStyles.lighterHint]}>•</Text>
+                : null}
 
                 <View style={[{
                     // borderRadius: 1,
@@ -209,6 +212,41 @@ const ColorIcon = ({color}) => {
     )
 }
 
+const NonAbsoluteFavoriteAndArchive = () => {
+    return (
+        <View style={{
+            width: '20%',
+            backgroundColor: 'pink',
+            justifyContent: 'flex-start',
+            alignItems: 'flex-end',
+            flexDirection: 'column'
+        }}>
+            <View style={[{
+                height: 50,
+                width: 50,
+                borderRadius: 5,
+                backgroundColor: 'white',
+                right: 10,
+                marginTop: 5,
+                marginBottom: 5
+            }, GlobalStyles.shadowLight]}>
+                
+            </View>
+            <View style={[{
+                height: 50,
+                width: 50,
+                borderRadius: 5,
+                backgroundColor: 'white',
+                right: 10,
+                marginTop: 5,
+                marginBottom: 5
+            }, GlobalStyles.shadowLight]}>
+                
+            </View>
+        </View>
+    )
+}
+
 
 export const FinalizeClothing = () => {
 
@@ -218,7 +256,7 @@ export const FinalizeClothing = () => {
 
     // this fucking works bby
     const clothingPieceInProgress = useSelector(state => state.closet.clothingPieceInProgress)
-    console.log(clothingPieceInProgress)
+    // console.log(clothingPieceInProgress)
 
     if (clothingPieceInProgress.images.images.length !== 0){
         src = clothingPieceInProgress.images.images
@@ -237,6 +275,22 @@ export const FinalizeClothing = () => {
     const [colors, setColors] = useState(clothingPieceInProgress.color)
     const [brands, setBrands] = useState(clothingPieceInProgress.brandName)
 
+    const [favorite, setFavorite] = useState(false)
+    const [archive, setArchive] = useState(false)
+
+    // No clue why I have to do this. Why doesn't the hook update on the first call :|
+    const toggleFavorite = () => {
+        console.log(`favorite: ${favorite}`)
+        dispatch(clothingInProgressAttributeAdded({favorite: !favorite}))
+        setFavorite(!favorite)
+        console.log(`favorite: ${favorite}`)
+    }
+
+    // Same thing as above. Y.
+    const toggleArchive = () => {
+        dispatch(clothingInProgressAttributeAdded({archive: !archive}))
+        setArchive(!archive)
+    }
 
     const saveItem = async () => {
         //send item to redux store
@@ -328,7 +382,7 @@ export const FinalizeClothing = () => {
                 
                 <View style={{
                     marginTop: -5,
-                    justifyContent: 'flex-start',
+                    justifyContent: 'center',
                     alignItems: 'center',
                     flexDirection: 'row'
                 }}>
@@ -365,54 +419,28 @@ export const FinalizeClothing = () => {
 
                 <View style={{
                     marginLeft: -10,
-                    justifyContent: 'flex-start',
-                    flexDirection: 'row',
-                    alignItems: 'center'
                 }}>
                     <View style={{
-                        width: '85%'
-                    }}>
-                        <ClothingTags tagsArray={tags} setTags={setTags}/>
-
-                        <BrandTags brandsArray={brands} setBrands={setBrands}/>
-                        <View style={{
-                            height: 100,
-                            width: 'auto',
-                            backgroundColor: 'white'
-                        }}>
-
-                        </View>
-                    </View>
-                    <View style={{
-                        width: '15%',
-                        height: '100%'
+                        width: '100%',
+                        flexDirection: 'row',
                     }}>
                         <View style={{
-                            justifyContent: 'flex-start',
-                            alignItems: 'flex-start',
-                            flexDirection: 'column'
+                            width: '80%',
                         }}>
+                            <ClothingTags tagsArray={tags} setTags={setTags}/>
+
+                            <BrandTags brandsArray={brands} setBrands={setBrands}/>
                             <View style={{
-                                width: '100%',
-                                aspectRatio: 1
+                                height: 100,
+                                width: 'auto',
+                                backgroundColor: 'white'
                             }}>
-                                <View style={{
-                                    margin: 5,
-                                    width: 'auto',
-                                    height: 'auto'
-                                }}>
-                                    <View style={[{
-                                        width: '100%',
-                                        height: '100%',
-                                        borderRadius: 5,
-                                        backgroundColor: 'white'
-                                    }, GlobalStyles.shadowLight]}>
 
-                                    </View>
-                                </View>
-                            </View> 
+                            </View>
                         </View>
+                        {/* <NonAbsoluteFavoriteAndArchive /> */}
                     </View>
+                    
                     
 
                 </View>
@@ -430,10 +458,60 @@ export const FinalizeClothing = () => {
                     */}
                     
                 </View>
+            <View style={{
+                position: 'absolute',
+                bottom: 70,
+                right: 10,
+            }}>
+                <View style={{
+                    margin: 5
+                }}>
+                    <View style={{
+                        flexDirection: 'column-reverse',
+                        justifyContent: 'flex-start',
+                        alignItems: 'center'
+                    }}>
+                        <TouchableOpacity
+                        onPress={() => toggleFavorite()}
+                        disabled={archive}
+                        >
+                            <View style={[{
+                                margin: 5,
+                                borderRadius: 5,
+                                height: 50,
+                                aspectRatio: 1,
+                                backgroundColor: 'white',
+                                justifyContent: 'center',
+                                alignItems: 'center'
+                            }, archive ? null : GlobalStyles.shadowLightest]}>
+                                <HeartIcon size={35} 
+                                    style={
+                                        archive ? 
+                                            GlobalStyles.lighterHint : 
+                                                (favorite ? GlobalStyles.favorite : GlobalStyles.colorMain)}/>
+                            </View>
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                        onPress={() => toggleArchive()}
+                        >
+                            <View style={[{
+                                margin: 5,
+                                borderRadius: 5,
+                                height: 50,
+                                aspectRatio: 1,
+                                backgroundColor: 'white',
+                                justifyContent: 'center',
+                                alignItems: 'center'
+                            }, GlobalStyles.shadowLightest]}>
+                                <ArchiveIcon size={35} style={GlobalStyles.colorMain}/>
+                            </View>
+                        </TouchableOpacity>
+                    </View>
+                </View>
+            </View>
             <FinalizeButton 
             onPressFunc={() => 
-            saveItem()} disabledHook={false}
-            
+                saveItem()} disabledHook={false}
             />
         </View>
     )

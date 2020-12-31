@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react'
+import React, { useState, useRef, useCallback } from 'react'
 import { 
     TouchableHighlight,
     StyleSheet,
@@ -8,7 +8,7 @@ import {
     Text,
     Pressable
   } from 'react-native'
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import GlobalStyles from '../GlobalComponents/GlobalStyles'
 import { PlusIcon } from '../GlobalComponents/GlobalIcons'
@@ -199,32 +199,36 @@ export const NewClosetScreen = () => {
 
     console.log('NewClosetScreen being re-rendered')
 
-    let src = { uri: 'https://randomuser.me/api/portraits/men/1.jpg' }
-
-
+    // Search bar at the top
     const [searchInput, setSearchInput] = useState('')
 
     /** All of these hooks are for the filters modal */
     const [modalVisible, setModalVisible] = useState(false);
     const [heartToggleChecked, setHeartToggleChecked] = useState(false)
-    // const [wornSelectedIndex, setWornSelectedIndex] = useState(new IndexPath(0))
-    // const [typeSelectedIndex, setTypeSelectedIndex] = useState(new IndexPath(0));
-    // const [colorSelectedIndex, setColorSelectedIndex] = useState(new IndexPath(0));
     const [filtersEnabled, setFiltersEnabled] = useState(false);
+
+    // Whether the ClosetList is displayed or not
     const [closetIsActive, setClosetIsActive] = useState(true);
 
-    // Lets our <Select> in filters display the name of the option, not the index
-    // We need to eventually fetch this data from our redux store so we don't
-    // Have to manually program the values into these arrays / options
-    // This is indeed a little buggy lol
-    const wornSelectData = ['Recently', 'Not Recently', 'Never']
-    const typeSelectData = ['Bottoms', 'Tops', 'Footwear', 'Other']
-    const colorSelectData= ['Red', 'Green', 'Blue', 'Multi']
-    // const wornDisplayValue = wornSelectData[wornSelectedIndex.row];
-    // const typeDisplayValue = typeSelectData[typeSelectedIndex.row];
-    // const colorDisplayValue = colorSelectData[colorSelectedIndex.row];
+    // Whether the entire screen is focused or not (controlled by useFocusEffect)
+    const [screenIsFocused, setScreenIsFocused] = useState(true)
+
 
     const navigation = useNavigation();
+
+
+    useFocusEffect(
+        useCallback(() => {
+            //focus
+            setScreenIsFocused(true)
+
+
+            //blur
+            return () => {
+                setScreenIsFocused(false)
+            }
+        }, [])
+    )
 
     const resetFilters = () => {
 
@@ -285,31 +289,29 @@ export const NewClosetScreen = () => {
                 </View>
                 <View style={{flex: 1}}>
                     <View 
-                        style={{
-                            height: '100%', }}>
-                            {/* {closetIsActive ? <ClosetList  //can change between ClosetListOneCol and TwoCol
-                                        searchInput={searchInput}
-                                        filtersEnabled={filtersEnabled}
-                                        heartToggleChecked={heartToggleChecked}/>
-                                    : <OutfitList />
-                                } */}
-                                <View style={{
-                                    display: closetIsActive ? 'flex' : 'none'
-                                }}
-                                pointerEvents={closetIsActive ? 'auto' : 'none'}>
-                                    <ClosetList  //can change between ClosetListOneCol and TwoCol
-                                        searchInput={searchInput}
-                                        filtersEnabled={filtersEnabled}
-                                        heartToggleChecked={heartToggleChecked}/>
-                                </View>
-                                <View style={{
-                                    display: closetIsActive ? 'none' : 'flex'
-
-                                }}
-                                pointerEvents={closetIsActive ? 'none' : 'auto'}>
-                                    <OutfitList customFilter={null} onClickFunc={onClickFunc}/>
-                                </View>
+                    style={{
+                        height: '100%'
+                    }}
+                    // Prevents accidentally tapping on stuff when swiping left to go back a screen
+                    pointerEvents={screenIsFocused ? 'auto' : 'none'}
+                    >
+                        <View style={{
+                            display: closetIsActive ? 'flex' : 'none'
+                        }}
+                        pointerEvents={closetIsActive ? 'auto' : 'none'}>
+                            <ClosetList  //can change between ClosetListOneCol and TwoCol
+                                searchInput={searchInput}
+                                filtersEnabled={filtersEnabled}
+                                heartToggleChecked={heartToggleChecked}/>
                         </View>
+                        <View style={{
+                            display: closetIsActive ? 'none' : 'flex'
+
+                        }}
+                        pointerEvents={closetIsActive ? 'none' : 'auto'}>
+                            <OutfitList customFilter={null} onClickFunc={onClickFunc}/>
+                        </View>
+                    </View>
                 </View>
             </View>
         </View>

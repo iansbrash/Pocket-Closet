@@ -64,6 +64,12 @@ const GlobalStyles = StyleSheet.create({
     },
     bgLighterHint: {
         backgroundColor: '#c9c9c9'
+    },
+    favorite: {
+        color: '#ff4040'
+    },
+    bgFavorite: {
+        backgroundColor: '#ff4040'
     }
 
 
