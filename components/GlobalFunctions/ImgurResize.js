@@ -58,17 +58,13 @@ export const deleteClothingFromCloset = (_id, clothingType, tagsArray, colorsArr
     // man
     clothingType = clothingType.toLowerCase();
 
-
-    // const {
-    //     clothingDeletedFromCloset,
-    //     removeAttributesFromAttributedClothing
-    // } = closetSlice.actions;
-
+    //notice how we use the store to dispatch the actions instead of a useDispatch hook
+    //(as this is not a functional component. it is a function)
     store.dispatch(batchActions([
         clothingDeletedFromCloset(_id, clothingType),
         removeAttributesFromAttributedClothing(_id, clothingType, 'taggedClothing', tagsArray),
         removeAttributesFromAttributedClothing(_id, clothingType, 'coloredClothing', colorsArray),
         // uncomment the below when uninstalling expo (not in initialstate)
-        // removeAttributesFromAttributedClothing(_id, clothingType, 'brandedClothing', brandsArray)
+        removeAttributesFromAttributedClothing(_id, clothingType, 'brandedClothing', brandsArray)
     ]))
 }

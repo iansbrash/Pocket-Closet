@@ -247,6 +247,164 @@ const NonAbsoluteFavoriteAndArchive = () => {
     )
 }
 
+const AbsolutePositionedFavoriteAndArchive = ({
+    archive, favorite,
+    toggleArchive, toggleFavorite
+}) => {
+    return (
+        <View style={{
+            position: 'absolute',
+            bottom: 70,
+            right: 10,
+        }}>
+            <View style={{
+                margin: 5
+            }}>
+                <View style={{
+                    flexDirection: 'column-reverse',
+                    justifyContent: 'flex-start',
+                    alignItems: 'center'
+                }}>
+                    <TouchableOpacity
+                    onPress={() => toggleFavorite()}
+                    disabled={archive}
+                    >
+                        <View style={[{
+                            margin: 5,
+                            borderRadius: 5,
+                            height: 50,
+                            aspectRatio: 1,
+                            backgroundColor: 'white',
+                            justifyContent: 'center',
+                            alignItems: 'center'
+                        }, archive ? null : GlobalStyles.shadowLightest]}>
+                            <HeartIcon size={35} 
+                                style={
+                                    archive ? 
+                                        GlobalStyles.lighterHint : 
+                                            (favorite ? GlobalStyles.favorite : GlobalStyles.colorMain)}/>
+                        </View>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                    onPress={() => toggleArchive()}
+                    >
+                        <View style={[{
+                            margin: 5,
+                            borderRadius: 5,
+                            height: 50,
+                            aspectRatio: 1,
+                            backgroundColor: 'white',
+                            justifyContent: 'center',
+                            alignItems: 'center'
+                        }, GlobalStyles.shadowLightest]}>
+                            <ArchiveIcon size={35} style={GlobalStyles.colorMain}/>
+                        </View>
+                    </TouchableOpacity>
+                </View>
+            </View>
+        </View>
+    )
+}
+
+const ClothingImages = ({images}) => {
+    return (
+        <ScrollView
+        horizontal={true}
+        style={{
+            margin: -20,
+        }}
+        contentContainerStyle={{
+            width: `${images.length * 100}%`,
+            height: 'auto'
+        }}
+        pagingEnabled={true}
+        showsHorizontalScrollIndicator={false}
+        >
+            {images.map((uri, index) => (
+                <View style={[{
+                    height: '100%', 
+                    aspectRatio: 1, 
+                    borderRadius: 5,
+                    justifyContent: 'center',
+                    alignItems: 'center',}, 
+                    GlobalStyles.shadowLight]}
+                key={index}>
+                    
+                    <Image style={{
+                    width: '90%',
+                    aspectRatio: 1,
+                    borderRadius: 5,
+                    // height: imageHeight * (windowHeight / imageHeight),
+                    // width: imageWidth * (windowWidth / imageWidth)
+                    }} source={{uri: uri}}/> 
+                </View>
+            ))}
+        </ScrollView>
+    )
+}
+
+const ClothingName = ({clothingName}) => {
+    return (
+        <View style={{
+            marginTop: 10,
+            justifyContent: 'center',
+            alignItems: 'center'
+        }}>
+            <Text style={
+                [GlobalStyles.colorMain, GlobalStyles.h3, {fontWeight: 'bold'}]
+            }
+            numberOfLines={1}>
+                {clothingName}
+            </Text>
+        </View>
+    )
+}
+
+const ClothingDescription = ({description}) => {
+    return (
+        <View>
+            <Text style={[
+                GlobalStyles.hint,
+                GlobalStyles.h5
+            ]}
+            numberOfLines={2}>
+                {description}
+            </Text>
+        </View>
+    )
+}
+
+const ClothingTypeAndSpecificType = ({type, specificType}) => {
+    return (
+        <View style={{
+            marginTop: -5,
+            justifyContent: 'center',
+            alignItems: 'center',
+            flexDirection: 'row'
+        }}>
+            <Text style={[
+                GlobalStyles.colorMain,
+                GlobalStyles.h4
+            ]}>
+                {`${type}`}
+            </Text>
+            <Text style={[
+                GlobalStyles.lighterHint,
+                GlobalStyles.h4,
+                {fontWeight: 'bold', marginLeft: 3, marginRight: 3}
+            ]}>
+                {`•`}
+            </Text>
+            <Text style={[
+                GlobalStyles.colorMain,
+                GlobalStyles.h4
+            ]}>
+                {`${specificType}`}
+            </Text>
+        </View>
+    )
+}
+
 
 export const FinalizeClothing = () => {
 
@@ -301,12 +459,11 @@ export const FinalizeClothing = () => {
                 _id: _id
             }),
             pushAttributesToAttributedClothing(_id, clothingPieceInProgress.clothingType, 'taggedClothing', tags),
-            pushAttributesToAttributedClothing(_id, clothingPieceInProgress.clothingType, 'coloredClothing', colors)
+            pushAttributesToAttributedClothing(_id, clothingPieceInProgress.clothingType, 'coloredClothing', colors),
+            // pushAttributesToAttributedClothing(_id, clothingPieceInProgress.clothingType, 'brandedClothing', brands)
         ]))
-        // dispatch(batchActions([
-        //     clothingInOutfitWorn(idArrayObject, nid),
-        //     outfitCreatedFromHome(idArrayObject, nid, date),]
-        // ))
+        
+        
         navigation.navigate('CLOSETSCREEN');
         //alternatively have  a'success' page like when u create an outfit
     }
@@ -327,39 +484,7 @@ export const FinalizeClothing = () => {
                     width: '100%',
                     aspectRatio: 1
                 }}>
-                    <ScrollView
-                    horizontal={true}
-                    style={{
-                        margin: -20,
-                    }}
-                    contentContainerStyle={{
-                        width: `${src.length * 100}%`,
-                        height: 'auto'
-                    }}
-                    pagingEnabled={true}
-                    showsHorizontalScrollIndicator={false}
-                    >
-                        {src.map((uri, index) => (
-                            <View style={[{
-                                height: '100%', 
-                                aspectRatio: 1, 
-                                borderRadius: 5,
-                                justifyContent: 'center',
-                                alignItems: 'center',}, 
-                                GlobalStyles.shadowLight]}
-                            key={index}>
-                                
-                                <Image style={{
-                                width: '90%',
-                                aspectRatio: 1,
-                                borderRadius: 5,
-                                // height: imageHeight * (windowHeight / imageHeight),
-                                // width: imageWidth * (windowWidth / imageWidth)
-                                }} source={{uri: uri}}/> 
-                            </View>
-                        ))}
-                    </ScrollView>
-
+                    <ClothingImages images={src}/>
 
 
                     <PriceAndColorAndSize 
@@ -367,55 +492,14 @@ export const FinalizeClothing = () => {
                         colorArray={clothingPieceInProgress.color}
                         size={clothingPieceInProgress.size}/>
                 </View>
-                <View style={{
-                    marginTop: 10,
-                    justifyContent: 'center',
-                    alignItems: 'center'
-                }}>
-                    <Text style={
-                        [GlobalStyles.colorMain, GlobalStyles.h3, {fontWeight: 'bold'}]
-                    }
-                    numberOfLines={1}>
-                        {clothingPieceInProgress.clothingName}
-                    </Text>
-                </View>
                 
-                <View style={{
-                    marginTop: -5,
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    flexDirection: 'row'
-                }}>
-                    <Text style={[
-                        GlobalStyles.colorMain,
-                        GlobalStyles.h4
-                    ]}>
-                        {`${clothingPieceInProgress.clothingType}`}
-                    </Text>
-                    <Text style={[
-                        GlobalStyles.lighterHint,
-                        GlobalStyles.h4,
-                        {fontWeight: 'bold', marginLeft: 3, marginRight: 3}
-                    ]}>
-                        {`•`}
-                    </Text>
-                    <Text style={[
-                        GlobalStyles.colorMain,
-                        GlobalStyles.h4
-                    ]}>
-                        {`${clothingPieceInProgress.pieceType}`}
-                    </Text>
-                </View>
+                <ClothingName clothingName={clothingPieceInProgress.clothingName}/>
+                
+                <ClothingTypeAndSpecificType 
+                    type={clothingPieceInProgress.clothingType} 
+                    specificType={clothingPieceInProgress.pieceType}/>
 
-                <View>
-                    <Text style={[
-                        GlobalStyles.hint,
-                        GlobalStyles.h5
-                    ]}
-                    numberOfLines={2}>
-                        {clothingPieceInProgress.description}
-                    </Text>
-                </View>
+                <ClothingDescription description={clothingPieceInProgress.description}/>
 
                 <View style={{
                     marginLeft: -10,
@@ -430,6 +514,8 @@ export const FinalizeClothing = () => {
                             <ClothingTags tagsArray={tags} setTags={setTags}/>
 
                             <BrandTags brandsArray={brands} setBrands={setBrands}/>
+
+                            {/* This View blocks the uncollasped BrandTags. Kinda a jank solution. */}
                             <View style={{
                                 height: 100,
                                 width: 'auto',
@@ -438,77 +524,26 @@ export const FinalizeClothing = () => {
 
                             </View>
                         </View>
-                        {/* <NonAbsoluteFavoriteAndArchive /> */}
                     </View>
-                    
-                    
-
                 </View>
-
-                    {/* Other things we could put (page is kinda empty rn) */}
+            </View>
+            {/* Other things we could put (page is kinda empty rn) */}
                     {/* 
                         Favorite Button
                         Archive Button
                         Advanced Button
                             # of times worn
                             Imgur link (if there is one)
-
-                    
-                    
                     */}
-                    
-                </View>
-            <View style={{
-                position: 'absolute',
-                bottom: 70,
-                right: 10,
-            }}>
-                <View style={{
-                    margin: 5
-                }}>
-                    <View style={{
-                        flexDirection: 'column-reverse',
-                        justifyContent: 'flex-start',
-                        alignItems: 'center'
-                    }}>
-                        <TouchableOpacity
-                        onPress={() => toggleFavorite()}
-                        disabled={archive}
-                        >
-                            <View style={[{
-                                margin: 5,
-                                borderRadius: 5,
-                                height: 50,
-                                aspectRatio: 1,
-                                backgroundColor: 'white',
-                                justifyContent: 'center',
-                                alignItems: 'center'
-                            }, archive ? null : GlobalStyles.shadowLightest]}>
-                                <HeartIcon size={35} 
-                                    style={
-                                        archive ? 
-                                            GlobalStyles.lighterHint : 
-                                                (favorite ? GlobalStyles.favorite : GlobalStyles.colorMain)}/>
-                            </View>
-                        </TouchableOpacity>
-                        <TouchableOpacity
-                        onPress={() => toggleArchive()}
-                        >
-                            <View style={[{
-                                margin: 5,
-                                borderRadius: 5,
-                                height: 50,
-                                aspectRatio: 1,
-                                backgroundColor: 'white',
-                                justifyContent: 'center',
-                                alignItems: 'center'
-                            }, GlobalStyles.shadowLightest]}>
-                                <ArchiveIcon size={35} style={GlobalStyles.colorMain}/>
-                            </View>
-                        </TouchableOpacity>
-                    </View>
-                </View>
-            </View>
+            
+            {/* It is what it is. */}
+            <AbsolutePositionedFavoriteAndArchive 
+                archive={archive}
+                favorite={favorite}
+                toggleArchive={toggleArchive}
+                toggleFavorite={toggleFavorite}/>
+            
+            {/* Check button that pushes clothing to our store */}
             <FinalizeButton 
             onPressFunc={() => 
                 saveItem()} disabledHook={false}

@@ -100,7 +100,8 @@ const closetSlice = createSlice({
         },
         brandedClothing: {
             Undefeated: {
-
+                //should probably employ same structure as coloredClothing, taggedClothing
+                //topsArray, bottomsArray, etc
             },
             //Apparently this is a thing
             'Off---White': {
