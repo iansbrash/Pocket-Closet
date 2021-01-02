@@ -296,7 +296,7 @@ const AbsolutePositionedFavoriteAndArchive = ({
                             backgroundColor: 'white',
                             justifyContent: 'center',
                             alignItems: 'center'
-                        }, GlobalStyles.shadowLightest]}>
+                        }, archive ? GlobalStyles.shadowLight : GlobalStyles.shadowLightest]}>
                             <ArchiveIcon size={35} style={GlobalStyles.colorMain}/>
                         </View>
                     </TouchableOpacity>
@@ -516,6 +516,8 @@ export const FinalizeClothing = () => {
                             <BrandTags brandsArray={brands} setBrands={setBrands}/>
 
                             {/* This View blocks the uncollasped BrandTags. Kinda a jank solution. */}
+                            {/* Alternatively, we could put more content under the brand tags 
+                            (with a white bg && higher zIndex) */}
                             <View style={{
                                 height: 100,
                                 width: 'auto',

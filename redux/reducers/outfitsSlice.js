@@ -266,6 +266,20 @@ const outfitsSlice = createSlice({
                     }
                 }
             }
+        },
+        pushClothingObjectsToOutfitInProgress: {
+            reducer (state, action) {
+                // should we cleanse beforehand? might leave residual description / tags... nah
+                console.log(`action.payload.outfitArr.length: ${action.payload.outfitArr.length}`)
+                state.outfitInProgress.outfitArr = action.payload.outfitArr
+            },
+            prepare (outfitArr) {
+                return {
+                    payload: {
+                        outfitArr
+                    }
+                }
+            }
         }
     }
 
@@ -281,5 +295,6 @@ export const {
     outfitFavoriteToggled,
     outfitInProgressFitpicAdded,
     outfitInProgressAttributeAdded,
-    createdOutfitTagged
+    createdOutfitTagged,
+    pushClothingObjectsToOutfitInProgress
 } = outfitsSlice.actions

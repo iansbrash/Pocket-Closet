@@ -68,6 +68,83 @@ const StatContainer = (props) => {
     )
 }
 
+const WelcomeBackHeader = ({username}) => {
+
+    let src = { uri: 'https://randomuser.me/api/portraits/men/1.jpg' }
+
+    return (
+        <View style={{
+            width: '100%',
+            height: 160,
+            paddingBottom: 10,
+        }}>
+            
+            <View style={{
+                margin: 10,
+                width: 'auto',
+                backgroundColor: 'white',
+                borderBottomRightRadius: 10,
+                borderBottomLeftRadius: 10
+            }}>
+                <View style={{ //if we don't use this please remove
+                    // backgroundColor: '#09122b',
+                    borderTopRightRadius: 10,
+                    borderTopLeftRadius: 10,
+                    height: 10
+                }}></View>
+                <View style={{
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    flexDirection: 'row',
+                }}>
+                    <View style={{
+                        width: '65%'
+                    }}>
+                        <View style={{
+                            width: 'auto',
+                            height: 'auto',
+                            margin: 10,
+                            justifyContent: 'flex-start',
+                            alignItems: 'flex-start'
+                        }}>
+                            <Text style={[{
+                                fontWeight: 'bold',
+                                marginBottom: -10,
+                                }, GlobalStyles.h2]} category='h2'>Welcome back,</Text>
+                            <Text style={[{ color: 'blue'}, GlobalStyles.h1]} category='h1' status='primary'>{username}</Text>
+                            {/* <Text category='h5'>@iansbrash</Text> */}
+                        </View>
+                    </View >
+                    <View style={{
+                        width: '35%',
+                        justifyContent: 'center',
+                        alignItems: 'center'
+                    }}>
+                        <View style={{
+                            width: 'auto',
+                            margin: 10,
+                            aspectRatio: 1
+                        }}>
+                            <View style={[{
+                                width: 110, 
+                                height: 110,
+                                borderRadius: 55,
+                                backgroundColor: 'white'},
+                                GlobalStyles.shadowLight]}>
+                                    <Image style={{
+                                        width: 110, 
+                                        height: 110,
+                                        borderRadius: 55}} source={src} />
+                            </View>
+                            
+                        </View>
+                    </View>
+                </View>
+            </View>
+        </View>
+    )
+}
+
 export const HomeScreenNew = ({route}) => {
 
 
@@ -88,7 +165,6 @@ export const HomeScreenNew = ({route}) => {
     //     setStatus('idle')
     // }, [status])
 
-    let src = { uri: 'https://randomuser.me/api/portraits/men/1.jpg' }
     const navigation = useNavigation();
 
     return (
@@ -96,77 +172,7 @@ export const HomeScreenNew = ({route}) => {
             flex: 1,
             backgroundColor: 'white'
         }}>
-            <View style={{
-                width: '100%',
-                height: 160,
-                paddingBottom: 10,
-                // borderBottomWidth: 1,
-                // borderColor: '#c4c8cc',
-            }}>
-                
-                <View style={{
-                    margin: 10,
-                    width: 'auto',
-                    backgroundColor: 'white',
-                    borderBottomRightRadius: 10,
-                    borderBottomLeftRadius: 10
-                }}>
-                    <View style={{ //if we don't use this please remove
-                        //backgroundColor: '#09122b',
-                        borderTopRightRadius: 10,
-                        borderTopLeftRadius: 10,
-                        height: 10
-                    }}></View>
-                    <View style={{
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        flexDirection: 'row',
-                    }}>
-                        <View style={{
-                            width: '65%'
-                        }}>
-                            <View style={{
-                                width: 'auto',
-                                height: 'auto',
-                                margin: 10,
-                                justifyContent: 'flex-start',
-                                alignItems: 'flex-start'
-                            }}>
-                                <Text style={[{
-                                    fontWeight: 'bold',
-                                    marginBottom: -10,
-                                    }, GlobalStyles.h2]} category='h2'>Welcome back,</Text>
-                                <Text style={[{ color: 'blue'}, GlobalStyles.h1]} category='h1' status='primary'>Ian</Text>
-                                {/* <Text category='h5'>@iansbrash</Text> */}
-                            </View>
-                        </View >
-                        <View style={{
-                            width: '35%',
-                            justifyContent: 'center',
-                            alignItems: 'center'
-                        }}>
-                            <View style={{
-                                width: 'auto',
-                                margin: 10,
-                                aspectRatio: 1
-                            }}>
-                                <View style={[{
-                                    width: 110, 
-                                    height: 110,
-                                    borderRadius: 55,
-                                    backgroundColor: 'white'},
-                                    GlobalStyles.shadowLight]}>
-                                        <Image style={{
-                                            width: 110, 
-                                            height: 110,
-                                            borderRadius: 55}} source={src} />
-                                </View>
-                                
-                            </View>
-                        </View>
-                    </View>
-                </View>
-            </View>
+            <WelcomeBackHeader username={`Ian`} />
             <View style={{height: 20 /** Spacer */ }}></View> 
             <View style={{
                 width: '100%',
@@ -181,7 +187,19 @@ export const HomeScreenNew = ({route}) => {
                 onPressFunc={() => navigation.navigate('RECORD')}/>
             </View>
             <View style={{height: 10 /** Spacer */ }}></View> 
-            <MiniScreenHeader title={'Recent Stats / Recently Worn'}/>
+
+            {/* 
+                How to fill the blank space
+                    Calendar with days filled on days recorded
+                    Quirky stats
+                    Carosel View of random clothing
+                        Maybe like...
+                            You haven't worn ______ this month
+                            You've worn _____ the most this month
+                            You wear ____ and ____ together a lot
+                    "At Glance"
+            */}
+            {/* <MiniScreenHeader title={'Recent Stats / Recently Worn'}/>
             <View style={{
                 width: '100%',
                 height: 120
@@ -197,7 +215,7 @@ export const HomeScreenNew = ({route}) => {
                     <StatContainer title={'Stat 1'}/>
                     <StatContainer title={'Stat 2'}/>
                 </View>
-            </View>
+            </View> */}
         </View >
     )
 }

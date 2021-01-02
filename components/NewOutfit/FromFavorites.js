@@ -6,7 +6,9 @@ import {
 } from 'react-native'
 import { TopNavScreenHeader } from '../GlobalComponents/TopNav'
 import { OutfitList } from '../ClosetScreen/OutfitList'
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
+import { pushClothingObjectsToOutfitInProgress } from '../../redux/reducers/outfitsSlice'
+import { useNavigation } from '@react-navigation/native'
 //              FROM FAVORITES
 // List all outfits with 'favorite'
 // Same layout as ClosetScreen outfits FlatList
@@ -25,10 +27,42 @@ export const FromFavorites = () => {
 
     const outfitsArray = useSelector(state => state.outfits.outfitsArray);
     const favoriteOutfitsArray = outfitsArray.filter(outfitObject => outfitObject.favorite)
+    const closetObject = useSelector(state => state.closet.closetObject)
+
+    const dispatch = useDispatch()
+
+    const navigation = useNavigation()
 
 
     const onClickFunc = (outfitObject) => {
+        // need to take the outfitObject clicked on,
+        // look at the _ids in outfitArr
+        // find the clothingObjects associated with those _ids
+        // cleanse outfitInProgress,
+        // push them to outfitInProgress,
+        // navigate to From Scratch (but everything should be there)
         console.log(`'clicked!' ${outfitObject._id}`)
+
+        let outfitArr = outfitObject.outfitArr
+        let populatedOutfitArr = {
+            topsArray: [],
+            bottomsArray: [],
+            footwearArray: [],
+            otherArray: []
+        }
+
+        Object.keys(outfitArr).forEach(key => {
+            outfitArr[key].forEach(_id => {
+                //iterating through the _ids of each clothingObject
+                populatedOutfitArr[key].push(
+                    closetObject[key].find(clothingObject => clothingObject._id === _id)
+                )
+            })
+        })
+
+        dispatch(pushClothingObjectsToOutfitInProgress(populatedOutfitArr))
+        navigation.navigate("FROMSCRATCH")
+        
     }
 
     const filterFavorites = (outfitArray) => {
