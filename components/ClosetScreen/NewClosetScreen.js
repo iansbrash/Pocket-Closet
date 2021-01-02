@@ -11,7 +11,7 @@ import {
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import GlobalStyles from '../GlobalComponents/GlobalStyles'
-import { PlusIcon } from '../GlobalComponents/GlobalIcons'
+import { PlusIcon, XIcon } from '../GlobalComponents/GlobalIcons'
 import { OutfitList } from './OutfitList'
 import { ClosetList } from './ClosetList'
 import { useSelector } from 'react-redux'
@@ -81,14 +81,17 @@ const ClosetOutfitsToggle = ({closetIsActive, setClosetIsActive }) => {
     )
 }
 
-const ClosetSearch = ({searchInput, setSearchInput}) => {
+export const ClosetSearch = ({searchInput, setSearchInput, notClosetSearch, placeholder}) => {
 
     const navigation = useNavigation();
     const [inputLength] = useState(new Animated.Value(1))
     const searchInputRef = useRef(null);
 
+    const [isFocused, setIsFocused] = useState(false)
+
 
     const onBlur = () => {
+        setIsFocused(false)
         Animated.timing(inputLength, {
             toValue: 1,
             duration: 250,
@@ -97,6 +100,7 @@ const ClosetSearch = ({searchInput, setSearchInput}) => {
     }
 
     const onFocus = () => {
+        setIsFocused(true)
         Animated.timing(inputLength, {
             toValue: 0,
             duration: 250,
@@ -141,7 +145,7 @@ const ClosetSearch = ({searchInput, setSearchInput}) => {
                                 zIndex: 2
                             }}
                             ref={searchInputRef}
-                            placeholder={`Search clothing!`}
+                            placeholder={placeholder ? placeholder : `Search clothing!`}
                             onFocus={() => onFocus()}
                             onBlur={() => onBlur()}
                             // inlineImageLeft='search40x40'
@@ -151,23 +155,76 @@ const ClosetSearch = ({searchInput, setSearchInput}) => {
                             onChangeText={text => setSearchInput(text)}
                             value={searchInput}
                         />
-                        <Pressable style={{
-                            height: 30,
-                            aspectRatio: 1,
-                            position: 'absolute',
-                            backgroundColor: '#e8e8e8',
-                            borderRadius: 5,
-                            margin: 5,
-                            top: 0,
-                            right: 0,
-                            zIndex: 3,
-                            justifyContent: 'center',
-                            alignItems: 'center'
+                        {notClosetSearch ? null : 
+                        <>
+                            <Animated.View
+                            style={{
+                                position: 'absolute',
+                                top: 0,
+                                right: 0,
+                                zIndex: 3,
+                                opacity: inputLength,
+                                transform: [{
+                                    translateX: inputLength.interpolate({
+                                        inputRange: [0, 1],
+                                        outputRange: [-10, 0]  // Edit this to change absolute position of textinput
+                                    }),
+                                }]
                             }}
-                            onPress={() => navigation.navigate('NEWCLOTHING')}
-                            hitSlop={10}>
-                            <PlusIcon size={25} style={GlobalStyles.colorMain}/>
-                        </Pressable>
+                            pointerEvents={isFocused ? 'none' : 'auto'}
+                            >
+                                <Pressable 
+                                    style={{
+                                        height: 30,
+                                        aspectRatio: 1,
+                                        backgroundColor: '#e8e8e8',
+                                        borderRadius: 5,
+                                        margin: 5,
+                                        justifyContent: 'center',
+                                        alignItems: 'center',
+                                    }}
+                                    onPress={() => navigation.navigate('NEWCLOTHING')}
+                                    hitSlop={10}>
+                                    <PlusIcon size={25} style={GlobalStyles.colorMain}/>
+                                </Pressable>
+                            </Animated.View>
+                        </>
+                        }
+                        <>
+                            <Animated.View style={{
+                                position: 'absolute',
+                                top: 0,
+                                right: 0,
+                                height: '100%',
+                                aspectRatio: 1,
+                                zIndex: 3,
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                opacity: inputLength.interpolate({
+                                    inputRange: [0, 1],
+                                    outputRange: [1, 0]
+                                }),
+                            }}
+                            pointerEvents={isFocused ? 'auto' : 'none'}
+                            >
+                                <Pressable
+                                onPress={() => setSearchInput('')}
+                                >
+                                    <View style={{
+                                        height: 25,
+                                        aspectRatio: 1,
+                                        borderRadius: 12.5,
+                                        backgroundColor: '#e8e8e8',
+                                        justifyContent: 'center',
+                                        alignItems: 'center'
+                                    }}>
+                                        <XIcon size={16} style={GlobalStyles.hint}/>
+                                    </View>
+                                </Pressable>
+                                
+                            </Animated.View>
+                        </>
+
                             <Animated.View 
                             style={{
                                 opacity: inputLength.interpolate({

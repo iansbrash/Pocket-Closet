@@ -447,7 +447,7 @@ export const OutfitList = ({customFilter, onClickFunc, customData}, props) => {
                 getItemLayout={(data, index) => (
                     {length: 200, offset: 200 * index, index}
                 )}
-                initialNumToRender={3}
+                initialNumToRender={4}
             />
         </View>
     )
