@@ -9,6 +9,7 @@ import { OutfitList } from '../ClosetScreen/OutfitList'
 import { useSelector, useDispatch } from 'react-redux'
 import { pushClothingObjectsToOutfitInProgress } from '../../redux/reducers/outfitsSlice'
 import { useNavigation } from '@react-navigation/native'
+import { populateArray } from '../GlobalFunctions/PopulateArray'
 //              FROM FAVORITES
 // List all outfits with 'favorite'
 // Same layout as ClosetScreen outfits FlatList
@@ -43,22 +44,7 @@ export const FromFavorites = () => {
         // navigate to From Scratch (but everything should be there)
         console.log(`'clicked!' ${outfitObject._id}`)
 
-        let outfitArr = outfitObject.outfitArr
-        let populatedOutfitArr = {
-            topsArray: [],
-            bottomsArray: [],
-            footwearArray: [],
-            otherArray: []
-        }
-
-        Object.keys(outfitArr).forEach(key => {
-            outfitArr[key].forEach(_id => {
-                //iterating through the _ids of each clothingObject
-                populatedOutfitArr[key].push(
-                    closetObject[key].find(clothingObject => clothingObject._id === _id)
-                )
-            })
-        })
+        let populatedOutfitArr = populateArray(outfitObject.outfitArr)
 
         dispatch(pushClothingObjectsToOutfitInProgress(populatedOutfitArr))
         navigation.navigate("FROMSCRATCH")

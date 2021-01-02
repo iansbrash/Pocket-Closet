@@ -235,7 +235,7 @@ export const OutfitDescription = () => {
             flex: 1,
             backgroundColor: 'white'
         }}>
-            <TopNavScreenHeader title={'Enter Description'} exitDestination={'CLOSETSCREEN'}
+            <TopNavScreenHeader title={'Enter Description'} exitDestination={'HOMESCREEN'}
             extraFunc={() => dispatch(outfitInProgressCleansed())}/>
             <View style={{
                 width: '100%'

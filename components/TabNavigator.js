@@ -29,7 +29,10 @@ import { OutfitDescription } from './NewOutfit/OutfitDescription'
 import { ViewIndividualTag } from './ViewIndividualTag'
 import { StatsScreen } from './StatsScreen'
 import { FromFavorites } from './NewOutfit/FromFavorites'
+
 import { FromTags } from './NewOutfit/FromTags'
+import { FromTagsList } from './NewOutfit/FromTagsList'
+
 import { FromHistory } from './NewOutfit/FromHistory'
 import { FromRandom } from './NewOutfit/FromRandom'
 
@@ -137,6 +140,7 @@ const HomeNav = () => {
 
             {/* From tags path */}
             <HomeStack.Screen name="FROMTAGS" component={FromTags} />
+            <HomeStack.Screen name="FROMTAGSLIST" component={FromTagsList} />
 
             {/* From history path */}
             <HomeStack.Screen name="FROMHISTORY" component={FromHistory} />

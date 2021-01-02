@@ -2,39 +2,47 @@ import React from 'react'
 import {
     View,
     FlatList,
-    Text
+    Text,
+    TouchableOpacity
 } from 'react-native'
 import { TopNavScreenHeader } from '../GlobalComponents/TopNav'
 import { useSelector } from 'react-redux'
 import GlobalStyles from '../GlobalComponents/GlobalStyles'
+import { useNavigation } from '@react-navigation/native'
 
-const renderTag = ({item}) => {
+const RenderTag = ({item}) => {
+
+    const navigation = useNavigation()
+
     return (
         <View style={{
             width: '100%',
             height: 'auto'
         }}>
-            <View style={{
-                margin: 10,
-                width: 'auto',
-                height: 'auto',
-            }}>
-                <View style={[{
-                    width: '100%',
-                    borderRadius: 5,
-                    padding: 5,
-                    backgroundColor: 'white',
-                    justifyContent: 'center',
-                    alignItems: 'flex-start'
-                }, GlobalStyles.shadowLight]}>
-                    <Text style={[
-                        GlobalStyles.h4, {fontWeight: 'bold'}
-                    ]}>
-                        {item}
-                    </Text>
+            <TouchableOpacity
+            onPress={() => navigation.navigate('FROMTAGSLIST', {tag: item})}
+            >
+                <View style={{
+                    margin: 10,
+                    width: 'auto',
+                    height: 'auto',
+                }}>
+                    <View style={[{
+                        width: '100%',
+                        borderRadius: 5,
+                        padding: 5,
+                        backgroundColor: 'white',
+                        justifyContent: 'center',
+                        alignItems: 'flex-start'
+                    }, GlobalStyles.shadowLight]}>
+                        <Text style={[
+                            GlobalStyles.h4, {fontWeight: 'bold'}
+                        ]}>
+                            {item}
+                        </Text>
+                    </View>
                 </View>
-
-            </View>
+            </TouchableOpacity>
         </View>
     )
 }
@@ -52,7 +60,8 @@ export const FromTags = () => {
             <TopNavScreenHeader title={'From Tags'} exitDestination={'HOMESCREEN'}/>
             <FlatList 
                 data={Object.keys(taggedOutfits)}
-                renderItem={renderTag}
+                renderItem={item => <RenderTag {...item}/>}
+                keyExtractor={key => key}
             />
         </View>
     )

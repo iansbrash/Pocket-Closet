@@ -417,7 +417,7 @@ const RenderOutfit = React.memo(({item, closetObject, onClickFunc}) => {
  *  that contains 4 arrays
  *  topsArray, bottomsArray, footwearArray, otherArray */
 // onClickFunc looks like:   function (outfitObject) { ... }
-export const OutfitList = ({customFilter, onClickFunc}, props) => {
+export const OutfitList = ({customFilter, onClickFunc, customData}, props) => {
     console.log('OutfitList being re-rendered')
 
     const navigation = useNavigation()
@@ -432,7 +432,7 @@ export const OutfitList = ({customFilter, onClickFunc}, props) => {
         }}>
             
             <FlatList
-                data={customFilter ? customFilter(outfitsArray) : outfitsArray}
+                data={customData ? customData : (customFilter ? customFilter(outfitsArray) : outfitsArray)}
 
                 renderItem={(object, index) => (
                     <RenderOutfit {...object} closetObject={closetObject} onClickFunc={onClickFunc}
