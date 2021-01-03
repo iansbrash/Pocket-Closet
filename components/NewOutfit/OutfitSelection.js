@@ -23,15 +23,12 @@ import GlobalStyles from '../GlobalComponents/GlobalStyles'
 import { PlusIcon, XIcon } from '../GlobalComponents/GlobalIcons'
 import { outfitInProgressCleansed } from '../../redux/reducers/outfitsSlice'
 
-
-var TopsArray = [];
-
+import { ClosetSearch } from '../ClosetScreen/NewClosetScreen'
+import { RenderSingleLineClosetItem } from '../ClosetScreen/ClosetList'
 
 const ClothingAddedIcon = (props) => {
 
     const item = props.item;
-
-   
 
     let src;
 
@@ -282,7 +279,6 @@ export const OutfitSelection = ({ route, navigation }) => {
                 width: '100%',
                 marginTop: 5,
                 marginBottom: 5,
-                position: 'relative',
             }}>
                 <TouchableOpacity style={{width: 'auto', height: 'auto'}}
                             onPress={() => addToArray(item)}>
@@ -293,8 +289,7 @@ export const OutfitSelection = ({ route, navigation }) => {
                     marginTop: 5,
                     marginBottom: 5,
                     height: 'auto',
-                    backgroundColor: 'white',
-                    borderRadius: 10
+                    borderRadius: 10,
                 }, GlobalStyles.shadowLight]}>
                     <View style={{
                         height: '100%',
@@ -304,20 +299,32 @@ export const OutfitSelection = ({ route, navigation }) => {
                         flexDirection: 'column',
                     }}
                     >
-                        <View 
-                        style={{
-                            height: 10, 
-                            borderTopLeftRadius: 10, 
-                            borderTopRightRadius: 10, 
-                            backgroundColor: '#09122b',
-                            width: '100%'}}></View>
                         <View style={{
-                            height: 'auto',
+                            height: 10,
+                            width: '100%',
+                        }}>
+                            <View 
+                            style={[{
+                                position: 'absolute',
+                                top: 0,
+                                width: '100%',
+                                height: 20, 
+                                borderTopLeftRadius: 10, 
+                                borderTopRightRadius: 10, 
+                            }, GlobalStyles.bgColorMain]}>
+                            </View>
+                        </View>
+                        
+                        <View style={{
+                            height: 55,
                             width: '100%',
                             justifyContent: 'space-between',
                             alignItems: 'center',
                             flexDirection: 'row',
-                            marginTop: 8
+                            zIndex: 1,
+                            backgroundColor: 'white',
+                            borderBottomLeftRadius: 10,
+                            borderBottomRightRadius: 10
                         }}>
                             <Text category='h4' 
                             numberOfLines={1}
@@ -355,7 +362,7 @@ export const OutfitSelection = ({ route, navigation }) => {
                     zIndex: 0,
                 }} 
                 hookValue={modalVisible}>
-                    <TestSearchInput searchInput={searchInput} setSearchInput={setSearchInput}/>
+                    <ClosetSearch searchInput={searchInput} setSearchInput={setSearchInput} notClosetSearch={true}/>
                 </DropDownViewTest>
                 <FadeInViewTestTwo 
                 style={{
@@ -366,7 +373,7 @@ export const OutfitSelection = ({ route, navigation }) => {
                         data={ClosetArray.filter(item => !item.archive).filter(item => item.clothingName.toLowerCase().includes(searchInput.toLowerCase()))}
                         keyExtractor={item => item._id.toString()}
                         renderItem={renderItem}
-                        />
+                    />
                 </FadeInViewTestTwo>
             </View>
             <View style={{
@@ -385,7 +392,10 @@ export const OutfitSelection = ({ route, navigation }) => {
                 hookValue={modalVisible}>
                         <FlatList style={{maxHeight: '100%'}}
                             data={OutfitArray}
-                            renderItem={(item) => (<ClothingAddedIcon {...item}/>)}
+                            //choose
+                            // renderItem={(item) => (<ClothingAddedIcon {...item}/>)}
+                            renderItem={(item) => (<RenderSingleLineClosetItem {...item}/>)}
+                            
                             keyExtractor={item => item._id.toString()}
                             />
                 </FadeInViewTest>

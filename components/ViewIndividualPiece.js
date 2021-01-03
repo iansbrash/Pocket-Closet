@@ -496,34 +496,7 @@ const ClothingIcon = React.memo(({outfitObject}) => {
 //we need to fetch / store the list of outfits this clothing is in somehow
 //wow. this is incredible. React.memo
 const OutfitScroll = React.memo(({outfitsWornIn}, props) => {
-    const dummySrc = {uri: 'https://randomuser.me/api/portraits/men/1.jpg'}
-
     const outfitsArray = useSelector(state => state.outfits.outfitsArray)
-
-    const mockOutfitsThisClothingIsUsedInArray = [
-        {
-            date: '11/20/20',
-            fitpic: {
-                fitpic: 'https://randomuser.me/api/portraits/men/1.jpg',
-                type: 'local'
-            },
-            //outfitArr: {
-            // we really don't need this part because we're just displaying the image
-            //}
-        },
-        {
-            date: '11/20/21',
-            fitpic: {
-                fitpic: 'https://randomuser.me/api/portraits/men/1.jpg',
-                type: 'local'
-            },
-            //outfitArr: {
-            // we really don't need this part because we're just displaying the image
-            //} //nm we do need this to navigate to the outfit lol
-        }
-    ]
-
-    
 
 
     return (

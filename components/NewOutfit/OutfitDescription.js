@@ -16,7 +16,7 @@ import { useDispatch } from 'react-redux'
 import { outfitInProgressAttributeAdded, outfitInProgressCleansed } from '../../redux/reducers/outfitsSlice'
 import GlobalStyles from '../GlobalComponents/GlobalStyles'
 import { XIcon, CheckIcon } from '../GlobalComponents/GlobalIcons'
-
+import { BrandTags } from '../ViewIndividualPiece'
 
 
 const IndividualDescription = ({
@@ -176,6 +176,67 @@ const IndividualTag = ({title, deleteFunc}) => {
     )
 }
 
+const OutfitStats = () => {
+
+
+    // outfitInProgress.outfitArr is not _ids yet. We can easily combine the brands together in a set.
+    const outfitInProgress = useSelector(state => state.outfits.outfitInProgress)
+    const [brands, setBrands] = useState([])
+
+    // This seems to work
+    useEffect(() => {
+        let { outfitArr } = outfitInProgress
+        let brandSet = new Set()
+        Object.keys(outfitArr).forEach(key => {
+            outfitArr[key].forEach(clothingObject => {
+                clothingObject.brandName.forEach(brand => {
+                    brandSet.add(brand)
+                })
+            })
+        })
+
+        // Spread out set into array. Nice.
+        setBrands([...brandSet])
+    }, [])
+
+    const NumOfBrandsPiecesColorsPrice = () => {
+
+        const Bullet = () => (
+            <Text style={[{fontWeight: 'bold', marginLeft: 5, marginRight: 5}, GlobalStyles.h3, GlobalStyles.lighterHint]}>•</Text>
+        )
+
+        const NiceText = ({text}) => (
+            <Text style={[GlobalStyles.h5, {fontWeight: 'bold'}]}>
+                    {text}
+            </Text>
+        )
+
+        return (
+            <View style={{
+                flexDirection: 'row',
+                justifyContent: 'center',
+                alignItems: 'center'
+            }}>
+                <NiceText text={'3 Brands'}/>
+                <Bullet />
+                <NiceText text={'2 Colors'}/>
+                <Bullet />
+                <NiceText text={'4 Pieces'}/>
+                <Bullet />
+                <NiceText text={'$98'}/>
+            </View>
+        )
+    }
+
+    return (
+        <View>
+            
+            <NumOfBrandsPiecesColorsPrice />
+            <BrandTags brandsArray={brands}/>
+        </View>
+    )
+}
+
 export const OutfitDescription = () => {
 
     // const nameRef = useRef(null)
@@ -320,13 +381,7 @@ export const OutfitDescription = () => {
                     </View>
                     
                 </Animated.View>
-                <View>
-                    <Text style={[GlobalStyles.h3, {fontWeight: 'bold'}]}>
-                        We'll put stats here soon.
-                        i.e. total price, # of brands, # of colors,
-                        maybe a 'you've worn this outfir before on 11/11/11'
-                    </Text>
-                </View>
+                <OutfitStats />
             </View>
             <NextButton 
             navpath={"UPLOADFITPIC"} 
