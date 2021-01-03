@@ -318,12 +318,29 @@ export const ClosetList = ({searchInput, filtersEnabled, heartToggleChecked}, pr
             <FlatList
             data={combinedArrays.filter((item, index) => 
                 (
+                    // Name matches search
                     item.clothingName.toLowerCase().includes(searchInput.toLowerCase()) ||
-                    item.brandName.find(name => name.toLowerCase().includes(searchInput.toLowerCase()))
-                ) && (!filtersEnabled ? true : (
-                        (heartToggleChecked ? item.favorite : true)
-                        && (true) //you can chain filters after this true.
-                    )  //this might be a little innefficent.\ xdddd
+
+                    // Brands match search
+                    item.brandName.find(name => name.toLowerCase().includes(searchInput.toLowerCase())) ||
+
+                    // Color match search
+                    item.color.find(col => col.toLowerCase().includes(searchInput.toLowerCase())) ||
+
+                    // Tags match search
+                    item.tags.find(tag => tag.toLowerCase().includes(tag.toLowerCase())) ||
+
+                    // search is 'favorite' 'heart' 'hearted' 'favorited'
+                    (
+                        // (searchInput.toLowerCase() === 'favorite' ||
+                        // searchInput.toLowerCase() === 'favorited') &&
+                        item.favorite
+                    ) || 
+                    false
+                // ) && (!filtersEnabled ? true : (
+                //         (heartToggleChecked ? item.favorite : true)
+                //         && (true) //you can chain filters after this true.
+                //     )  //this might be a little innefficent.\ xdddd
                 )
             )}
             

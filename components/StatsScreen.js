@@ -450,7 +450,7 @@ const VariableChart = ({reRender, setReRender}) => {
 
         const maxNumOfPlots = 6;
 
-        for (let revIndex = outfitsArray.length - 1; revIndex >= 0 && revIndex >= outfitsArray.length - maxNumOfPlots; revIndex--){
+        for (let revIndex = 0; revIndex >= 0 && revIndex < outfitsArray.length - maxNumOfPlots; revIndex++){
             let accum = 0;
 
             Object.keys(outfitsArray[revIndex].outfitArr).forEach(key => {

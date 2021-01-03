@@ -25,6 +25,9 @@ import { useNavigation, useFocusEffect } from '@react-navigation/native'
 import { YesNoModal, ImageScrollModal } from './GlobalComponents/GlobalModals'
 import { TogglableDrawer } from './GlobalComponents/GlobalDrawers'
 import { makeSmallImage, makeMediumImage, makeMediumSmallImage, deleteClothingFromCloset } from './GlobalFunctions/ImgurResize'
+import { useEffect } from 'react/cjs/react.development';
+
+import * as ImageManipulator from 'expo-image-manipulator';
 
 const windowWidth = Dimensions.get('window').width;
 //edit these instead of numbers in handleScroll
@@ -366,11 +369,36 @@ const ClothingIcon = React.memo(({outfitObject}) => {
 
     const navigation = useNavigation();
 
+    const [fitpic, setFitpic] = useState(outfitObject.fitpic)
 
     if (!outfitObject){
         console.log(`didnt find outfitObject... probably got deleted`)
         return null;
     }
+
+
+    // Compresses the image so no lag during scrolling. very nice
+    useEffect(() => {
+
+        // console.log(`about to log fitpic`)
+        console.log(`typeof outfitObject.fitpic.fitpic: ${typeof outfitObject.fitpic.fitpic}`)
+
+        const toCall = async () => {
+            if (outfitObject.fitpic.type === 'local' && outfitObject.fitpic.fitpic) {
+                const manipResult = await ImageManipulator.manipulateAsync(
+                    // image.localUri || image.uri
+                    outfitObject.fitpic.fitpic,
+                    [{ resize: {width: 200} }],
+                    { compress: 1, format: ImageManipulator.SaveFormat.JPEG }
+                );
+        
+                setFitpic({fitpic: manipResult.uri, type: 'local'})
+            }
+        }
+
+        toCall()
+    }, [])
+
     console.log(`ClothingIcon with outfitObject _id of ${outfitObject._id} being re-rendered.`)
 
     return (
@@ -415,11 +443,11 @@ const ClothingIcon = React.memo(({outfitObject}) => {
                         backgroundColor: 'white'
                     }}>
                         <Image source={
-                            (outfitObject.fitpic &&
-                            outfitObject.fitpic.fitpic !== '') ? 
-                                (outfitObject.fitpic.type === 'imgur' ? 
-                                    {uri: makeMediumSmallImage(outfitObject.fitpic.fitpic)} : 
-                                    {uri: outfitObject.fitpic.fitpic}
+                            (fitpic &&
+                                fitpic.fitpic !== '') ? 
+                                (fitpic.type === 'imgur' ? 
+                                    {uri: makeMediumSmallImage(fitpic.fitpic)} : 
+                                    {uri: fitpic.fitpic}
                                 ) 
                             : dummySrc}
                             

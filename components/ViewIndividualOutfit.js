@@ -233,7 +233,7 @@ const ClothingIcon = React.memo(({clothingObject}) => {
                                 {uri: makeMediumSmallImage(clothingObject.images.images[0])} :
                                 {uri: clothingObject.images.images[0]}
                             )
-                            : dummySrc} 
+                            : null} 
                             style={{width: '100%', aspectRatio: 1, borderRadius: 5}}/>
                     </View>
                     <View style={{marginLeft: 5, marginBottom: 5}}>

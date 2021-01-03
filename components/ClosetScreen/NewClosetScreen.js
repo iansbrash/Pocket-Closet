@@ -209,6 +209,7 @@ export const ClosetSearch = ({searchInput, setSearchInput, notClosetSearch, plac
                             >
                                 <Pressable
                                 onPress={() => setSearchInput('')}
+                                hitSlop={10}
                                 >
                                     <View style={{
                                         height: 25,
