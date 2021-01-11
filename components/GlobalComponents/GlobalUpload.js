@@ -233,7 +233,7 @@ export const GlobalUpload = (
             flex: 1
         }}>
             <MediumButton 
-                title={`Choose asdImages (${maxUploadAmount - fileUri.length} left)`}
+                title={`Choose Images (${maxUploadAmount - fileUri.length} left)`}
                 onPressFunc={() => toggleDropDown()}
                 disabled={fileUri.length === maxUploadAmount}
                 icon={<PlusIcon style={{marginRight: 15, marginLeft: 5, color: fileUri.length === maxUploadAmount ? 'lightgray' : 'black'}} name="plus" size={30} 

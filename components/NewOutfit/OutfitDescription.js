@@ -308,17 +308,6 @@ export const OutfitDescription = () => {
                     }]
                 }}>
                     {/* This is going to be each individual input + title */}
-                    {/* <IndividualDescription 
-                        title={'Name'} 
-                        placeholder={'SS17 Bleached Tee'} 
-                        thisRef={nameRef} 
-                        nextFocusRef={descriptionRef}
-                        setIndex={setIndex}
-                        index={0}
-                        multiline={false}
-                        textInput={nameInput}
-                        setTextInput={setNameInput}
-                    /> */}
                     <IndividualDescription 
                         title={'Description'} 
                         placeholder={'Bought on Grailed 11/17/2019'} 
@@ -330,30 +319,6 @@ export const OutfitDescription = () => {
                         textInput={descriptionInput}
                         setTextInput={setDescriptionInput}
                     />
-                    {/* <IndividualDescription 
-                        title={'Color'} 
-                        placeholder={'White'} 
-                        thisRef={colorRef} 
-                        setIndex={setIndex}
-                        multiline={false}
-                        index={2}
-                        nextFocusRef={priceRef}
-                        textInput={colorInput}
-                        setTextInput={setColorInput}
-                    />
-                    <IndividualDescription 
-                        title={'Price'} 
-                        placeholder={'79'} 
-                        thisRef={priceRef} 
-                        setIndex={setIndex}
-                        multiline={false}
-                        index={3}
-                        nextFocusRef={tagsRef}
-                        textInput={priceInput}
-                        setTextInput={setPriceInput}
-                        keyboardType={'number-pad'}
-                        isPrice={true}
-                    /> */}
                     <IndividualDescription 
                         title={'Tags'} 
                         placeholder={'Seperate tags with commas'} 
@@ -364,7 +329,6 @@ export const OutfitDescription = () => {
                         specialOnCheck={() => setIndex(0)}
                         textInput={tagsInput}
                         setTextInput={tagsChange}
-                        // nextFocusRef={colorRef}
                     />
                     {/** Tags */}
                     <View style={{
@@ -386,7 +350,7 @@ export const OutfitDescription = () => {
             <NextButton 
             navpath={"UPLOADFITPIC"} 
             disabledHook={false} 
-            extraFunc={dispatch(outfitInProgressAttributeAdded({
+            extraFunc={() => dispatch(outfitInProgressAttributeAdded({
                 // clothingName: nameInput,
                 // color: colorInput,
                 description: descriptionInput,

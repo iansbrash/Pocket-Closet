@@ -37,6 +37,7 @@ export const FromHistory = () => {
          *  Abbreviation - Number - e.g. 20, 01, 04, etc. Very general. */
         //new Date(item.date).toLocaleString('en-GB').substr(0, 10)
 
+        /** TODO: Add further date search functionality */
         console.log(input)
 
         return outfitArray.filter(outfitObject => {
