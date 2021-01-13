@@ -8,6 +8,8 @@ import { TopNavScreenHeader } from '../GlobalComponents/TopNav'
 import GlobalStyles from '../GlobalComponents/GlobalStyles'
 import {PlusIcon} from '../GlobalComponents/GlobalIcons'
 import { useSelector, useDispatch } from 'react-redux'
+import { TypeSelectionModal } from '../GlobalComponents/GlobalModals'
+
 // maybe ask a few questions before assigning randomly
 // i.e. 
 //      is it hot, warm, cool, or cold outside
@@ -37,7 +39,7 @@ import { useSelector, useDispatch } from 'react-redux'
  *  
  *      There should be a 'save default random config' button
  */
-const PlusButton = ({onPressFunc}) => {
+const PlusButton = ({onPressFunc, category}) => {
     return (
         <View style={{
             height: 'auto',
@@ -45,41 +47,71 @@ const PlusButton = ({onPressFunc}) => {
         }}>
             <TouchableOpacity style={[{
                 width: 'auto',
-                height: 50,
+                height: 'auto',
                 margin: 5,
                 borderRadius: 10,
                 elevation: 5,
             }, GlobalStyles.shadowLight]}
             onPress={() => onPressFunc()}>
                 <View style={{
+                    height: 'auto',
+                }}>
+                    <View style={{
                     height: 5,
                     width: '100%'
-                }}>
-                    <View 
-                    style={[
-                        GlobalStyles.bgColorMain, {
-                        borderTopLeftRadius: 5, 
-                        borderTopRightRadius: 5, 
-                        height: 10, 
+                    }}>
+                        <View 
+                        style={[
+                            GlobalStyles.bgColorMain, {
+                            borderTopLeftRadius: 5, 
+                            borderTopRightRadius: 5, 
+                            height: 10, 
+                            width: '100%',
+                            position: 'absolute',
+                            top: 0,
+                            zIndex: 0
+                        }]}></View>
+                    </View>
+                    <View style={[{
+                        height: 40,
                         width: '100%',
-                        position: 'absolute',
-                        top: 0,
-                        zIndex: 0
-                    }]}></View>
+                        borderBottomLeftRadius: 5,
+                        borderBottomRightRadius: 5,
+                        justifyContent:'space-between',
+                        alignItems:'center',
+                        backgroundColor: 'white',
+                        flexDirection: 'row'
+                    }]}>
+                        <Text style={[
+                            GlobalStyles.h3, GlobalStyles.colorMain, { fontWeight: 'bold', marginLeft: 10},
+                        ]}>
+                            {category.substr(0, 1).toUpperCase() + category.substr(1, category.length)} 
+                        </Text>
+                        <PlusIcon size={30} style={[
+                            GlobalStyles.colorMain, 
+                            {marginRight: 5}
+                        ]}/>
+                    </View>
                 </View>
-                <View style={[{
-                    height: '100%',
-                    width: '100%',
-                    borderBottomLeftRadius: 5,
-                    borderBottomRightRadius: 5,
-                    justifyContent:'center',
-                    alignItems:'center',
-                    backgroundColor: 'white',
-                    flexDirection: 'row'
-                }]}>
-                    <PlusIcon size={30} style={[GlobalStyles.colorMain]}/>
-                </View>
+                
             </TouchableOpacity>
+        </View>
+    )
+}
+
+const Divider = () => {
+    return (
+        <View style={[{
+            width: 'auto',
+            height: 1,
+            margin: 5
+        }]}>
+            <View style={[
+                GlobalStyles.bgHint,
+                {width: '100%', height: '100%'}
+            ]}>
+
+            </View>
         </View>
     )
 }
@@ -92,7 +124,6 @@ const TypeButton = ({type}) => {
         }}>
             <View style={[{
                 width: 'auto',
-                height: 50,
                 margin: 5,
                 borderRadius: 10,
                 elevation: 5,
@@ -114,14 +145,14 @@ const TypeButton = ({type}) => {
                     }]}></View>
                 </View>
                 <View style={[{
-                    height: '100%',
+                    height: 40,
                     width: '100%',
                     borderBottomLeftRadius: 5,
                     borderBottomRightRadius: 5,
                     justifyContent:'center',
                     alignItems:'center',
                     backgroundColor: 'white',
-                    flexDirection: 'row'
+                    flexDirection: 'row',
                 }]}>
                     <Text style={[
                         GlobalStyles.colorMain, GlobalStyles.h4, {fontWeight: 'bold'}
@@ -134,33 +165,41 @@ const TypeButton = ({type}) => {
     )
 }
 
-const CompleteCategory = ({category, selectablesArray}) => {
+const CompleteCategory = ({category, selectablesArray, setModalVisible}) => {
 
-    const [selected, setSelected] = useState([])
+    // const [selected, setSelected] = useState([])
+
+    const [selected, setSelected] = useState(selectablesArray)
+
+
+    const onPressFunc = () => {
+        setModalVisible(true)
+    }
 
     return (
-        <>
-            <Text style={[
-                GlobalStyles.h3, GlobalStyles.colorMain, { fontWeight: 'bold'}
-            ]}>
-                {category} 
-            </Text>
+            
             <View style={{
                 justifyContent: 'flex-start',
                 alignItems: 'center',
                 flexDirection: 'row',
-                flexWrap: 'wrap'
+                flexWrap: 'wrap',
             }}>
                 {
-                    selected.map(pieceType => (
-                        <TypeButton type={pieceType} />
+                    selected.map((pieceType, index) => (
+                        <TypeButton 
+                            type={pieceType}
+                            key={pieceType} 
+                        />
                     ))
                 }
-                <PlusButton />
-
                 
+                <PlusButton 
+                    category={category}
+                    onPressFunc={onPressFunc}
+                />
+
             </View>
-        </>
+            
     )
 }
 
@@ -169,22 +208,42 @@ export const FromRandom = () => {
 
     const typesOfClothing = useSelector(state => state.closet.typesOfClothing)
 
+    const [modalVisible, setModalVisible] = useState(false)
+
     return (
         <View style={{
             backgroundColor: 'white',
             flex: 1
         }}>
             <TopNavScreenHeader title={'From Random'} exitDestination={'HOMESCREEN'}/>
+
+            {/* Self-explanatory */}
+            <TypeSelectionModal 
+                setModalVisible={setModalVisible} 
+                modalVisible={modalVisible} 
+                onPressFunc={() => null} 
+                title={'title test'} 
+                typesArray={['type1', 'type2', 'type3']}
+            />
+
             {/* Tops, Bottoms, Footwear, Other, etc */}
-            
                 <View style={{
                     margin: 10,
                     flex: 1
                 }}>
                     {
                         Object.keys(typesOfClothing).map(
-                            key => (
-                                <CompleteCategory category={key} key={key} selectablesArray={typesOfClothing[key]}/>
+                            (key, index) => (
+                                <View key={index}>
+                                    <CompleteCategory 
+                                        category={key} 
+                                        // key={index} 
+                                        // selectablesArray={typesOfClothing[key]}
+                                        selectablesArray={['Test', 'Category']}
+                                        setModalVisible={setModalVisible}
+                                    />
+                                    <Divider/>     
+                                </View>
                             )
                         )
                     }

@@ -539,3 +539,174 @@ export const DescriptionModal = ({setModalVisible, modalVisible, children}) => {
         </Animated.View>
     )
 }
+
+export const TypeSelectionModal = ({setModalVisible, modalVisible, onPressFunc, title, typesArray}) => {
+
+    const [viewBlur] = useState(new Animated.Value(0))
+
+    const SingleType = (type) => {
+
+        console.log(type)
+
+        return (
+            <View style={{
+                width: '80%'
+            }}>
+                <View style={{
+                    margin: 5,
+                    width: 'auto'
+                }}>
+                    <View style={[{
+                        width: '100%',
+                        backgroundColor: 'white',
+                        borderRadius: 5,
+                        alignItems: 'center',
+                        justifyContent: 'center'
+                    }, GlobalStyles.shadowLight]}>
+                        <Text style={[
+                            GlobalStyles.h4,
+                            GlobalStyles.colorMain,
+                            {fontWeight: 'bold',
+                            margin: 5}
+                        ]}>
+                            {/* Why the hell i have to do this */}
+                            {type.type}
+                        </Text>
+                    </View>
+                </View> 
+            </View>
+        )
+    }
+
+    const onShow = () => {
+        Animated.timing(viewBlur, {
+            toValue: .95,
+            duration: 250,
+            useNativeDriver: true
+        }).start();
+    }
+
+    const onDismiss = () => {
+        Animated.timing(viewBlur, {
+            toValue: 0,
+            duration: 250,
+            useNativeDriver: true
+        }).start();
+    }
+
+    useEffect(() => {
+        if (modalVisible){
+            onShow()
+        } else {
+            onDismiss()
+        }
+    },[modalVisible])
+
+    return (
+        <Animated.View style={{
+            position: 'absolute',
+            height: '100%',
+            width: '100%',
+            opacity: viewBlur,
+            zIndex: 2
+        }}
+        pointerEvents={'none'}>
+            <BlurView 
+            intensity={100} style={{
+                height: '100%',
+                width: '100%'
+            }}>
+                <Modal
+                animationType="slide"
+                transparent={true}
+                visible={modalVisible}
+                onRequestClose={() => {
+                Alert.alert("Modal has been closed.");
+                }}>
+                <View style={{
+                    top: 300,
+                    justifyContent: 'center', alignItems: 'center'}}>
+                        <View style={[{
+                            justifyContent: 'center', 
+                            alignItems: 'center',
+                            flexDirection: 'column',
+                            width: '75%',
+                            height: 'auto',
+                            borderRadius: 10,
+
+                        }, GlobalStyles.shadowLight]}>
+                                {/* The Bar */}
+                                <View style={{
+                                    height: 10,
+                                    width: '100%'
+                                }}>
+                                <View 
+                                    style={[{
+                                        position: 'absolute',
+                                        zIndex: 0,
+                                        height: 20, 
+                                        borderTopLeftRadius: 10, 
+                                        borderTopRightRadius: 10,
+                                        width: '100%'
+                                    }, GlobalStyles.bgColorMain]}></View>
+                                </View>
+                                <View style={[{
+                                    height: 'auto', 
+                                    width: '100%',
+                                    backgroundColor: 'white',
+                                    borderBottomLeftRadius: 10,
+                                    borderBottomRightRadius: 10,
+                                    flexDirection: 'column',
+                                    justifyContent: 'space-between',
+                                    alignItems: 'center'
+                                }]}>
+
+                                    {/* The title */}
+                                    <View style={{
+                                        justifyContent: 'center',alignItems: 'flex-start',
+                                    }}>
+                                        <Text style={[GlobalStyles.h5, GlobalStyles.colorMain,
+                                            {fontWeight: 'bold', margin: 15}]}>
+                                            {title ? title : 'Are you sure?'}
+                                        </Text>
+                                    </View>
+
+                                    {/* Lists of togglable types */}
+                                    <View style={{
+                                        justifyContent: 'flex-start',
+                                        alignItems: 'center',
+                                        flexDirection: 'column',
+                                        width: '100%'
+                                    }}>
+                                        {typesArray.map(type => (
+                                            <SingleType type={type}/>
+                                        ))}
+                                    </View>
+                                    
+                                    <View style={{
+                                            width: '100%',
+                                            justifyContent: 'space-between',
+                                            alignItems: 'center', 
+                                            flexDirection: 'row',
+                                        }}>
+                                            <View style={{width: '100%'}}>
+                                                <TouchableOpacity style={{
+                                                    width: '100%',
+                                                    flexDirection: 'row',
+                                                    justifyContent: 'center',
+                                                    alignItems: 'center'
+                                                }}
+                                                onPress={() => setModalVisible(false)}>
+                                                    <CheckIcon size={40} style={GlobalStyles.colorMain}/>
+                                                </TouchableOpacity>
+                                            </View>
+                                    </View>
+                                
+                        </View>
+                        </View>
+                </View>
+            </Modal>
+        </BlurView>
+      </Animated.View>
+    )
+}

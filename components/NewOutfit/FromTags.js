@@ -24,7 +24,10 @@ const RenderTag = ({item, length}) => {
             onPress={() => navigation.navigate('FROMTAGSLIST', {tag: item})}
             >
                 <View style={{
-                    margin: 5
+                    marginLeft: 10,
+                    marginRight: 10,
+                    marginTop: 5,
+                    marginBottom: 5
                 }}>
                     <View style={{
                         height: 5,

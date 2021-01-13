@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import {
     View
 } from 'react-native'
@@ -8,6 +8,10 @@ import { useSelector, useDispatch } from 'react-redux'
 import { pushClothingObjectsToOutfitInProgress } from '../../redux/reducers/outfitsSlice'
 import { populateArray } from '../GlobalFunctions/PopulateArray'
 import { useNavigation } from '@react-navigation/native'
+import { ClosetSearch } from '../ClosetScreen/NewClosetScreen'
+
+
+
 export const FromTagsList = ({route}) => {
 
     const { tag } = route.params
@@ -15,6 +19,8 @@ export const FromTagsList = ({route}) => {
 
     const dispatch = useDispatch()
     const navigation = useNavigation()
+
+    const [searchInput, setSearchInput] = useState('')
 
 
     const filterTag = (outfitArray) => {
@@ -38,8 +44,18 @@ export const FromTagsList = ({route}) => {
             backgroundColor: 'white'
         }}>
             <TopNavScreenHeader exitDestination={'HOMESCREEN'} title={tag}/>
+            <View style={{
+                marginBottom: 5
+            }}>
+                <ClosetSearch 
+                    searchInput={searchInput} 
+                    setSearchInput={setSearchInput} 
+                    notClosetSearch={true} 
+                    placeholder={`Search outfits!`}/>
+            </View>
+            
             <OutfitList 
-                customFilter={filterTag}
+                customFilter={filterTag} //Need to combine filterDate and filterTag
                 onClickFunc={onClickFunc}
             />
 
