@@ -9,6 +9,8 @@ import GlobalStyles from '../GlobalComponents/GlobalStyles'
 import {PlusIcon} from '../GlobalComponents/GlobalIcons'
 import { useSelector, useDispatch } from 'react-redux'
 import { TypeSelectionModal } from '../GlobalComponents/GlobalModals'
+import { NextButton } from '../NewClothing/NextButton'
+import { pushClothingObjectsToOutfitInProgress } from '../../redux/reducers/outfitsSlice'
 
 // maybe ask a few questions before assigning randomly
 // i.e. 
@@ -212,6 +214,10 @@ export const FromRandom = () => {
     const [modalVisible, setModalVisible] = useState(false)
     const [selectedType, setSelectedType] = useState('')
 
+    const closetObject = useSelector(state => state.closet.closetObject)
+
+    const dispatch = useDispatch()
+
     // This structure constrasts our usual use of 'topsArray', 'bottomsArray', etc... should change?
     const [selectablesObject, setSelectablesObject] = useState({
         tops: [],
@@ -219,6 +225,44 @@ export const FromRandom = () => {
         footwear: [],
         other: []
     })
+
+    // From https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/random
+    // Don't wanna bother to make my own :)
+    function getRandomInt(min, max) {
+        min = Math.ceil(min);
+        max = Math.floor(max);
+        return Math.floor(Math.random() * (max - min) + min); //The maximum is exclusive and the minimum is inclusive
+    }
+
+    const pushRandom = () => {
+        // Observe selectablesObject and its contents
+        // Iterate over Object.keys, for each item in the tops, bottoms, etc array, 
+        //      Filter ____Array => clothingObj.pieceType === Object.key
+        //      Of those, get length of the array, getRandomInt(0, [].length)
+        //      push to a temp {topsArray: [], ...}
+        // once done iterating over everything,
+        // dispatch an action to completely replace the outfitInProgress
+        // replace outfitInProgress.outfitArr
+
+        let outfitArr = {
+            topsArray: [],
+            bottomsArray: [],
+            footwearArray: [],
+            otherArray: []
+        }
+
+        Object.keys(selectablesObject).forEach(key => {
+            selectablesObject[key].forEach(pType => {
+                let toFetch = closetObject[`${key}Array`].filter(clothingObj =>
+                    clothingObj.pieceType === pType)
+                outfitArr[`${key}Array`].push(toFetch[getRandomInt(0, toFetch.length)])
+            })
+        })
+
+        dispatch(pushClothingObjectsToOutfitInProgress(outfitArr))
+
+        console.log(outfitArr)
+    }
 
     return (
         <View style={{
@@ -262,6 +306,7 @@ export const FromRandom = () => {
                         )
                     }
                 </View>
+            <NextButton navpath={'FROMSCRATCH'} extraFunc={pushRandom}/>
         </View>
     )
 }
