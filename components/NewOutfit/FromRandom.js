@@ -165,14 +165,15 @@ const TypeButton = ({type}) => {
     )
 }
 
-const CompleteCategory = ({category, selectablesArray, setModalVisible}) => {
+const CompleteCategory = ({category, selectablesArray, setModalVisible, setSelectedType}) => {
 
     // const [selected, setSelected] = useState([])
 
-    const [selected, setSelected] = useState(selectablesArray)
+    // const [selected, setSelected] = useState(selectablesArray)
 
 
     const onPressFunc = () => {
+        setSelectedType(category)
         setModalVisible(true)
     }
 
@@ -185,7 +186,7 @@ const CompleteCategory = ({category, selectablesArray, setModalVisible}) => {
                 flexWrap: 'wrap',
             }}>
                 {
-                    selected.map((pieceType, index) => (
+                    selectablesArray.map((pieceType, index) => (
                         <TypeButton 
                             type={pieceType}
                             key={pieceType} 
@@ -209,6 +210,15 @@ export const FromRandom = () => {
     const typesOfClothing = useSelector(state => state.closet.typesOfClothing)
 
     const [modalVisible, setModalVisible] = useState(false)
+    const [selectedType, setSelectedType] = useState('')
+
+    // This structure constrasts our usual use of 'topsArray', 'bottomsArray', etc... should change?
+    const [selectablesObject, setSelectablesObject] = useState({
+        tops: [],
+        bottoms: [],
+        footwear: [],
+        other: []
+    })
 
     return (
         <View style={{
@@ -222,8 +232,11 @@ export const FromRandom = () => {
                 setModalVisible={setModalVisible} 
                 modalVisible={modalVisible} 
                 onPressFunc={() => null} 
-                title={'title test'} 
-                typesArray={['type1', 'type2', 'type3']}
+                title={selectedType.substr(0, 1).toUpperCase() + selectedType.substr(1, selectedType.length)} 
+                typesArray={selectedType === '' ? [] : typesOfClothing[selectedType]}
+                setSelectablesObject={setSelectablesObject}
+                selectablesObject={selectablesObject}
+                selectedType={selectedType}
             />
 
             {/* Tops, Bottoms, Footwear, Other, etc */}
@@ -239,8 +252,9 @@ export const FromRandom = () => {
                                         category={key} 
                                         // key={index} 
                                         // selectablesArray={typesOfClothing[key]}
-                                        selectablesArray={['Test', 'Category']}
+                                        selectablesArray={selectablesObject[key]}
                                         setModalVisible={setModalVisible}
+                                        setSelectedType={setSelectedType}
                                     />
                                     <Divider/>     
                                 </View>

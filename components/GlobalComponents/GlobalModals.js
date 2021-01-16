@@ -65,7 +65,7 @@ export const YesNoModal = ({setModalVisible, modalVisible, onPressFunc, title}) 
         }}
       >
           <View style={{
-              top: 300,
+              flex: 1,
               justifyContent: 'center', alignItems: 'center'}}>
                   <View style={[{
                       justifyContent: 'center', 
@@ -540,43 +540,76 @@ export const DescriptionModal = ({setModalVisible, modalVisible, children}) => {
     )
 }
 
-export const TypeSelectionModal = ({setModalVisible, modalVisible, onPressFunc, title, typesArray}) => {
+export const TypeSelectionModal = ({
+    setModalVisible, modalVisible, onPressFunc, 
+    title, typesArray, setSelectablesObject, 
+    selectedType, selectablesObject}) => {
 
     const [viewBlur] = useState(new Animated.Value(0))
 
-    const SingleType = (type) => {
+    const SingleType = React.memo((type) => {
 
-        console.log(type)
+
+        const [isSelected, setIsSelected] = useState(false)
+
+        // useEffect(() => {
+        //     setIsSelected(!isSelected)
+        //     selectablesObject[selectedType].includes(type.type) ?
+        //     console.log(`includes type ${type.type}`) : console.log(`doesnt' include type ${type}`)
+
+        //     console.log(selectablesObject)
+        //     console.log(isSelected)
+        // }, [selectablesObject])
+
+        const onPress = () => {
+            selectablesObject[selectedType].includes(type.type) ?
+                setSelectablesObject({
+                    ...selectablesObject, 
+                    [selectedType]: 
+                        selectablesObject[selectedType].filter(ty => ty !== type.type)}) 
+                : 
+                setSelectablesObject({...selectablesObject, 
+                    [selectedType]: 
+                        [...selectablesObject[selectedType], type.type]})
+            setIsSelected(true)
+            console.log(`isSelected: ${isSelected}`)
+        }
+
 
         return (
             <View style={{
                 width: '80%'
             }}>
-                <View style={{
-                    margin: 5,
-                    width: 'auto'
-                }}>
-                    <View style={[{
-                        width: '100%',
-                        backgroundColor: 'white',
-                        borderRadius: 5,
-                        alignItems: 'center',
-                        justifyContent: 'center'
-                    }, GlobalStyles.shadowLight]}>
-                        <Text style={[
-                            GlobalStyles.h4,
-                            GlobalStyles.colorMain,
-                            {fontWeight: 'bold',
-                            margin: 5}
-                        ]}>
-                            {/* Why the hell i have to do this */}
-                            {type.type}
-                        </Text>
-                    </View>
-                </View> 
+                <TouchableOpacity
+                onPress={() => onPress()}
+                >
+                    <View style={{
+                        margin: 5,
+                        width: 'auto'
+                    }}>
+                        <View style={[{
+                            width: '100%',
+                            borderRadius: 5,
+                            alignItems: 'center',
+                            justifyContent: 'center'
+                        }, GlobalStyles.shadowLight,
+                        selectablesObject[selectedType].includes(type.type) ? GlobalStyles.bgColorMain : {backgroundColor: 'white'},
+                    ]}>
+                            <Text style={[
+                                GlobalStyles.h4,
+                                selectablesObject[selectedType].includes(type.type) ? {color: 'white'} : GlobalStyles.colorMain,
+                                {fontWeight: 'bold',
+                                margin: 5}
+                            ]}>
+                                {/* Why the hell i have to do this */}
+                                {type.type}
+                            </Text>
+                        </View>
+                    </View> 
+                </TouchableOpacity>
             </View>
         )
-    }
+    })
 
     const onShow = () => {
         Animated.timing(viewBlur, {
@@ -624,86 +657,85 @@ export const TypeSelectionModal = ({setModalVisible, modalVisible, onPressFunc, 
                 Alert.alert("Modal has been closed.");
                 }}>
                 <View style={{
-                    top: 300,
+                    flex: 1,
                     justifyContent: 'center', alignItems: 'center'}}>
+                    <View style={[{
+                        justifyContent: 'center', 
+                        alignItems: 'center',
+                        flexDirection: 'column',
+                        width: '75%',
+                        height: 'auto',
+                        borderRadius: 10,
+
+                    }, GlobalStyles.shadowLight]}>
+                        {/* The Bar */}
+                        <View style={{
+                            height: 10,
+                            width: '100%'
+                        }}>
+                        <View 
+                            style={[{
+                                position: 'absolute',
+                                zIndex: 0,
+                                height: 20, 
+                                borderTopLeftRadius: 10, 
+                                borderTopRightRadius: 10,
+                                width: '100%'
+                            }, GlobalStyles.bgColorMain]}></View>
+                        </View>
                         <View style={[{
-                            justifyContent: 'center', 
-                            alignItems: 'center',
+                            height: 'auto', 
+                            width: '100%',
+                            backgroundColor: 'white',
+                            borderBottomLeftRadius: 10,
+                            borderBottomRightRadius: 10,
                             flexDirection: 'column',
-                            width: '75%',
-                            height: 'auto',
-                            borderRadius: 10,
+                            justifyContent: 'space-between',
+                            alignItems: 'center'
+                        }]}>
 
-                        }, GlobalStyles.shadowLight]}>
-                                {/* The Bar */}
-                                <View style={{
-                                    height: 10,
-                                    width: '100%'
-                                }}>
-                                <View 
-                                    style={[{
-                                        position: 'absolute',
-                                        zIndex: 0,
-                                        height: 20, 
-                                        borderTopLeftRadius: 10, 
-                                        borderTopRightRadius: 10,
-                                        width: '100%'
-                                    }, GlobalStyles.bgColorMain]}></View>
-                                </View>
-                                <View style={[{
-                                    height: 'auto', 
+                            {/* The title */}
+                            <View style={{
+                                justifyContent: 'center',alignItems: 'flex-start',
+                            }}>
+                                <Text style={[GlobalStyles.h5, GlobalStyles.colorMain,
+                                    {fontWeight: 'bold', margin: 15}]}>
+                                    {title ? title : 'Are you sure?'}
+                                </Text>
+                            </View>
+
+                            {/* Lists of togglable types */}
+                            <View style={{
+                                justifyContent: 'flex-start',
+                                alignItems: 'center',
+                                flexDirection: 'column',
+                                width: '100%'
+                            }}>
+                                {typesArray.map(type => (
+                                    <SingleType type={type}/>
+                                ))}
+                            </View>
+                            
+                            <View style={{
                                     width: '100%',
-                                    backgroundColor: 'white',
-                                    borderBottomLeftRadius: 10,
-                                    borderBottomRightRadius: 10,
-                                    flexDirection: 'column',
                                     justifyContent: 'space-between',
-                                    alignItems: 'center'
-                                }]}>
-
-                                    {/* The title */}
-                                    <View style={{
-                                        justifyContent: 'center',alignItems: 'flex-start',
-                                    }}>
-                                        <Text style={[GlobalStyles.h5, GlobalStyles.colorMain,
-                                            {fontWeight: 'bold', margin: 15}]}>
-                                            {title ? title : 'Are you sure?'}
-                                        </Text>
-                                    </View>
-
-                                    {/* Lists of togglable types */}
-                                    <View style={{
-                                        justifyContent: 'flex-start',
-                                        alignItems: 'center',
-                                        flexDirection: 'column',
-                                        width: '100%'
-                                    }}>
-                                        {typesArray.map(type => (
-                                            <SingleType type={type}/>
-                                        ))}
-                                    </View>
-                                    
-                                    <View style={{
-                                            width: '100%',
-                                            justifyContent: 'space-between',
-                                            alignItems: 'center', 
-                                            flexDirection: 'row',
-                                        }}>
-                                            <View style={{width: '100%'}}>
-                                                <TouchableOpacity style={{
-                                                    width: '100%',
-                                                    flexDirection: 'row',
-                                                    justifyContent: 'center',
-                                                    alignItems: 'center'
-                                                }}
-                                                onPress={() => setModalVisible(false)}>
-                                                    <CheckIcon size={40} style={GlobalStyles.colorMain}/>
-                                                </TouchableOpacity>
-                                            </View>
-                                    </View>
-                                
+                                    alignItems: 'center', 
+                                    flexDirection: 'row',
+                                }}>
+                                <View style={{width: '100%'}}>
+                                    <TouchableOpacity style={{
+                                        width: '100%',
+                                        flexDirection: 'row',
+                                        justifyContent: 'center',
+                                        alignItems: 'center'
+                                    }}
+                                    onPress={() => setModalVisible(false)}>
+                                        <CheckIcon size={40} style={GlobalStyles.colorMain}/>
+                                    </TouchableOpacity>
+                                </View>
+                            </View>
                         </View>
-                        </View>
+                    </View>
                 </View>
             </Modal>
         </BlurView>
