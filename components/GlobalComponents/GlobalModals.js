@@ -698,8 +698,8 @@ export const TypeSelectionModal = ({
                             <View style={{
                                 justifyContent: 'center',alignItems: 'flex-start',
                             }}>
-                                <Text style={[GlobalStyles.h5, GlobalStyles.colorMain,
-                                    {fontWeight: 'bold', margin: 15}]}>
+                                <Text style={[GlobalStyles.h2, GlobalStyles.colorMain,
+                                    {fontWeight: 'bold', margin: 5}]}>
                                     {title ? title : 'Are you sure?'}
                                 </Text>
                             </View>
@@ -712,7 +712,7 @@ export const TypeSelectionModal = ({
                                 width: '100%'
                             }}>
                                 {typesArray.map(type => (
-                                    <SingleType type={type}/>
+                                    <SingleType type={type} key={type}/>
                                 ))}
                             </View>
                             

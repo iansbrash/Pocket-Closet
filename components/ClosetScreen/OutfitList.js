@@ -172,144 +172,6 @@ const RenderOutfit = React.memo(({item, closetObject, onClickFunc}) => {
 
     const navigation = useNavigation();
 
-    // The absolutely positioned date and heart badge and the top right
-    // <3 11/12/13
-    const OutfitDateFavoriteBadge = React.memo(({item}) => {
-        return (
-            <View style={[{
-                position: 'absolute',
-                width: 'auto',
-                height: 'auto',
-                borderRadius: 10,
-                top: 0,
-                right: 0,
-                zIndex: 3,
-                padding: 5,
-                flexDirection: 'row'
-            }, GlobalStyles.bgColorMain]}>
-                <View style={{
-                    justifyContent: 'center',
-                    alignItems: 'center'
-                }}>
-                    {
-                        item.favorite ? <HeartIcon size={22} style={{color: '#ff4040', marginRight: 2}}/> : null
-                    }
-                </View>
-                <Text style={[{color: 'white', fontWeight: 'bold'}, GlobalStyles.h5]}>
-                    {`${new Date(item.date).toLocaleString('en-GB').substr(0, 10)}`}
-                </Text>
-            </View>
-        )
-    })
-
-    // The roughly 180x180 image of the outfit's fitpic on the left
-    const OutfitFitpic = React.memo(({item}) => {
-        return (
-            <View style={{
-                width: '50%',
-                height: 'auto'}}>
-                <View style={{
-                    width: 'auto',
-                    marginLeft: 10,
-                    marginTop: 10,
-                    marginBottom: 10,
-                    height: 'auto'
-                }}>
-                    <View style={[{
-                        marginRight: 5,
-                        width: 'auto',
-                        aspectRatio: 1,
-                        backgroundColor: 'white',
-                        borderRadius: 10
-                    }, GlobalStyles.shadowLight]}>
-                        <Image source={item.fitpic !== '' && item.fitpic.fitpic !== '' ? (item.fitpic.type === 'imgur' ?
-                        { uri: makeMediumImage(item.fitpic.fitpic)} : {uri: item.fitpic.fitpic}) : null}
-                            style={{height: '100%', width: '100%', borderRadius: 10}}/>
-                    </View>
-                </View>
-            </View>
-        )
-    })
-
-    // roughly 80x80 image of an outfit's individual clothing pieces
-    // mapped out in PieceView
-    const IndividualClothingImage = React.memo(({index}) => {
-        return (
-            <View style={[{
-                width: '50%', 
-                aspectRatio: 1,
-            }]} > 
-            <View style={[{
-                margin: 5,
-                width: 'auto',
-                height: 'auto',
-                borderRadius: 10,
-                backgroundColor: 'white'
-            }, GlobalStyles.shadowLight]}>
-            {imageArrayFromIdsHook[index] ? <Image  
-                    source={
-                        imageArrayFromIdsHook[index].type === 'imgur' ? 
-                        // Imgur
-                            {uri: makeSmallImage(imageArrayFromIdsHook[index].images)} :
-                        // Local
-                            {uri: imageArrayFromIdsHook[index].images
-                        }  
-                    } 
-                    style={{height: '100%', aspectRatio: 1, borderRadius: 10}} /> : null}
-            </View>
-        </View>
-        )
-    })
-
-    // The 1-4 IndividualClothingImage icons mapped out into a 2x2 area
-    // adds a '+#' icon if there are more than 4 clothing items
-    const PiecePreview = React.memo(({outfitArray}) => {
-        return (
-            <View style={{
-                width: '50%',
-            }}>
-                <View style={{
-                    marginTop: 5,
-                    marginRight: 5,
-                    marginBottom: 5,
-                    flexDirection: 'row',
-                    flexWrap: 'wrap',
-                    alignItems: 'center'
-                }}>
-                    {/* Maps out the first 1-4 clothing images */}
-                    {combinedClothingItemsArrayHook.map((clothingObject, index) => (
-                        <IndividualClothingImage index={index} key={index} />
-                        )
-                    )}
-                    {/* Adds the  '+#' if needed */}
-                    {needsCropHook ? (
-                        <View style={[{
-                            height: 'auto', 
-                            aspectRatio: 1,
-                            borderRadius: 10,
-                            margin: 5,
-                            borderRadius: 10,
-                            backgroundColor: 'white'
-                        }, GlobalStyles.shadowLight]}> 
-                            <View 
-                            style={{
-                                height: 75, 
-                                aspectRatio: 1, 
-                                borderRadius: 10, 
-                                justifyContent: 'center',
-                                alignItems: 'center'}} >
-                                    <Text style={[GlobalStyles.h3, {fontWeight: 'bold'}]}>
-                                        {`+${origLengthHook - 3}`}
-                                    </Text>
-                            </View>
-                    </View>
-                    ) : null}
-                </View>
-            </View>
-        )
-    }, (prevProps, nextProps) => 
-            prevProps.outfitArray == nextProps.outfitArray &&
-            prevProps.favorite == nextProps.favorite) //memo equal function
     
 
     
@@ -389,7 +251,13 @@ const RenderOutfit = React.memo(({item, closetObject, onClickFunc}) => {
                             <OutfitFitpic item={item}/>
                             
                             {/* The images of the pieces in the outfit */}
-                            <PiecePreview outfitArray={item.outfitArr}/>
+                            <PiecePreview 
+                                outfitArray={item.outfitArr}
+                                combinedClothingItemsArrayHook={combinedClothingItemsArrayHook}
+                                needsCropHook={needsCropHook}
+                                origLengthHook={origLengthHook}
+                                imageArrayFromIdsHook={imageArrayFromIdsHook}
+                            />
 
                             {/* Might need to replace the above with something less image intensive. Causes tons of lag. */}
                             {/* 
@@ -411,6 +279,157 @@ const RenderOutfit = React.memo(({item, closetObject, onClickFunc}) => {
 }, (prevProps, nextProps) => prevProps.item == nextProps.item) //memo equal function
 
 
+// The absolutely positioned date and heart badge and the top right
+// <3 11/12/13
+const OutfitDateFavoriteBadge = React.memo(({item}) => {
+    return (
+        <View style={[{
+            position: 'absolute',
+            width: 'auto',
+            height: 'auto',
+            borderRadius: 10,
+            top: 0,
+            right: 0,
+            zIndex: 3,
+            padding: 5,
+            flexDirection: 'row'
+        }, GlobalStyles.bgColorMain]}>
+            <View style={{
+                justifyContent: 'center',
+                alignItems: 'center'
+            }}>
+                {
+                    item.favorite ? <HeartIcon size={22} style={{color: '#ff4040', marginRight: 2}}/> : null
+                }
+            </View>
+            <Text style={[{color: 'white', fontWeight: 'bold'}, GlobalStyles.h5]}>
+                {`${new Date(item.date).toLocaleString('en-GB').substr(0, 10)}`}
+            </Text>
+        </View>
+    )
+})
+
+// The roughly 180x180 image of the outfit's fitpic on the left
+const OutfitFitpic = React.memo(({item}) => {
+    return (
+        <View style={{
+            width: '50%',
+            height: 'auto'}}>
+            <View style={{
+                width: 'auto',
+                marginLeft: 10,
+                marginTop: 10,
+                marginBottom: 10,
+                height: 'auto'
+            }}>
+                <View style={[{
+                    marginRight: 5,
+                    width: 'auto',
+                    aspectRatio: 1,
+                    backgroundColor: 'white',
+                    borderRadius: 10
+                }, GlobalStyles.shadowLight]}>
+                    <Image source={item.fitpic !== '' && item.fitpic.fitpic !== '' ? (item.fitpic.type === 'imgur' ?
+                    { uri: makeMediumImage(item.fitpic.fitpic)} : {uri: item.fitpic.fitpic}) : null}
+                        style={{height: '100%', width: '100%', borderRadius: 10}}/>
+                </View>
+            </View>
+        </View>
+    )
+})
+
+// roughly 80x80 image of an outfit's individual clothing pieces
+// mapped out in PieceView
+// imageArrayFromIdsHook 
+const IndividualClothingImage = React.memo(({index, imageArrayFromIdsHook}) => {
+    return (
+        <View style={[{
+            width: '50%', 
+            aspectRatio: 1,
+        }]} > 
+        <View style={[{
+            margin: 5,
+            width: 'auto',
+            height: 'auto',
+            borderRadius: 10,
+            backgroundColor: 'white'
+        }, GlobalStyles.shadowLight]}>
+        {imageArrayFromIdsHook[index] ? <Image  
+                source={
+                    imageArrayFromIdsHook[index].type === 'imgur' ? 
+                    // Imgur
+                        {uri: makeSmallImage(imageArrayFromIdsHook[index].images)} :
+                    // Local
+                        {uri: imageArrayFromIdsHook[index].images
+                    }  
+                } 
+                style={{height: '100%', aspectRatio: 1, borderRadius: 10}} /> : null}
+        </View>
+    </View>
+    )
+})
+
+
+//play around with this.... i mightve fucked up herer ... need 2 revert ?
+
+// The 1-4 IndividualClothingImage icons mapped out into a 2x2 area
+// adds a '+#' icon if there are more than 4 clothing items
+// combinedClothingItemsArrayHook needsCropHook origLengthHook
+const PiecePreview = ({
+    outfitArray,
+    combinedClothingItemsArrayHook, needsCropHook, origLengthHook, imageArrayFromIdsHook}) => {
+    return (
+        <View style={{
+            width: '50%',
+        }}>
+            <View style={{
+                marginTop: 5,
+                marginRight: 5,
+                marginBottom: 5,
+                flexDirection: 'row',
+                flexWrap: 'wrap',
+                alignItems: 'center'
+            }}>
+                {/* Maps out the first 1-4 clothing images */}
+                {combinedClothingItemsArrayHook.map((clothingObject, index) => (
+                    <IndividualClothingImage 
+                        index={index} 
+                        key={index} 
+                        imageArrayFromIdsHook={imageArrayFromIdsHook}
+                    />
+                    )
+                )}
+                {/* Adds the  '+#' if needed */}
+                {needsCropHook ? (
+                    <View style={[{
+                        height: 'auto', 
+                        aspectRatio: 1,
+                        borderRadius: 10,
+                        margin: 5,
+                        borderRadius: 10,
+                        backgroundColor: 'white'
+                    }, GlobalStyles.shadowLight]}> 
+                        <View 
+                        style={{
+                            height: 75, 
+                            aspectRatio: 1, 
+                            borderRadius: 10, 
+                            justifyContent: 'center',
+                            alignItems: 'center'}} >
+                                <Text style={[GlobalStyles.h3, {fontWeight: 'bold'}]}>
+                                    {`+${origLengthHook - 3}`}
+                                </Text>
+                        </View>
+                </View>
+                ) : null}
+            </View>
+        </View>
+    )
+} 
+// (prevProps, nextProps) => 
+//         prevProps.outfitArray == nextProps.outfitArray &&
+//         prevProps.favorite == nextProps.favorite) || 
+//         prevProps.origLengthHook !== nextProps.origLengthHook //memo equal function
 
 
 /** An outfit is an object
@@ -427,13 +446,13 @@ export const OutfitList = ({customFilter, onClickFunc, customData}, props) => {
     
     return (
         <View style={{
-            width: '100%',
-            height: '100%'
+            flex: 1
         }}>
             
             <FlatList
                 data={customData ? customData : (customFilter ? customFilter(outfitsArray) : outfitsArray)}
 
+                // 1. Avoid arrow functions inline for renderItem
                 renderItem={(object, index) => (
                     <RenderOutfit {...object} closetObject={closetObject} onClickFunc={onClickFunc}
                     />
@@ -448,6 +467,9 @@ export const OutfitList = ({customFilter, onClickFunc, customData}, props) => {
                     {length: 200, offset: 200 * index, index}
                 )}
                 initialNumToRender={4}
+                maxToRenderPerBatch={5} 
+                windowSize={7} 
+
             />
         </View>
     )

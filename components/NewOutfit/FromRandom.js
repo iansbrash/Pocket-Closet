@@ -2,7 +2,8 @@ import React, { useState } from 'react'
 import { 
     View,
     Text,
-    TouchableOpacity
+    TouchableOpacity,
+    FlatList
 } from 'react-native'
 import { TopNavScreenHeader } from '../GlobalComponents/TopNav'
 import GlobalStyles from '../GlobalComponents/GlobalStyles'
@@ -136,7 +137,10 @@ const TypeButton = ({type}) => {
                 }}>
                     <View 
                     style={[
-                        GlobalStyles.bgColorMain, {
+                        // GlobalStyles.bgColorMain, 
+                        // {backgroundColor: 'white'},
+                        GlobalStyles.bgHint,
+                    {
                         borderTopLeftRadius: 5, 
                         borderTopRightRadius: 5, 
                         height: 10, 
@@ -151,6 +155,38 @@ const TypeButton = ({type}) => {
                     width: '100%',
                     borderBottomLeftRadius: 5,
                     borderBottomRightRadius: 5,
+                    justifyContent:'center',
+                    alignItems:'center',
+                    backgroundColor: 'white',
+                    flexDirection: 'row',
+                }]}>
+                    <Text style={[
+                        GlobalStyles.colorMain, GlobalStyles.h4, {fontWeight: 'bold'}
+                    ]}>
+                        {type}
+                    </Text>
+                </View>
+            </View>
+        </View>
+    )
+}
+
+const TypeButtonTwo = ({type}) => {
+    return (
+        <View style={{
+            height: 'auto',
+            width: '50%',
+        }}>
+            <View style={[{
+                width: 'auto',
+                margin: 5,
+                borderRadius: 10,
+                elevation: 5,
+            }, GlobalStyles.shadowLight]}>
+                <View style={[{
+                    height: 45,
+                    width: '100%',
+                    borderRadius: 5,
                     justifyContent:'center',
                     alignItems:'center',
                     backgroundColor: 'white',
@@ -189,7 +225,7 @@ const CompleteCategory = ({category, selectablesArray, setModalVisible, setSelec
             }}>
                 {
                     selectablesArray.map((pieceType, index) => (
-                        <TypeButton 
+                        <TypeButtonTwo 
                             type={pieceType}
                             key={pieceType} 
                         />
@@ -255,7 +291,17 @@ export const FromRandom = () => {
             selectablesObject[key].forEach(pType => {
                 let toFetch = closetObject[`${key}Array`].filter(clothingObj =>
                     clothingObj.pieceType === pType)
-                outfitArr[`${key}Array`].push(toFetch[getRandomInt(0, toFetch.length)])
+
+                // If we find a possible clothingObject, push, otherwise, null
+                // Accounts for selecting a pieceType that has no associated clothingObjects
+                toFetch ? outfitArr[`${key}Array`].push(toFetch[getRandomInt(0, toFetch.length)]) : null
+
+                // Possible 'fix': 
+                // Disable pieceTypes that have no associated clothingObjects
+                //      Keep track of this in redux store...
+                //      Possibly keep a count of each pieceType
+                //      Would be helpful for StatsScreen (no calculations / weird updates)
+                // -----Would need to add/delete from these counts when archiving / deleting / creating
             })
         })
 
@@ -289,21 +335,35 @@ export const FromRandom = () => {
                     flex: 1
                 }}>
                     {
-                        Object.keys(typesOfClothing).map(
-                            (key, index) => (
-                                <View key={index}>
-                                    <CompleteCategory 
-                                        category={key} 
-                                        // key={index} 
-                                        // selectablesArray={typesOfClothing[key]}
-                                        selectablesArray={selectablesObject[key]}
-                                        setModalVisible={setModalVisible}
-                                        setSelectedType={setSelectedType}
-                                    />
-                                    <Divider/>     
-                                </View>
-                            )
-                        )
+                        <FlatList 
+                            keyExtractor={key => key}
+                            data={Object.keys(typesOfClothing)}
+                            renderItem={item => 
+                                <CompleteCategory 
+                                    category={item.item} 
+                                    selectablesArray={selectablesObject[item.item]}
+                                    setModalVisible={setModalVisible}
+                                    setSelectedType={setSelectedType}
+                                />
+                            }
+                            ItemSeparatorComponent={item => <Divider />}
+                            bounces={false}
+                        />
+                        // Object.keys(typesOfClothing).map(
+                        //     (key, index) => (
+                        //         <View key={index}>
+                        //             <CompleteCategory 
+                        //                 category={key} 
+                        //                 // key={index} 
+                        //                 // selectablesArray={typesOfClothing[key]}
+                        //                 selectablesArray={selectablesObject[key]}
+                        //                 setModalVisible={setModalVisible}
+                        //                 setSelectedType={setSelectedType}
+                        //             />
+                        //             {/* <Divider/>      */}
+                        //         </View>
+                        //     )
+                        // )
                     }
                 </View>
             <NextButton navpath={'FROMSCRATCH'} extraFunc={pushRandom}/>

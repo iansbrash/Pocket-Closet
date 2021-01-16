@@ -363,6 +363,7 @@ export const NewClosetScreen = () => {
                                 heartToggleChecked={heartToggleChecked}/>
                         </View>
                         <View style={{
+                            flex: 1,
                             display: closetIsActive ? 'none' : 'flex'
 
                         }}

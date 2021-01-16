@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import {
     View,
     Text,
@@ -10,6 +10,8 @@ import { useSelector, useDispatch } from 'react-redux'
 import { pushClothingObjectsToOutfitInProgress } from '../../redux/reducers/outfitsSlice'
 import { useNavigation } from '@react-navigation/native'
 import { populateArray } from '../GlobalFunctions/PopulateArray'
+import { ClosetSearch } from '../ClosetScreen/NewClosetScreen'
+
 //              FROM FAVORITES
 // List all outfits with 'favorite'
 // Same layout as ClosetScreen outfits FlatList
@@ -29,6 +31,8 @@ export const FromFavorites = () => {
     const outfitsArray = useSelector(state => state.outfits.outfitsArray);
     const favoriteOutfitsArray = outfitsArray.filter(outfitObject => outfitObject.favorite)
     const closetObject = useSelector(state => state.closet.closetObject)
+
+    const [searchInput, setSearchInput] = useState('')
 
     const dispatch = useDispatch()
 
@@ -51,8 +55,15 @@ export const FromFavorites = () => {
         
     }
 
-    const filterFavorites = (outfitArray) => {
+    // Seems to work nicely
+    const filterFavorites = (outfitArray, input = searchInput) => {
         return outfitArray.filter(outfitObject => outfitObject.favorite)
+            .filter(outfitObject => {
+                let parsedDate = new Date(outfitObject.date);
+                return parsedDate.toLocaleString('en-GB').substr(0, 10).includes(input)
+            }
+        )
+
     }
 
     return (
@@ -61,6 +72,15 @@ export const FromFavorites = () => {
             flex: 1
         }}>
             <TopNavScreenHeader title={'From Favorites'} exitDestination={'HOMESCREEN'}/>
+            <View style={{
+                marginBottom: 5
+            }}>
+                <ClosetSearch 
+                    searchInput={searchInput} 
+                    setSearchInput={setSearchInput} 
+                    notClosetSearch={true} 
+                    placeholder={`Search outfits!`}/>
+            </View>
             <OutfitList 
                 customFilter={filterFavorites} 
                 onClickFunc={onClickFunc}/>

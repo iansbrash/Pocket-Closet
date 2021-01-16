@@ -243,17 +243,24 @@ export const MediumButton = ({title, icon, onPressFunc, buttonFunc, disabled}) =
                         alignItems: 'center',
                         flexDirection: 'row',
                         backgroundColor: 'white',
-                        zIndex: 2
+                        zIndex: 2,
+                        borderBottomLeftRadius: 10,
+                        borderBottomRightRadius: 10
                     }}>
-                        <View style={{height: '100%', justifyContent: 'center', alignItems: 'center'}}>
+                        <View style={{
+                            height: 55, 
+                            justifyContent: 'center', 
+                            alignItems: 'center', 
+                            borderBottomLeftRadius: 10
+                        }}>
                             <Text category='h4' 
                                 style={[{fontWeight: 'bold', marginLeft: 15, height: 'auto'}, 
                                 disabled ? styles.textInactive : GlobalStyles.colorMain, 
-                                GlobalStyles.h5]}>
+                                GlobalStyles.h4]}>
                                     {title}
                             </Text>
                         </View>
-                        <Pressable style={{height: '100%', justifyContent: 'center', alignItems: 'center'}}
+                        <Pressable style={{height: 55, justifyContent: 'center', alignItems: 'center'}}
                         onPress={!disabled ? (buttonFunc ? buttonFunc : onPressFunc) : null}>
                             {icon}
                         </Pressable>
