@@ -8,6 +8,7 @@ import { createSlice } from '@reduxjs/toolkit'
  *  Each outfit needs a 'link' attribute
  *      Upload via imgur. Store link and deleteHash 
  */
+
 const outfitsSlice = createSlice({
     name: 'outfits',
     initialState: {

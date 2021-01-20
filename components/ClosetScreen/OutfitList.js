@@ -1,21 +1,22 @@
 import React, {
     useCallback,
-    useState
+    useState,
+    useEffect
 } from 'react'
 import {
     View,
     TouchableOpacity,
     Text,
     Image,
-    FlatList
+    FlatList,
+    ActivityIndicator
 } from 'react-native'
 import { useSelector,  } from 'react-redux'
 import store from '../../redux/store'
 import { useNavigation, useFocusEffect } from '@react-navigation/native'
 import GlobalStyles from '../GlobalComponents/GlobalStyles'
-import { HeartIcon } from '../GlobalComponents/GlobalIcons'
+import { HeartIcon, PlusIcon } from '../GlobalComponents/GlobalIcons'
 import { makeSmallImage, makeMediumImage } from '../GlobalFunctions/ImgurResize'
-import { useEffect } from 'react/cjs/react.development'
 
 
 
@@ -42,6 +43,9 @@ const RenderOutfit = React.memo(({item, closetObject, onClickFunc}) => {
     
     // original number of _ids we are working with
     const [origLengthHook, setOrigLengthHook] = useState(0)
+
+    // Used in PiecePreview to force update component after compressed images are created 
+    const [needsUpdate, setNeedsUpdate] = useState(false)
 
     // leaving this comment here for fun
     // wow. i understand how hooks work now 4 months later. this was causing re rendering
@@ -88,7 +92,7 @@ const RenderOutfit = React.memo(({item, closetObject, onClickFunc}) => {
             //we're searching with
             for (const key of Object.keys(outfitArray)){
 
-                //for each id in our outfits outfitArray
+                // for each id in our outfits outfitArray
                 for (const id of outfitArray[key]){
 
                     //attempt to find the corresponding clothingObject for our _id
@@ -142,6 +146,11 @@ const RenderOutfit = React.memo(({item, closetObject, onClickFunc}) => {
                         break;
                     }
                 }
+
+                // Double break to exit outermost loop
+                if (imageArrayFromIds.length >= combinedClothingItemsArray.length){
+                    break;
+                }
             }
     
             // array of all clothingObjects, without the usual divides with topsArray, bottomsArray, etc
@@ -156,6 +165,11 @@ const RenderOutfit = React.memo(({item, closetObject, onClickFunc}) => {
 
             // original # of clothing items, so we can properly add the '+#' icon
             setOrigLengthHook(origLength)
+
+            console.log(`needsUpdate: ${needsUpdate}`)
+            // Force update PiecePreview component
+            setNeedsUpdate(true)
+            console.log(`needsUpdate: ${needsUpdate}`)
         }
 
         // because we are using the async expo image manupulator, we need to first create the async function,
@@ -171,9 +185,6 @@ const RenderOutfit = React.memo(({item, closetObject, onClickFunc}) => {
 
 
     const navigation = useNavigation();
-
-    
-
     
     //RenderOutfit return
     return (
@@ -257,6 +268,7 @@ const RenderOutfit = React.memo(({item, closetObject, onClickFunc}) => {
                                 needsCropHook={needsCropHook}
                                 origLengthHook={origLengthHook}
                                 imageArrayFromIdsHook={imageArrayFromIdsHook}
+                                needsUpdate={needsUpdate}
                             />
 
                             {/* Might need to replace the above with something less image intensive. Causes tons of lag. */}
@@ -341,7 +353,7 @@ const OutfitFitpic = React.memo(({item}) => {
 // roughly 80x80 image of an outfit's individual clothing pieces
 // mapped out in PieceView
 // imageArrayFromIdsHook 
-const IndividualClothingImage = React.memo(({index, imageArrayFromIdsHook}) => {
+const IndividualClothingImage = React.memo(({index, imageArrayFromIdsHook, needsUpdate}) => {
     return (
         <View style={[{
             width: '50%', 
@@ -354,7 +366,7 @@ const IndividualClothingImage = React.memo(({index, imageArrayFromIdsHook}) => {
             borderRadius: 10,
             backgroundColor: 'white'
         }, GlobalStyles.shadowLight]}>
-        {imageArrayFromIdsHook[index] ? <Image  
+        {needsUpdate ? (imageArrayFromIdsHook[index] ? <Image  
                 source={
                     imageArrayFromIdsHook[index].type === 'imgur' ? 
                     // Imgur
@@ -363,7 +375,7 @@ const IndividualClothingImage = React.memo(({index, imageArrayFromIdsHook}) => {
                         {uri: imageArrayFromIdsHook[index].images
                     }  
                 } 
-                style={{height: '100%', aspectRatio: 1, borderRadius: 10}} /> : null}
+                style={{height: '100%', aspectRatio: 1, borderRadius: 10}} /> : null) : <ActivityIndicator size="small" color="lightgray"/>}
         </View>
     </View>
     )
@@ -375,9 +387,19 @@ const IndividualClothingImage = React.memo(({index, imageArrayFromIdsHook}) => {
 // The 1-4 IndividualClothingImage icons mapped out into a 2x2 area
 // adds a '+#' icon if there are more than 4 clothing items
 // combinedClothingItemsArrayHook needsCropHook origLengthHook
-const PiecePreview = ({
+const PiecePreview = React.memo(({
     outfitArray,
-    combinedClothingItemsArrayHook, needsCropHook, origLengthHook, imageArrayFromIdsHook}) => {
+    combinedClothingItemsArrayHook, needsCropHook, origLengthHook, imageArrayFromIdsHook,
+    needsUpdate}) => {
+
+
+    // Possible fix,
+    // Don't load any images (uncompressed) initially
+    // aync loadImages function, use state hook to tell PiecePreview component the compressed images are ready
+    // React.memo() PiecePreview, (pProps, nProps) => {  pProps.needsUpdate === nProps.needsUpdate   }
+
+    console.log(`in PiecePreview... needsUpdate: ${needsUpdate}`)
+
     return (
         <View style={{
             width: '50%',
@@ -391,41 +413,50 @@ const PiecePreview = ({
                 alignItems: 'center'
             }}>
                 {/* Maps out the first 1-4 clothing images */}
-                {combinedClothingItemsArrayHook.map((clothingObject, index) => (
-                    <IndividualClothingImage 
-                        index={index} 
-                        key={index} 
-                        imageArrayFromIdsHook={imageArrayFromIdsHook}
-                    />
+                {
+                // needsUpdate ? 
+                    combinedClothingItemsArrayHook.map((clothingObject, index) => (
+                        <IndividualClothingImage 
+                            index={index} 
+                            key={index} 
+                            imageArrayFromIdsHook={imageArrayFromIdsHook}
+                            needsUpdate={needsUpdate}
+                        />
                     )
-                )}
+                ) 
+                // : null
+                }
                 {/* Adds the  '+#' if needed */}
-                {needsCropHook ? (
-                    <View style={[{
-                        height: 'auto', 
-                        aspectRatio: 1,
-                        borderRadius: 10,
-                        margin: 5,
-                        borderRadius: 10,
-                        backgroundColor: 'white'
-                    }, GlobalStyles.shadowLight]}> 
-                        <View 
-                        style={{
-                            height: 75, 
-                            aspectRatio: 1, 
-                            borderRadius: 10, 
-                            justifyContent: 'center',
-                            alignItems: 'center'}} >
-                                <Text style={[GlobalStyles.h3, {fontWeight: 'bold'}]}>
-                                    {`+${origLengthHook - 3}`}
-                                </Text>
-                        </View>
-                </View>
-                ) : null}
+                {
+                // needsUpdate ?
+                    (needsCropHook ? (
+                        <View style={[{
+                            height: 'auto', 
+                            aspectRatio: 1,
+                            borderRadius: 10,
+                            margin: 5,
+                            borderRadius: 10,
+                            backgroundColor: 'white'
+                        }, GlobalStyles.shadowLight]}> 
+                            <View 
+                            style={{
+                                height: 75, 
+                                aspectRatio: 1, 
+                                borderRadius: 10, 
+                                justifyContent: 'center',
+                                alignItems: 'center'}} >
+                                    <Text style={[GlobalStyles.h3, {fontWeight: 'bold'}]}>
+                                        {`+${origLengthHook - 3}`}
+                                    </Text>
+                            </View>
+                    </View>
+                    ) : null) 
+                // : null
+                }
             </View>
         </View>
     )
-} 
+}, (prevProps, nextProps) => prevProps.needsUpdate === nextProps.needsUpdate) 
 // (prevProps, nextProps) => 
 //         prevProps.outfitArray == nextProps.outfitArray &&
 //         prevProps.favorite == nextProps.favorite) || 
@@ -460,6 +491,21 @@ export const OutfitList = ({customFilter, onClickFunc, customData}, props) => {
                 
                 keyExtractor={(obj, index) => obj._id.toString()} 
                 showsVerticalScrollIndicator={false}
+
+                ListEmptyComponent={
+                <View style={{
+                    margin: 10,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    flexDirection: 'row'
+                }}>
+                    <Text style={[{
+                        fontWeight: 'normal'
+                    }, GlobalStyles.h6, GlobalStyles.colorMain]}>Create an outfit!</Text>
+                    <PlusIcon size={25} style={GlobalStyles.colorMain}/>
+                </View>
+                }
+
 
                 // Below are possible optimizations
                 removeClippedSubviews={false} // causes FlatList to sometimes not render until scrolled.. so we disabled

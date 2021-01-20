@@ -23,6 +23,10 @@ import {
 import { useSelector, useDispatch } from 'react-redux'
 import { useFocusEffect } from '@react-navigation/native'
 import * as Haptics from 'expo-haptics';
+import {
+    updateStatObjectFromIndividualStat,
+    updateStatObjectFromStatArray,
+} from '../redux/reducers/statsSlice'
 
 
 const screenWidth = Dimensions.get("window").width;
@@ -210,6 +214,7 @@ const AllStatsThree = ({reRender, setReRender}) => {
 }
 
 const VerbalStats = ({reRender, setReRender, modalVisible, setModalVisible}) => {
+
     /**
      *                  DATA WE NEED
      *  Closet Worth
@@ -218,12 +223,21 @@ const VerbalStats = ({reRender, setReRender, modalVisible, setModalVisible}) => 
      *  Number of Brands (Either just do state.closetObject.brandsArray.length, or create a set and sum everything from closetObject)
      * 
      */
-    const closetObject = useSelector(state => state.closet.closetObject)
 
-    const [closetWorth, setClosetWorth] = useState(0)
-    const [closetSize, setClosetSize] = useState(0)
-    const [totalTimesWorn, setTotalTimesWorn] = useState(0)
-    const [totalNumberOfBrands, setTotalNumberOfBrands] = useState(0)
+    const closetObject = useSelector(state => state.closet.closetObject)
+    const verbalStats = useSelector(state => state.stats.statsObject.verbalStats)
+
+    const dispatch = useDispatch()
+
+
+    //updateStatObjectFromStatArray
+
+    // Sum clothingObject.price for all 4 topsArray,... etc
+    const [closetWorth, setClosetWorth] = useState(verbalStats.totalClosetWorth)
+
+    const [closetSize, setClosetSize] = useState(verbalStats.totalClosetSize)
+    const [totalTimesWorn, setTotalTimesWorn] = useState(verbalStats.totalTimesWorn)
+    const [totalNumberOfBrands, setTotalNumberOfBrands] = useState(verbalStats.totalNumberOfBrands)
 
 
     // This seems to be the solution to my rerendering problem
@@ -256,6 +270,12 @@ const VerbalStats = ({reRender, setReRender, modalVisible, setModalVisible}) => 
         setClosetWorth(accum)
         setTotalNumberOfBrands(brandsSet.size)
         setTotalTimesWorn(timesWorn)
+
+        dispatch(updateStatObjectFromStatArray(
+            'verbalStats',                                                                         //statCategory
+            ['totalClosetWorth', 'totalTimesWorn', 'totalNumberOfBrands', 'totalClosetSize'],      //statNameArray
+            [accum,               timesWorn,        brandsSet.size,        timesWorn]              //statArray
+        ))
     }, [reRender])
     
     const VerbalContainerTwo = ({stat, value}) => {
