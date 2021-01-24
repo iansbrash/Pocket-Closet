@@ -14,7 +14,8 @@ import {
     ShoeIcon,
     BagIcon,
     TieIcon,
-    RefreshIcon
+    RefreshIcon,
+    PlusIcon
  } from './GlobalComponents/GlobalIcons'
  import { Dimensions } from "react-native";
 import {
@@ -451,8 +452,35 @@ const VariableChart = ({reRender, setReRender}) => {
 
     const outfitsArray = useSelector(state => state.outfits.outfitsArray)
 
+    // In case there is no graph
     if (outfitsArray.length === 0 ){
-        return null;
+        return (
+            <View style={{
+                width: '80%',
+                alignSelf: 'center',
+                justifyContent: 'center',
+                alignItems: 'center'
+            }}>
+                 <View style={[{
+                    marginTop: 15,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    flexDirection: 'row',
+                    borderRadius: 10,
+                    backgroundColor: '#fafafa',
+                    padding: 5,
+                }, GlobalStyles.shadowLightest]}>
+                    <Text style={[{
+                        fontWeight: 'normal',
+                        // color: '#3e3e40'
+                    }, GlobalStyles.h6, GlobalStyles.lighterHint
+                    ]}>
+                        {`Add an outfit to see graph!`}
+                    </Text>
+                    <PlusIcon size={25} style={GlobalStyles.lighterHint}/>
+                </View>
+            </View>
+        )
     }
 
     console.log(dataArray)

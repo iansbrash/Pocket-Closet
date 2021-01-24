@@ -9,8 +9,9 @@ import {
 import { useSelector } from 'react-redux'
 import { useNavigation } from '@react-navigation/native'
 import GlobalStyles from '../GlobalComponents/GlobalStyles'
-import { HeartIcon, ArchiveIcon } from '../GlobalComponents/GlobalIcons'
+import { HeartIcon, ArchiveIcon, PlusIcon } from '../GlobalComponents/GlobalIcons'
 import { makeSmallImage } from '../GlobalFunctions/ImgurResize'
+import { ListEmptyComponent } from './ListEmptyComponent'
 
 
 
@@ -347,7 +348,9 @@ export const ClosetList = ({searchInput, filtersEnabled, heartToggleChecked}, pr
             renderItem={object => <RenderSingleLineClosetItem {...object}/>}
 
             keyExtractor={obj => obj._id.toString()}
-            ListEmptyComponent={<Text>Add some items! (change this)</Text>}
+            ListEmptyComponent={
+                <ListEmptyComponent text={'Add a clothing piece!'}/>
+            }
             showsVerticalScrollIndicator={false}
 
             // Below are possible optimizations

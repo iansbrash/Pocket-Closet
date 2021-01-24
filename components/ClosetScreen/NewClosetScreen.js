@@ -15,6 +15,7 @@ import { PlusIcon, XIcon } from '../GlobalComponents/GlobalIcons'
 import { OutfitList } from './OutfitList'
 import { ClosetList } from './ClosetList'
 import { useSelector } from 'react-redux'
+import { ListEmptyComponent } from './ListEmptyComponent'
 
 import * as Haptics from 'expo-haptics';
 
@@ -80,6 +81,9 @@ const ClosetOutfitsToggle = ({closetIsActive, setClosetIsActive }) => {
         </View>
     )
 }
+
+
+
 
 export const ClosetSearch = ({searchInput, setSearchInput, notClosetSearch, placeholder}) => {
 

@@ -214,6 +214,7 @@ export const FinalizeOutfit = () => {
     console.log(arrayOfTempObjectValues)
 
     // console.log(arrayOfTempObjectValues);
+    console.log(outfitInProgress.fitpic)
 
     return (
 
@@ -227,11 +228,15 @@ export const FinalizeOutfit = () => {
             <View style={{
                 flex: 1
             }}>
-                <Text>{`fitpic (if there is one): ${outfitInProgress.fitpic}`}</Text>
-                <View style={{
-                    
-                }}>
-
+                <View style={[{
+                    margin: 10,
+                    width: 'auto',
+                    borderRadius: 10
+                }, GlobalStyles.shadowLight]}>
+                    <Image 
+                        source={{uri: outfitInProgress.fitpic.fitpic}}
+                        style={{width: '100%', aspectRatio: 1, borderRadius: 10}}
+                    />
                 </View>
                 {/* <ScrollView style={{padding: 10}}> */}
                 <View style={{
@@ -261,6 +266,7 @@ export const FinalizeOutfit = () => {
                             </> : null)
                         }
                         data={Object.keys(outfitInProgress.outfitArr)}
+                        keyExtractor={key => key.toString()}
                         //
                         //['topsArray', 'bottomsArray', 'footwearArray', 'otherArray']
                     

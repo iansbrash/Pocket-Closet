@@ -17,6 +17,7 @@ import { useNavigation, useFocusEffect } from '@react-navigation/native'
 import GlobalStyles from '../GlobalComponents/GlobalStyles'
 import { HeartIcon, PlusIcon } from '../GlobalComponents/GlobalIcons'
 import { makeSmallImage, makeMediumImage } from '../GlobalFunctions/ImgurResize'
+import { ListEmptyComponent } from './ListEmptyComponent'
 
 
 
@@ -493,17 +494,7 @@ export const OutfitList = ({customFilter, onClickFunc, customData}, props) => {
                 showsVerticalScrollIndicator={false}
 
                 ListEmptyComponent={
-                <View style={{
-                    margin: 10,
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    flexDirection: 'row'
-                }}>
-                    <Text style={[{
-                        fontWeight: 'normal'
-                    }, GlobalStyles.h6, GlobalStyles.colorMain]}>Create an outfit!</Text>
-                    <PlusIcon size={25} style={GlobalStyles.colorMain}/>
-                </View>
+                    <ListEmptyComponent text={'Create an outfit!'}/>
                 }
 
 
