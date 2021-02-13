@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useState, useEffect} from 'react'
 import  { 
     Image,
     View,
@@ -23,6 +23,7 @@ import { MediumButton } from '../GlobalComponents/GlobalButtons'
 import { outfitInProgressCleansed } from '../../redux/reducers/outfitsSlice'
 import { nanoid } from 'nanoid/async/index.native'
 import { clothingInOutfitWorn } from '../../redux/reducers/closetSlice'
+import { updateVariableStats } from '../../redux/reducers/statsSlice'
 ///
 import {batchActions} from 'redux-batched-actions';
 
@@ -129,11 +130,44 @@ const OutfitDivider = ({item, index, }) => {
 }
 
 
+
 export const FinalizeOutfit = () => {
 
     const outfitInProgress = useSelector(state => state.outfits.outfitInProgress);
     const navigation = useNavigation();
     const dispatch = useDispatch();
+
+    const [brands, setBrands] = useState([])
+    const [colors, setColors] = useState([])
+    const [totalPrice, setTotalPrice] = useState(0)
+    const [totalPieces, setTotalPieces] = useState(0)
+
+    // This seems to work
+    useEffect(() => {
+        let { outfitArr } = outfitInProgress
+        let brandSet = new Set();
+        let colorSet = new Set();
+        let totalPrice = 0;
+        let totalPieces = 0;
+        Object.keys(outfitArr).forEach(key => {
+            outfitArr[key].forEach(clothingObject => {
+                clothingObject.brandName.forEach(brand => {
+                    brandSet.add(brand);
+                });
+                clothingObject.color.forEach(col => {
+                    colorSet.add(col);
+                });
+                totalPrice += clothingObject.price === '' ? 0 : parseInt(clothingObject.price);
+                totalPieces++;
+            })
+        })
+
+        // Spread out set into array. Nice.
+        setColors([...colorSet])
+        setBrands([...brandSet])
+        setTotalPieces(totalPieces);
+        setTotalPrice(totalPrice)
+    }, [outfitInProgress])
     
     
     const FinalizeClicked = async () => {
@@ -166,6 +200,8 @@ export const FinalizeOutfit = () => {
         let nid = await nanoid();
         let date = Date.parse(new Date());
 
+        
+
         // TODO
         /**
          *  The problem here is that our outfitSlice outfitInProgress structure is not as detailed / intricate
@@ -195,7 +231,17 @@ export const FinalizeOutfit = () => {
         dispatch(batchActions([
             clothingInOutfitWorn(idArrayObject, nid),
             outfitCreatedFromHome(idArrayObject, nid, date),
-            createdOutfitTagged(nid, outfitInProgress.tags)
+            createdOutfitTagged(nid, outfitInProgress.tags),
+            // For StatsScreen
+            updateVariableStats(
+                //objectName
+                ['piecesPerOutfit', 'pricesPerOutfit', 'brandsPerOutfit', 'colorsPerOutfit', 'perOutfitDates'],
+                //objectAttribute
+                ['pieces',          'price',            'brands',          'colors',          'dates'],
+                //attributeValueToPush
+                [totalPieces,       totalPrice,         brands.length,     colors.length,    date],
+
+            )
         ]
         ))
 
@@ -215,6 +261,36 @@ export const FinalizeOutfit = () => {
 
     // console.log(arrayOfTempObjectValues);
     console.log(outfitInProgress.fitpic)
+
+    const NumOfBrandsPiecesColorsPrice = () => {
+
+        const Bullet = () => (
+            <Text style={[{fontWeight: 'bold', marginLeft: 5, marginRight: 5}, GlobalStyles.h3, GlobalStyles.lighterHint]}>•</Text>
+        )
+
+        const NiceText = ({text}) => (
+            <Text style={[GlobalStyles.h5, {fontWeight: 'bold'}]}>
+                    {text}
+            </Text>
+        )
+
+        return (
+            <View style={{
+                flexDirection: 'row',
+                justifyContent: 'center',
+                alignItems: 'center'
+            }}>
+                <NiceText text={`${brands.length} Brand${brands.length != 1 ? 's' : ''}`}/>
+                <Bullet />
+                <NiceText text={`${colors.length} Color${colors.length != 1 ? 's' : ''}`}/>
+                <Bullet />
+                <NiceText text={`${totalPieces} Piece${totalPieces != 1 ? 's' : ''}`}/>
+                <Bullet />
+                <NiceText text={`$${totalPrice}`}/>
+            </View>
+        )
+    }
+
 
     return (
 
@@ -238,10 +314,10 @@ export const FinalizeOutfit = () => {
                         style={{width: '100%', aspectRatio: 1, borderRadius: 10}}
                     />
                 </View>
-                {/* <ScrollView style={{padding: 10}}> */}
                 <View style={{
-                    padding: 10
+                    padding: 0
                 }}>
+                    <NumOfBrandsPiecesColorsPrice />
                     <FlatList 
                         renderItem={key => ( 
                             // <Text>{key.item}</Text>) this is weird af.... why key.item...

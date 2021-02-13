@@ -241,6 +241,8 @@ const VerbalStats = ({reRender, setReRender, modalVisible, setModalVisible}) => 
     const [totalNumberOfBrands, setTotalNumberOfBrands] = useState(verbalStats.totalNumberOfBrands)
 
 
+
+
     // This seems to be the solution to my rerendering problem
     // Only the last call to any useState hook works in a useEffect call
     // So we have to use local variables to accumulate the cost
@@ -435,18 +437,20 @@ const VariableChart = ({reRender, setReRender}) => {
      */
 
 
-    const [dataArray, setDataArray] = useState(["January", "February", "March", "April", "May", "June"])
+    const [dataArray, setDataArray] = useState(["January"])
     const [labelsArray, setLabelsArray] = useState([
-        Math.random() * 100,
-        Math.random() * 100,
-        Math.random() * 100,
-        Math.random() * 100,
-        Math.random() * 100,
-        Math.random() * 100
+        123
     ])
+
+    const piecesPerOutfit = useSelector(state => state.stats.statsObject.variableStats.piecesPerOutfit.pieces)
+    const perOutfitDates = useSelector(state => state.stats.statsObject.variableStats.perOutfitDates.dates)
+
 
     // used to re-update the LineChart so it doesn't crash on the initial render
     const [mounted, setMounted] = useState(false)
+
+    // Should be like... 0?
+    const testRTValue = useSelector(state => state.stats.statsObject.verbalStats.totalClosetSize);
 
     
 
@@ -483,8 +487,8 @@ const VariableChart = ({reRender, setReRender}) => {
         )
     }
 
-    console.log(dataArray)
-    console.log(labelsArray)
+    console.log({dataArray})
+    console.log({labelsArray})
     console.log('VariableChart rerender')
 
 
@@ -527,6 +531,17 @@ const VariableChart = ({reRender, setReRender}) => {
         setMounted(true)
     }, [])
 
+
+    /**
+     *          IDEAS:
+     *  If I want to display the last 6 outfits and how many pieces were in it,
+     *  I should calculate it when the outfit is created,
+     *  push it to statsObject.variableStats,
+     *  delete the last if there are more than 6 outfits,
+     *  and just useSelector it for the data.
+     * 
+     */
+
     
 
     
@@ -566,6 +581,9 @@ const VariableChart = ({reRender, setReRender}) => {
         }
     }
 
+    const testData = [123];
+    const testLabels = ['jan'];
+
     return (
         <View style={[
             {backgroundColor: 'white', borderRadius: 10, margin: 5}, 
@@ -573,10 +591,20 @@ const VariableChart = ({reRender, setReRender}) => {
         >
             <LineChart
                 data={{
-                    labels: mounted ? labelsArray : ["Jan"],
+                    labels: //mounted ? 
+                    perOutfitDates
+                    // labelsArray 
+                    // : 
+                    // ["Jan"]
+                    ,
                     datasets: [
                         {
-                        data: mounted ? dataArray : [123.32]
+                        data: 
+                        piecesPerOutfit
+                        // mounted ? 
+                        // dataArray 
+                        // : 
+                        // [124]
                         }
                     ]
                 }}

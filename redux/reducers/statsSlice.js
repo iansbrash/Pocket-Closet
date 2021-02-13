@@ -10,6 +10,29 @@ const statsSlice = createSlice({
                 totalTimesWorn: 0,
                 totalNumberOfBrands: 0,
                 totalClosetSize: 0
+            },
+            variableStats: {
+                piecesPerOutfit: {
+                    pieces: [],     // i.e. [4, 5, 2, 6]
+                },
+                pricesPerOutfit: {
+                    price: []
+                },
+                brandsPerOutfit: {
+                    brands: []
+                },
+                colorsPerOutfit: {
+                    colors: []
+                },
+                perOutfitDates: {
+                    dates: []
+                },
+                closetQuantityPerMonth: {
+                    //less impt
+                },
+                closetPricePerMonth: {
+
+                }
             }
         }
     },
@@ -50,6 +73,36 @@ const statsSlice = createSlice({
                     }
                 }
             }
+        },
+        updateVariableStats: {
+            reducer (state, action) {
+                // payload will look like:
+                /**
+                 * {
+                 *      objectName: ['1', '2', '3']
+                 *      objectAttribute: ['prices', 'colors', 'brands']
+                 *      attributeValueToPush: ['3', '4', '2']
+                 * }
+                 * 
+                 */
+
+                const { objectName, objectAttribute, attributeValueToPush} = action.payload;
+
+                objectName.forEach((obj, index) => {
+                    let toPush = state.statsObject.variableStats[obj][objectAttribute[index]];
+                    toPush.push(attributeValueToPush[index]);
+                    toPush.length > 6 ? toPush.pop() : null;
+                })
+            },
+            prepare (objectName, objectAttribute, attributeValueToPush) {
+                return {
+                    payload: {
+                        objectName,
+                        objectAttribute,
+                        attributeValueToPush
+                    }
+                }
+            }
         }
 
     },
@@ -59,5 +112,6 @@ const statsSlice = createSlice({
 export default statsSlice.reducer;
 export const {
     updateStatObjectFromIndividualStat,
-    updateStatObjectFromStatArray
+    updateStatObjectFromStatArray,
+    updateVariableStats
 } = statsSlice.actions

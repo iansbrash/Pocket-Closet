@@ -182,21 +182,35 @@ const OutfitStats = () => {
     // outfitInProgress.outfitArr is not _ids yet. We can easily combine the brands together in a set.
     const outfitInProgress = useSelector(state => state.outfits.outfitInProgress)
     const [brands, setBrands] = useState([])
+    const [colors, setColors] = useState([])
+    const [totalPrice, setTotalPrice] = useState(0)
+    const [totalPieces, setTotalPieces] = useState(0)
 
     // This seems to work
     useEffect(() => {
         let { outfitArr } = outfitInProgress
-        let brandSet = new Set()
+        let brandSet = new Set();
+        let colorSet = new Set();
+        let totalPrice = 0;
+        let totalPieces = 0;
         Object.keys(outfitArr).forEach(key => {
             outfitArr[key].forEach(clothingObject => {
                 clothingObject.brandName.forEach(brand => {
-                    brandSet.add(brand)
-                })
+                    brandSet.add(brand);
+                });
+                clothingObject.color.forEach(col => {
+                    colorSet.add(col);
+                });
+                totalPrice += clothingObject.price === '' ? 0 : parseInt(clothingObject.price);
+                totalPieces++;
             })
         })
 
         // Spread out set into array. Nice.
+        setColors([...colorSet])
         setBrands([...brandSet])
+        setTotalPieces(totalPieces);
+        setTotalPrice(totalPrice)
     }, [])
 
     const NumOfBrandsPiecesColorsPrice = () => {
@@ -217,13 +231,13 @@ const OutfitStats = () => {
                 justifyContent: 'center',
                 alignItems: 'center'
             }}>
-                <NiceText text={'3 Brands'}/>
+                <NiceText text={`${brands.length} Brand${brands.length != 1 ? 's' : ''}`}/>
                 <Bullet />
-                <NiceText text={'2 Colors'}/>
+                <NiceText text={`${colors.length} Color${colors.length != 1 ? 's' : ''}`}/>
                 <Bullet />
-                <NiceText text={'4 Pieces'}/>
+                <NiceText text={`${totalPieces} Piece${totalPieces != 1 ? 's' : ''}`}/>
                 <Bullet />
-                <NiceText text={'$98'}/>
+                <NiceText text={`$${totalPrice}`}/>
             </View>
         )
     }
