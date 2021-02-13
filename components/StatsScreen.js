@@ -234,11 +234,15 @@ const VerbalStats = ({reRender, setReRender, modalVisible, setModalVisible}) => 
     //updateStatObjectFromStatArray
 
     // Sum clothingObject.price for all 4 topsArray,... etc
-    const [closetWorth, setClosetWorth] = useState(verbalStats.totalClosetWorth)
+    // const [closetWorth, setClosetWorth] = useState(verbalStats.totalClosetWorth)
+    // const [closetSize, setClosetSize] = useState(verbalStats.totalClosetSize)
+    // const [totalTimesWorn, setTotalTimesWorn] = useState(verbalStats.totalTimesWorn)
+    // const [totalNumberOfBrands, setTotalNumberOfBrands] = useState(verbalStats.totalNumberOfBrands)
 
-    const [closetSize, setClosetSize] = useState(verbalStats.totalClosetSize)
-    const [totalTimesWorn, setTotalTimesWorn] = useState(verbalStats.totalTimesWorn)
-    const [totalNumberOfBrands, setTotalNumberOfBrands] = useState(verbalStats.totalNumberOfBrands)
+    const closetWorth = useSelector(state => state.stats.statsObject.verbalStats.totalClosetWorth)
+    const closetSize = useSelector(state => state.stats.statsObject.verbalStats.totalClosetSize)
+    const totalTimesWorn = useSelector(state => state.stats.statsObject.verbalStats.totalTimesWorn)
+    const totalNumberOfBrands = useSelector(state => state.stats.statsObject.verbalStats.totalNumberOfBrands)
 
 
 
@@ -269,10 +273,10 @@ const VerbalStats = ({reRender, setReRender, modalVisible, setModalVisible}) => 
             })
         })
 
-        setClosetSize(size)
-        setClosetWorth(accum)
-        setTotalNumberOfBrands(brandsSet.size)
-        setTotalTimesWorn(timesWorn)
+        // setClosetSize(size)
+        // setClosetWorth(accum)
+        // setTotalNumberOfBrands(brandsSet.size)
+        // setTotalTimesWorn(timesWorn)
 
         dispatch(updateStatObjectFromStatArray(
             'verbalStats',                                                                         //statCategory
@@ -592,7 +596,7 @@ const VariableChart = ({reRender, setReRender}) => {
             <LineChart
                 data={{
                     labels: //mounted ? 
-                    perOutfitDates
+                    perOutfitDates.map(date => new Date(date).toLocaleString('en-GB').substr(0, 5))
                     // labelsArray 
                     // : 
                     // ["Jan"]

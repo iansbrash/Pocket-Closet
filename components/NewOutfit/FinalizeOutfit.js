@@ -240,7 +240,6 @@ export const FinalizeOutfit = () => {
                 ['pieces',          'price',            'brands',          'colors',          'dates'],
                 //attributeValueToPush
                 [totalPieces,       totalPrice,         brands.length,     colors.length,    date],
-
             )
         ]
         ))
@@ -265,11 +264,11 @@ export const FinalizeOutfit = () => {
     const NumOfBrandsPiecesColorsPrice = () => {
 
         const Bullet = () => (
-            <Text style={[{fontWeight: 'bold', marginLeft: 5, marginRight: 5}, GlobalStyles.h3, GlobalStyles.lighterHint]}>•</Text>
+            <Text style={[{fontWeight: 'bold', marginLeft: 5, marginRight: 5}, GlobalStyles.h5, GlobalStyles.lighterHint]}>•</Text>
         )
 
         const NiceText = ({text}) => (
-            <Text style={[GlobalStyles.h5, {fontWeight: 'bold'}]}>
+            <Text style={[GlobalStyles.h6, {fontWeight: 'bold'}]}>
                     {text}
             </Text>
         )
@@ -278,7 +277,11 @@ export const FinalizeOutfit = () => {
             <View style={{
                 flexDirection: 'row',
                 justifyContent: 'center',
-                alignItems: 'center'
+                alignItems: 'center',
+                backgroundColor: 'white',
+                borderRadius: 5,
+                paddingLeft: 5,
+                paddingRight: 5
             }}>
                 <NiceText text={`${brands.length} Brand${brands.length != 1 ? 's' : ''}`}/>
                 <Bullet />
@@ -307,69 +310,77 @@ export const FinalizeOutfit = () => {
                 <View style={[{
                     margin: 10,
                     width: 'auto',
-                    borderRadius: 10
+                    borderRadius: 10,
+                    zIndex: 2
                 }, GlobalStyles.shadowLight]}>
-                    <Image 
+                    {outfitInProgress.fitpic.fitpic != '' ? <Image 
                         source={{uri: outfitInProgress.fitpic.fitpic}}
                         style={{width: '100%', aspectRatio: 1, borderRadius: 10}}
-                    />
+                    /> : null}
+                    <View style={{
+                        position: 'absolute',
+                        bottom: -15,
+                        width: '100%'
+                    }}>
+                        <View style={{
+                            width: '100%',
+                            justifyContent: 'center',
+                            alignItems: 'center'
+                        }}>
+                            <NumOfBrandsPiecesColorsPrice />
+                        </View>
+                    </View>
                 </View>
                 <View style={{
-                    padding: 0
-                }}>
-                    <NumOfBrandsPiecesColorsPrice />
-                    <FlatList 
-                        renderItem={key => ( 
-                            // <Text>{key.item}</Text>) this is weird af.... why key.item...
-                            outfitInProgress.outfitArr[key.item].length !== 0 ?
-                            <>
-                                <MiniScreenHeader 
-                                title={outfitInProgress.outfitArr[key.item][0].clothingType.charAt(0).toUpperCase() 
-                                    + outfitInProgress.outfitArr[key.item][0].clothingType.slice(1)}/>
-                                <FlatList 
-                                    data={outfitInProgress.outfitArr[key.item]}
-                                    bounces={false}
-                                    keyExtractor={item => item._id.toString()}
-                                    renderItem={item => (
-                                        <MediumButton 
-                                            title={item.item.clothingName}
-                                            onPressFunc={null}
-                                            buttonFunc={() => dispatch(outfitInProgressItemDeleted(item.item))}
-                                            icon={<XIcon size={30} style={[{marginRight: 10}, GlobalStyles.colorMain]}/>}
-                                        />
-                                    )}
-                                />
-                            </> : null)
-                        }
-                        data={Object.keys(outfitInProgress.outfitArr)}
-                        keyExtractor={key => key.toString()}
-                        //
-                        //['topsArray', 'bottomsArray', 'footwearArray', 'otherArray']
+                    flex: 1,
+                    zIndex: 0,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    padding: 10
                     
-                    />
-                    {/* Notice we are compensating for our subpar redux structure by filtering out the fitpic key */}
-                    {/* {Object.keys(outfitInProgress).filter(item => item !== 'fitpic').map(key => ( 
-                        outfitInProgress[key].length !== 0 ?
-                        <>
-                            <MiniScreenHeader 
-                            title={outfitInProgress[key][0].clothingType.charAt(0).toUpperCase() 
-                                + outfitInProgress[key][0].clothingType.slice(1)}/>
-                            <FlatList 
-                            data={outfitInProgress[key]}
-                            bounces={false}
-                            keyExtractor={item => item._id.toString()}
-                            renderItem={item => (
-                            <MediumButton 
-                                title={item.item.clothingName}
-                                onPressFunc={null}
-                                buttonFunc={() => dispatch(outfitInProgressItemDeleted(item.item))}
-                                icon={<XIcon size={30} style={[{marginRight: 10}, GlobalStyles.colorMain]}/>}/>)}/>
-                        </> : null
-                    ))} */}
+                }}>
+                   
+                    <View style={{
+                        top: -17,
+                        position: 'absolute',
+                        height: '113.7%', //terrible practice. nice !
+                        width: 'auto',
+                    }}>
+                        <FlatList 
+                            renderItem={key => ( 
+                                // <Text>{key.item}</Text>) this is weird af.... why key.item...
+                                outfitInProgress.outfitArr[key.item].length !== 0 ?
+                                <>
+                                    <MiniScreenHeader 
+                                    title={outfitInProgress.outfitArr[key.item][0].clothingType.charAt(0).toUpperCase() 
+                                        + outfitInProgress.outfitArr[key.item][0].clothingType.slice(1)}/>
+                                    <FlatList 
+                                        data={outfitInProgress.outfitArr[key.item]}
+                                        bounces={false}
+                                        keyExtractor={item => item._id.toString()}
+                                        renderItem={item => (
+                                            <MediumButton 
+                                                title={item.item.clothingName}
+                                                onPressFunc={null}
+                                                buttonFunc={() => dispatch(outfitInProgressItemDeleted(item.item))}
+                                                icon={<XIcon size={30} style={[{marginRight: 10}, GlobalStyles.colorMain]}/>}
+                                            />
+                                        )}
+                                    />
+                                </> : null)
+                            }
+                            data={Object.keys(outfitInProgress.outfitArr)}
+                            keyExtractor={key => key.toString()}
+                            style={{
+                                paddingTop: 20
+                            }}
+                            showsVerticalScrollIndicator={false}
+                            //
+                            //['topsArray', 'bottomsArray', 'footwearArray', 'otherArray']
+                        
+                        />
+                    </View>
                 </View>
-                {/* </ScrollView> */}
-                
-
                 <FinalizeButton 
                 disabledHook={false}
                 onPressFunc={FinalizeClicked}/>
