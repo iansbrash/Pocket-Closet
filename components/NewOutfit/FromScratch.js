@@ -129,6 +129,8 @@ export const FromScratch = () => {
     const closetObjectKeys = Object.keys(closetObject);
     const dispatch = useDispatch();
 
+    const outfitArr = useSelector(state => state.outfits.outfitInProgress.outfitArr)
+
     return (
         <View 
         style={{flex: 1, backgroundColor: 'white'}}>
@@ -177,14 +179,18 @@ export const FromScratch = () => {
                 <SelectClothingButton 
                 title={'Other'} 
                 iconName={'plus'}
-                defaultChecked={false}
+                defaultChecked={true}
                 navpath={'OUTFITSELECTION'}
                 navprops={{
                     topNavTitle: 'Other',
                     arrayName: 'otherArray'}}/>
             </View>
-            <NextButton disabledHook={false} navpath={'OUTFITDESCRIPTION'} />
-
+            <NextButton disabledHook={[
+                ...outfitArr.topsArray,
+                ...outfitArr.bottomsArray,
+                ...outfitArr.footwearArray,
+                ...outfitArr.otherArray,
+            ].length === 0} navpath={'OUTFITDESCRIPTION'} />
         </View>
     )
 }

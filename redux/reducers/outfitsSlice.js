@@ -249,13 +249,12 @@ const outfitsSlice = createSlice({
         createdOutfitTagged: {
             reducer (state, action) {
                 console.log(`in createdOutfitTagged with _id ${_id}`)
-                const { tagsArray, _id } = action.payload
+                const { tagsArray, _id } = action.payload;
 
                 tagsArray.forEach(tag => {
                     // add tag if it isnt in the taggedOutfits object
                     !state.taggedOutfits[tag] ? state.taggedOutfits[tag] = [] : null;
-
-                    state.taggedOutfits[tag].push(_id)
+                    state.taggedOutfits[tag].push(_id);
                 })
 
             },
@@ -271,11 +270,6 @@ const outfitsSlice = createSlice({
         removedOutfitTagged: {
             reducer (state, action) {
                 const {_id, tagsArray} = action.payload;
-
-                console.log(`In removeTaggedOutfits`)
-
-                console.log(tagsArray)
-
 
                 tagsArray.forEach(tag => {
                     console.log(state.taggedOutfits[tag])
@@ -297,8 +291,17 @@ const outfitsSlice = createSlice({
         pushClothingObjectsToOutfitInProgress: {
             reducer (state, action) {
                 // should we cleanse beforehand? might leave residual description / tags... nah
-                console.log(`action.payload.outfitArr.length: ${action.payload.outfitArr.length}`)
-                state.outfitInProgress.outfitArr = action.payload.outfitArr
+
+                const { outfitArr } = action.payload;
+                console.log(`action.payload.outfitArr.length: ${outfitArr.length}`);
+
+                // delete any undefined in outfitArr before assigning
+
+                Object.keys(outfitArr).forEach(key => {
+                    outfitArr[key] = outfitArr[key].filter(clothingObject => clothingObject)
+                })
+
+                state.outfitInProgress.outfitArr = outfitArr
             },
             prepare (outfitArr) {
                 return {

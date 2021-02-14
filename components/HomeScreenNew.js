@@ -4,6 +4,8 @@ import {
     Image,
     TouchableOpacity,
     Text,
+    Pressable,
+    TextInput
 } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
 import { ScreenHeader, MiniScreenHeader } from './GlobalComponents/ScreenHeader'
@@ -70,7 +72,15 @@ const StatContainer = (props) => {
 
 const WelcomeBackHeader = ({username}) => {
 
-    let src = { uri: 'https://randomuser.me/api/portraits/men/1.jpg' }
+    let src = { uri: 'https://randomuser.me/api/portraits/men/1.jpg' };
+
+    const [editingName, setEditingName] = useState(false);
+    const [nameInput, setNameInput] = useState('redux')
+
+    // dispatch action to change new name once TextInput is blurred
+    useEffect(() => {
+
+    }, [editingName])
 
     return (
         <View style={{
@@ -110,8 +120,49 @@ const WelcomeBackHeader = ({username}) => {
                             <Text style={[{
                                 fontWeight: 'bold',
                                 marginBottom: -10,
-                                }, GlobalStyles.h2]} category='h2'>Welcome back,</Text>
-                            <Text style={[{ color: 'blue'}, GlobalStyles.h1]} category='h1' status='primary'>{username}</Text>
+                            }, GlobalStyles.h2]} category='h2'>
+                                Welcome back,
+                            </Text>
+                            {!editingName ? 
+                                <>
+                                    <Pressable
+                                    hitSlop={30}
+                                    onPressIn={() => setEditingName(true)}
+                                    >
+                                        <Text style={[{ color: 'blue' }, GlobalStyles.h1]}>
+                                            {nameInput}
+                                        </Text>
+                                    </Pressable>
+                                </>
+                            :
+                                <>
+                                    <TextInput 
+                                    style={[{ 
+                                        justifyContent: 'center',
+                                        alignItems: 'center',
+                                        height: 'auto', 
+                                        width: '100%',
+                                        borderRadius: 5,
+                                        fontSize: 15,
+                                        backgroundColor: 'white',
+                                        elevation: 10,
+                                        zIndex: -1,
+                                        color: 'blue'
+                                    }, GlobalStyles.h1]}
+                                    // ref={searchInputRef}
+                                    placeholder={`Search clothing!`}
+                                    // onFocus={() => onFocus()}
+                                    onBlur={() => setEditingName(false)}
+                                    // inlineImageLeft='search40x40'
+                                    //inlineImagePadding={5} // might have to be in curly braces?
+                                    selectTextOnFocus={true}
+                                    placeholderTextColor="blue"  //random ass color
+                                    onChangeText={text => setNameInput(text)}
+                                    value={nameInput}
+                                    numberOfLines={2}
+                                    />
+                                </>
+                            }
                             {/* <Text category='h5'>@iansbrash</Text> */}
                         </View>
                     </View >
@@ -131,12 +182,15 @@ const WelcomeBackHeader = ({username}) => {
                                 borderRadius: 55,
                                 backgroundColor: 'white'},
                                 GlobalStyles.shadowLight]}>
+                                <TouchableOpacity
+                                activeOpacity={0.7}
+                                >
                                     <Image style={{
                                         width: 110, 
                                         height: 110,
                                         borderRadius: 55}} source={src} />
+                                </TouchableOpacity>
                             </View>
-                            
                         </View>
                     </View>
                 </View>
@@ -155,15 +209,9 @@ export const HomeScreenNew = ({route}) => {
     console.log(`status: ${status}`)
 
     if (status === 'success'){
-        console.log("Sucess!")
-        setStatus('idle')
+        console.log("Sucess!");
+        setStatus('idle');
     }
-
-    // useEffect(() => {
-    //     console.log(`status: ${status}`)
-    //     status ? console.log("status was updated") : console.log("we got null but still lggging")
-    //     setStatus('idle')
-    // }, [status])
 
     const navigation = useNavigation();
 
@@ -172,7 +220,7 @@ export const HomeScreenNew = ({route}) => {
             flex: 1,
             backgroundColor: 'white'
         }}>
-            <WelcomeBackHeader username={`Ian`} />
+            <WelcomeBackHeader username={`${`Ian`}`} />
             <View style={{height: 20 /** Spacer */ }}></View> 
             <View style={{
                 width: '100%',
@@ -199,23 +247,6 @@ export const HomeScreenNew = ({route}) => {
                             You wear ____ and ____ together a lot
                     "At Glance"
             */}
-            {/* <MiniScreenHeader title={'Recent Stats / Recently Worn'}/>
-            <View style={{
-                width: '100%',
-                height: 120
-            }}>
-                <View style={{
-                    margin: 20,
-                    width: 'auto',
-                    height: 'auto',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    flexDirection: 'row'
-                }}>
-                    <StatContainer title={'Stat 1'}/>
-                    <StatContainer title={'Stat 2'}/>
-                </View>
-            </View> */}
         </View >
     )
 }
