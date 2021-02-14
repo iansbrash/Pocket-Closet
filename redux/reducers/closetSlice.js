@@ -65,6 +65,22 @@ const closetSlice = createSlice({
             footwear: ['Sneakers', 'Sandals', 'Flip Flops', 'Socks', 'Boots', 'Dress Shoes'],
             other: ['Ring', 'Jewelery', 'Glasses', 'Backpack', 'Fanny Pack']
         },
+        typesOfClothingWorn: {
+            tops: {
+                // e.g.
+                //T-Shirt: 1
+                //Jacket: 2
+            },
+            bottoms: {
+
+            },
+            footwear: {
+
+            },
+            other: {
+
+            }
+        },
         brandsArray: 
             [
                 ['Comme Des Garcons', 'CDG'], 
@@ -88,7 +104,7 @@ const closetSlice = createSlice({
                 topsArray: [],
                 bottomsArray: [],
                 otherArray: []
-            },//same premise as taggedOutfits -- contains _ids of clothing w that tag
+            },  //same premise as taggedOutfits -- contains _ids of clothing w that tag
         },
         coloredClothing: {
             white: {
@@ -457,6 +473,54 @@ const closetSlice = createSlice({
                 }
             }
         },
+        pushToTypesOfClothingWorn: {
+            reducer (state, action) {
+                const { clothingType, pieceType } = action.payload;
+
+                console.log(`clothingType: ${clothingType}, pieceType: ${pieceType}`)
+
+                if (!state.typesOfClothingWorn[clothingType][pieceType]){
+                    state.typesOfClothingWorn[clothingType][pieceType] = 1;
+                } else {
+                    state.typesOfClothingWorn[clothingType][pieceType] += 1;
+                }
+
+                console.log(`state.TypesOfClothingWorn`)
+                console.log(state.typesOfClothingWorn)
+            },
+            prepare (clothingType, pieceType) {
+                return {
+                    payload: {
+                        clothingType,
+                        pieceType
+                    }
+                }
+            }
+        },
+        removeFromTypesOfClothingWorn: {
+            reducer (state, action) {
+                const { clothingType, pieceType } = action.payload;
+
+                if (!state.typesOfClothingWorn[clothingType][pieceType]){
+                    console.log(`Could not find ${pieceType} in ${clothingType}.`)
+                } else if (state.typesOfClothingWorn[clothingType][pieceType] === 1){
+                    console.log(`Deleting ${pieceType} in ${clothingType}`)
+                    delete state.typesOfClothingWorn[clothingType][pieceType];
+                } else {
+                    console.log(`Decrementing ${pieceType} in ${clothingType}`)
+                    state.typesOfClothingWorn[clothingType][pieceType]--;
+                }
+
+            },
+            prepare(clothingType, pieceType) {
+                return {
+                    payload: {
+                        clothingType,
+                        pieceType
+                    }
+                }
+            }
+        }
     },
 })
 
@@ -479,7 +543,9 @@ export const {
     removeTagsFromTaggedClothing,
     itemArchiveToggled,
     tagDeleted,
-    brandDeletedFromClothingPieceInProgress
+    brandDeletedFromClothingPieceInProgress,
+    pushToTypesOfClothingWorn,
+    removeFromTypesOfClothingWorn
 } = closetSlice.actions;
 
 //we export this instead of clothingDeletedFromCloset because it lets us

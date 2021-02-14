@@ -13,6 +13,7 @@ import GlobalStyles from './GlobalStyles'
 import { CheckIcon, XIcon } from './GlobalIcons'
 import { BlurView } from 'expo-blur';
 import {makeHugeImage, makeLargeImage} from '../GlobalFunctions/ImgurResize'
+import { useSelector } from 'react-redux'
 
 export const YesNoModal = ({setModalVisible, modalVisible, onPressFunc, title}) => {
 
@@ -552,14 +553,11 @@ export const TypeSelectionModal = ({
 
         const [isSelected, setIsSelected] = useState(false)
 
-        // useEffect(() => {
-        //     setIsSelected(!isSelected)
-        //     selectablesObject[selectedType].includes(type.type) ?
-        //     console.log(`includes type ${type.type}`) : console.log(`doesnt' include type ${type}`)
+        // const typesOfClothingWorn = useSelector(state => state.closet.typesOfClothingWorn) 
 
-        //     console.log(selectablesObject)
-        //     console.log(isSelected)
-        // }, [selectablesObject])
+
+        const isDisabled = useSelector(state => !state.closet.typesOfClothingWorn[selectedType][type.type])
+
 
         const onPress = () => {
             selectablesObject[selectedType].includes(type.type) ?
@@ -582,6 +580,7 @@ export const TypeSelectionModal = ({
             }}>
                 <TouchableOpacity
                 onPress={() => onPress()}
+                disabled={isDisabled}
                 >
                     <View style={{
                         margin: 5,
@@ -592,14 +591,14 @@ export const TypeSelectionModal = ({
                             borderRadius: 5,
                             alignItems: 'center',
                             justifyContent: 'center'
-                        }, GlobalStyles.shadowLight,
+                        }, isDisabled ? null : GlobalStyles.shadowLight,
                         selectablesObject[selectedType].includes(type.type) ? GlobalStyles.bgColorMain : {backgroundColor: 'white'},
                     ]}>
                             <Text style={[
                                 GlobalStyles.h4,
-                                selectablesObject[selectedType].includes(type.type) ? {color: 'white'} : GlobalStyles.colorMain,
-                                {fontWeight: 'bold',
-                                margin: 5}
+                                isDisabled ? GlobalStyles.lighterHint : (selectablesObject[selectedType].includes(type.type) ? {color: 'white'} : GlobalStyles.colorMain),
+                                isDisabled ? null : {fontWeight: 'bold'},
+                                {margin: 5}
                             ]}>
                                 {/* Why the hell i have to do this */}
                                 {type.type}

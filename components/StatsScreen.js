@@ -595,20 +595,13 @@ const VariableChart = ({reRender, setReRender}) => {
         >
             <LineChart
                 data={{
-                    labels: //mounted ? 
+                    labels: 
                     perOutfitDates.map(date => new Date(date).toLocaleString('en-GB').substr(0, 5))
-                    // labelsArray 
-                    // : 
-                    // ["Jan"]
                     ,
                     datasets: [
                         {
                         data: 
-                        piecesPerOutfit
-                        // mounted ? 
-                        // dataArray 
-                        // : 
-                        // [124]
+                            piecesPerOutfit
                         }
                     ]
                 }}

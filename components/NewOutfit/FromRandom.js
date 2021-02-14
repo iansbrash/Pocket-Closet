@@ -42,6 +42,29 @@ import { pushClothingObjectsToOutfitInProgress } from '../../redux/reducers/outf
  *  
  *      There should be a 'save default random config' button
  */
+
+
+// How to make sure we aren't pushing stuff that doesn't exist to the outfitInProgress
+// Idea 1:
+//      Keep a 'outfitsAdded' 
+/**
+ *      i.e. outfitsAdded: {
+ *                      tops: {
+ *                          T-Shirt: 1,
+ *                          Jacket: 1,
+ *                          
+ *                      },
+ *                      bottoms: {
+ * 
+ *                      },   
+ *                  }
+ * 
+ * 
+ * 
+ */
+
+
+
 const PlusButton = ({onPressFunc, category}) => {
     return (
         <View style={{
@@ -349,21 +372,6 @@ export const FromRandom = () => {
                             ItemSeparatorComponent={item => <Divider />}
                             bounces={false}
                         />
-                        // Object.keys(typesOfClothing).map(
-                        //     (key, index) => (
-                        //         <View key={index}>
-                        //             <CompleteCategory 
-                        //                 category={key} 
-                        //                 // key={index} 
-                        //                 // selectablesArray={typesOfClothing[key]}
-                        //                 selectablesArray={selectablesObject[key]}
-                        //                 setModalVisible={setModalVisible}
-                        //                 setSelectedType={setSelectedType}
-                        //             />
-                        //             {/* <Divider/>      */}
-                        //         </View>
-                        //     )
-                        // )
                     }
                 </View>
             <NextButton navpath={'FROMSCRATCH'} extraFunc={pushRandom}/>

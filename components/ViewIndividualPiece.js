@@ -602,7 +602,7 @@ export const ViewIndividualPiece = ({ route }) => {
         setModalVisible(false)
         // dispatch(clothingDeletedFromCloset(_id))
 
-        deleteClothingFromCloset(item._id, item.clothingType, item.tags, item.color, item.brandName)
+        deleteClothingFromCloset(item._id, item.clothingType, item.tags, item.color, item.brandName, item.pieceType)
         navigation.navigate('CLOSETSCREEN')
     }
     

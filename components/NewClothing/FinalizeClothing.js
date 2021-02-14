@@ -16,7 +16,8 @@ import {
     pushAttributesToAttributedClothing,
     tagDeleted,
     brandDeletedFromClothingPieceInProgress,
-    clothingInProgressAttributeAdded
+    clothingInProgressAttributeAdded,
+    pushToTypesOfClothingWorn
  } from '../../redux/reducers/closetSlice'
 import GlobalStyles from '../GlobalComponents/GlobalStyles'
 import { XIcon, HeartIcon, ArchiveIcon } from '../GlobalComponents/GlobalIcons'
@@ -460,7 +461,9 @@ export const FinalizeClothing = () => {
             }),
             pushAttributesToAttributedClothing(_id, clothingPieceInProgress.clothingType, 'taggedClothing', tags),
             pushAttributesToAttributedClothing(_id, clothingPieceInProgress.clothingType, 'coloredClothing', colors),
-            // pushAttributesToAttributedClothing(_id, clothingPieceInProgress.clothingType, 'brandedClothing', brands)
+            pushAttributesToAttributedClothing(_id, clothingPieceInProgress.clothingType, 'brandedClothing', brands),
+            //need to push to typesOfClothingWorn
+            pushToTypesOfClothingWorn(clothingPieceInProgress.clothingType.toLowerCase(), clothingPieceInProgress.pieceType)
         ]))
         
         

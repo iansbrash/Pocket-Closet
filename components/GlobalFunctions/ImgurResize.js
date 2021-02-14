@@ -1,5 +1,9 @@
 import store from '../../redux/store'
-import {clothingDeletedFromCloset, removeAttributesFromAttributedClothing } from '../../redux/reducers/closetSlice'
+import {
+    clothingDeletedFromCloset, 
+    removeAttributesFromAttributedClothing,
+    removeFromTypesOfClothingWorn
+} from '../../redux/reducers/closetSlice'
 import {batchActions} from 'redux-batched-actions'
 //90 x 90
 export const makeSmallImage = (imgurUrl) => {
@@ -48,7 +52,7 @@ export const makeHugeImage = (imgurUrl) => {
 
 //we export this instead of clothingDeletedFromCloset because it lets us
 //abstract the deletion process (as we have to delete many things)
-export const deleteClothingFromCloset = (_id, clothingType, tagsArray, colorsArray, brandsArray) => {
+export const deleteClothingFromCloset = (_id, clothingType, tagsArray, colorsArray, brandsArray, pieceType) => {
     console.log(`_id: ${_id}`)
     console.log(`clothingType: ${clothingType}`)
     console.log(`tagsArray: ${tagsArray}`)
@@ -65,6 +69,8 @@ export const deleteClothingFromCloset = (_id, clothingType, tagsArray, colorsArr
         removeAttributesFromAttributedClothing(_id, clothingType, 'taggedClothing', tagsArray),
         removeAttributesFromAttributedClothing(_id, clothingType, 'coloredClothing', colorsArray),
         // uncomment the below when uninstalling expo (not in initialstate)
-        removeAttributesFromAttributedClothing(_id, clothingType, 'brandedClothing', brandsArray)
+        removeAttributesFromAttributedClothing(_id, clothingType, 'brandedClothing', brandsArray),
+        // below is to -- from typesOfClothingWorn
+        removeFromTypesOfClothingWorn(clothingType, pieceType),
     ]))
 }
