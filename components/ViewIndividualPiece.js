@@ -24,7 +24,12 @@ import {
 import { useNavigation, useFocusEffect } from '@react-navigation/native'
 import { YesNoModal, ImageScrollModal } from './GlobalComponents/GlobalModals'
 import { TogglableDrawer } from './GlobalComponents/GlobalDrawers'
-import { makeSmallImage, makeMediumImage, makeMediumSmallImage, deleteClothingFromCloset } from './GlobalFunctions/ImgurResize'
+import { 
+    makeSmallImage, 
+    makeMediumImage, 
+    makeMediumSmallImage, 
+    deleteClothingFromCloset 
+} from './GlobalFunctions/ImgurResize'
 import { useEffect } from 'react/cjs/react.development';
 
 import * as ImageManipulator from 'expo-image-manipulator';

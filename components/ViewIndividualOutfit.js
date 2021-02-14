@@ -27,13 +27,16 @@ import {
     ShirtIcon,
     LegIcon,
     ShoeIcon,
-    ArchiveIcon
+    ArchiveIcon,
+    CancelIcon
  } from './GlobalComponents/GlobalIcons'
 import { outfitDeletedFromOutfits, outfitFavoriteToggled } from '../redux/reducers/outfitsSlice'
 import { useNavigation, useFocusEffect } from '@react-navigation/native'
 import { YesNoModal, ImageScrollModal } from './GlobalComponents/GlobalModals'
 import { TogglableDrawer } from './GlobalComponents/GlobalDrawers'
 import { makeSmallImage, makeMediumImage, makeMediumSmallImage } from './GlobalFunctions/ImgurResize'
+
+import * as Haptics from 'expo-haptics';
 
 /**
  *  @param {Object} fetchedOutfitObject - React hook that includes all of our outfitObject's updated properties
@@ -159,7 +162,10 @@ const ScrollClothingList = React.memo(({type, fetchedOutfitObjectOutfitArr}) => 
                         clothingObject={item.item} 
                     />
                 }
-                keyExtractor={clothingObject => clothingObject._id}
+                keyExtractor={(clothingObject, index) => 
+                    //clothingObject._id
+                    index.toString()
+                }
                 horizontal={true}
                 showsHorizontalScrollIndicator={false}
                 initialNumToRender={3}
@@ -185,6 +191,77 @@ const ScrollClothingList = React.memo(({type, fetchedOutfitObjectOutfitArr}) => 
 //Renders ClothingIcon, which display's an individual piece's image, # of brands and colors, and favorite/archive
 //Tapping navigates to ViewIndividualPiece
 const ClothingIcon = React.memo(({clothingObject}) => {
+
+
+    // If the clothingObject has since been deleted... rip
+    if (!clothingObject){
+        return (
+            <View style={{
+                width: 150, // might just have to do this
+                height: 'auto',
+            }}>
+                <TouchableOpacity
+                activeOpacity={0.7}
+                onPressIn={() => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy)}
+                >
+                    <View style={[{
+                        margin: 5,
+                        height: 'auto',
+                        width: 'auto',
+                        borderRadius: 5,
+                        backgroundColor: 'white',
+                    }, GlobalStyles.shadowLight]}>
+                        <View style={{
+                            height: 5,
+                            width: '100%',
+                            zIndex: 0
+                        }}>
+                            <View 
+                            style={[
+                                GlobalStyles.bgColorMain, 
+                                {width: '100%', 
+                                position: 'absolute',
+                                height: 10,
+                                top: 0,
+                                borderTopLeftRadius: 5, 
+                                borderTopRightRadius: 5
+                                }]}></View>
+                        </View>
+                        <View style={{
+                            paddingTop: 5,
+                            paddingLeft: 5,
+                            paddingRight: 5,
+                            marginBottom: 5,
+                            backgroundColor: 'white',
+                            width: 'auto',
+                            height: 'auto'
+                        }}>
+                            {/* <Image style={{width: '100%', aspectRatio: 1, borderRadius: 5}}/> */}
+                            <View style={[{
+                                width: '100%', 
+                                aspectRatio: 1, 
+                                borderRadius: 5,
+                                backgroundColor: 'white',
+                                justifyContent: 'center',
+                                alignItems: 'center'
+                            }, GlobalStyles.shadowLightest]}>
+                                <CancelIcon style={{color: '#ededed'}} size={70}/>
+                            </View>
+                        </View>
+                        <View style={{marginLeft: 5, marginBottom: 5}}>
+                            <Text 
+                            numberOfLines={1}
+                            style={[{fontWeight: 'bold'}, GlobalStyles.h7]}>
+                                {`Deleted Clothing`}
+                                </Text>
+                            <Text style={GlobalStyles.h7}>{`This piece no longer exists :(`}</Text>
+                        </View>
+                    </View>
+                </TouchableOpacity>
+            </View>
+        )
+    }
+
     console.log(`ClothingIcon with clothingObject._id ${clothingObject._id}`)
 
     const navigation = useNavigation()
@@ -592,6 +669,11 @@ export const ViewIndividualOutfit = ({ route }) => {
             for (let i = 3; i >= 0; i--){
                 for (let k = 0; k < fetchedOutfitObject.outfitArr[fetchedOutfitObjectOutfitArrKeys[i]].length; k++){
                     //console.log(`'xd' iteration ${k}`)
+
+                    if (!fetchedOutfitObject.outfitArr[fetchedOutfitObjectOutfitArrKeys[i]][k]){
+                        continue;
+                    }
+
                     if (fetchedOutfitObject.outfitArr[fetchedOutfitObjectOutfitArrKeys[i]][k].color &&
                         fetchedOutfitObject.outfitArr[fetchedOutfitObjectOutfitArrKeys[i]][k].color !== ''){
                         nonStateColorsSet.add(fetchedOutfitObject.outfitArr[fetchedOutfitObjectOutfitArrKeys[i]][k].color)

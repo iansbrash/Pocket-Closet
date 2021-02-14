@@ -39,8 +39,8 @@ const outfitsSlice = createSlice({
             }
         },
         taggedOutfits: { //each property contains the IDs of outfits that have used that tag
-            tag1: [],
-            tag2: [], //etc... we don't need these tags to contain objects that contain arrays unlike taggedClothing
+            //tag1: [],
+            //tag2: [], //etc... we don't need these tags to contain objects that contain arrays unlike taggedClothing
         },
         status: 'idle', // idle, success, or error. call 'success' on creating an outfit to prompt animation
         error: null

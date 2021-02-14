@@ -475,6 +475,9 @@ export const OutfitList = ({customFilter, onClickFunc, customData}, props) => {
     const outfitsArray = useSelector(state => state.outfits.outfitsArray);
     const closetObject = useSelector(state => state.closet.closetObject);
 
+
+   
+
     
     return (
         <View style={{

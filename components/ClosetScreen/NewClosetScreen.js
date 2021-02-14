@@ -318,6 +318,12 @@ export const NewClosetScreen = () => {
         navigation.navigate("VIEWINDIVIDUALOUTFIT", {item: outfitObject})
     }
 
+    // Filter for OutfitsList
+    const customFilter = outfitArray => {
+        return outfitArray.filter(outfitObject => 
+            new Date(outfitObject.date).toLocaleString('en-GB').substr(0, 10).includes(searchInput)
+        )
+    }
     
 
 
@@ -372,7 +378,7 @@ export const NewClosetScreen = () => {
 
                         }}
                         pointerEvents={closetIsActive ? 'none' : 'auto'}>
-                            <OutfitList customFilter={null} onClickFunc={onClickFunc}/>
+                            <OutfitList customFilter={customFilter} onClickFunc={onClickFunc}/>
                         </View>
                     </View>
                 </View>

@@ -162,3 +162,9 @@ export const ArchiveIcon = (props) => {
         <Ionicons style={props.style} name="md-save" size={props.size}/>
     )
 }
+
+export const CancelIcon = (props) => {
+    return (
+        <MaterialCommunityIcons style={props.style} name="cancel" size={props.size}/>
+    )
+}

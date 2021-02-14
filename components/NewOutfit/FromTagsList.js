@@ -25,6 +25,7 @@ export const FromTagsList = ({route}) => {
 
     const filterTag = (outfitArray) => {
         return outfitArray.filter(outfitObject => tagArray.includes(outfitObject._id))
+            .filter(outfitObj => new Date(outfitObj.date).toLocaleString('en-GB').substr(0, 10).includes(searchInput))
     }
 
     const onClickFunc = (outfitObject) => {

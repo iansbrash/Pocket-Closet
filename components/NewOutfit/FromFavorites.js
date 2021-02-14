@@ -60,7 +60,7 @@ export const FromFavorites = () => {
         return outfitArray.filter(outfitObject => outfitObject.favorite)
             .filter(outfitObject => {
                 let parsedDate = new Date(outfitObject.date);
-                return parsedDate.toLocaleString('en-GB').substr(0, 10).includes(input)
+                return parsedDate.toLocaleString('en-GB').substr(0, 10).includes(input);
             }
         )
 
