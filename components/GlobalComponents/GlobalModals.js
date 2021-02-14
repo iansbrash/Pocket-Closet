@@ -353,15 +353,14 @@ export const ImageScrollModal = ({setModalVisible, modalVisible, imageArray, ima
     },[modalVisible])
 
     return (
-        
         <Modal
         animationType="slide"
         transparent={false}
         visible={modalVisible}
         onRequestClose={() => {
-          Alert.alert("Modal has been closed.");
+            Alert.alert("Modal has been closed.");
         }}
-      >
+        >
           <View style={{
               flex: 1,
               backgroundColor: 'black',
@@ -380,7 +379,7 @@ export const ImageScrollModal = ({setModalVisible, modalVisible, imageArray, ima
                         <TouchableOpacity style={{
                             marginLeft: 10
                         }}>
-                            <XIcon size={40} style={{backgroundColor: 'white'}}/>
+                            {/* <XIcon size={40} style={{backgroundColor: 'white'}}/> */}
                         </TouchableOpacity>
                         <TouchableOpacity style={{
                             marginRight: 10

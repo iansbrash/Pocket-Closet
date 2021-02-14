@@ -145,8 +145,13 @@ const closetSlice = createSlice({
                 // console.log(action.payload);
                 // console.log(state.closetObject[action.payload.clothingType.toLowerCase() + 'Array'])
 
+                console.log('in itemFavorietToggled')
+
                 let itemToEdit = state.closetObject[action.payload.clothingType.toLowerCase() + 'Array']
                 .find(clothingObj => clothingObj._id === action.payload._id);
+
+                console.log(itemToEdit)
+
                 itemToEdit.favorite = !itemToEdit.favorite;
             }
         },

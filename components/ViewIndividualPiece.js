@@ -15,7 +15,12 @@ import GestureRecognizer, {swipeDirections} from 'react-native-swipe-gestures';
 import { TopNavScreenHeader } from './GlobalComponents/TopNav'
 import GlobalStyles from './GlobalComponents/GlobalStyles'
 import { TouchableOpacity } from 'react-native-gesture-handler'
-import { HeartIcon, ArchiveIcon, DeleteIcon, ShareIcon, CheckIcon, XIcon } from './GlobalComponents/GlobalIcons'
+import { 
+    HeartIcon, 
+    ArchiveIcon, 
+    DeleteIcon,
+    CancelIcon 
+} from './GlobalComponents/GlobalIcons'
 import { 
     itemFavoriteToggled, 
     clothingDeletedFromCloset,//we used this action to delete previously. now trying the below function which bundles actions
@@ -25,12 +30,12 @@ import { useNavigation, useFocusEffect } from '@react-navigation/native'
 import { YesNoModal, ImageScrollModal } from './GlobalComponents/GlobalModals'
 import { TogglableDrawer } from './GlobalComponents/GlobalDrawers'
 import { 
-    makeSmallImage, 
     makeMediumImage, 
     makeMediumSmallImage, 
     deleteClothingFromCloset 
 } from './GlobalFunctions/ImgurResize'
 import { useEffect } from 'react/cjs/react.development';
+import * as Haptics from 'expo-haptics';
 
 import * as ImageManipulator from 'expo-image-manipulator';
 
@@ -374,12 +379,97 @@ const ClothingIcon = React.memo(({outfitObject}) => {
 
     const navigation = useNavigation();
 
+    if (!outfitObject){
+        return (
+            <View style={{
+                width: 150, // might just have to do this
+                height: 'auto',
+            }}>
+                <TouchableOpacity
+                onPressIn={() => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy)}>
+                    <View style={[{
+                        margin: 5,
+                        height: 'auto',
+                        width: 'auto',
+                        borderRadius: 5,
+                        backgroundColor: 'white',
+                    }, GlobalStyles.shadowLight]}>
+                        <View style={{
+                            height: 5,
+                            width: '100%',
+                            zIndex: 0
+                        }}>
+                            <View 
+                            style={[
+                                GlobalStyles.bgColorMain, 
+                                {width: '100%', 
+                                position: 'absolute',
+                                height: 10,
+                                top: 0,
+                                borderTopLeftRadius: 5, 
+                                borderTopRightRadius: 5
+                                }]}></View>
+                        </View>
+                        
+                        <View style={{
+                            paddingTop: 5,
+                            paddingLeft: 5,
+                            paddingRight: 5,
+                            marginBottom: 5,
+                            width: 'auto',
+                            height: 'auto',
+                            zIndex: 1,
+                            backgroundColor: 'white'
+                        }}>
+                            <View 
+                            style={[{
+                                width: '100%', 
+                                aspectRatio: 1, 
+                                borderRadius: 5,
+                                backgroundColor: 'white',
+                                justifyContent: 'center',
+                                alignItems: 'center'
+                            }, GlobalStyles.shadowLightest]}>
+                                <CancelIcon style={{color: '#ededed'}} size={70}/>
+                            </View>
+                        </View>
+                        <View style={{marginTop: -5, marginLeft: 5, marginBottom: 5, marginRight: 5}}>
+                            <View style={{
+                                justifyContent: 'space-between',
+                                alignItems: 'center',
+                                flexDirection: 'row'
+                            }}>
+                                <Text 
+                                numberOfLines={1}
+                                style={[{fontWeight: 'bold'}, GlobalStyles.h6]}>
+                                    {'??/??/????'}
+                                </Text>
+                            </View>
+                            <View style={{
+                                justifyContent: 'space-between',
+                                alignItems: 'center',
+                                flexDirection: 'row'
+                            }}>
+                                <Text style={GlobalStyles.h7}>{`Outfit deleted :(`}</Text>
+                                {/* <Text style={[{fontWeight: 'bold'}, GlobalStyles.hint]}>•</Text>
+                                <Text style={GlobalStyles.h7}>{`${3} brands`}</Text> */}
+                            </View>
+                        </View>
+                        <View style={{
+                            position: 'absolute',
+                            bottom: 5,
+                            right: 5
+                        }}>
+                        </View>
+                    </View>
+                </TouchableOpacity>
+            </View>
+        )
+    }
+
     const [fitpic, setFitpic] = useState(outfitObject.fitpic)
 
-    if (!outfitObject){
-        console.log(`didnt find outfitObject... probably got deleted`)
-        return null;
-    }
+    
 
 
     // Compresses the image so no lag during scrolling. very nice
@@ -548,18 +638,10 @@ export const ViewIndividualPiece = ({ route }) => {
     const [modalVisible, setModalVisible] = useState(false);
     const [imageModal, setImageModal] = useState(false)
 
-    // we pass in the item we clicked on so we can display stats XDDDD
-    // const { item } = route.params;
-    // console.log('item')
-    // console.log(item)
-
 
     //thought this would prevent re rendering
     const [item, setItem] = useState(route.params.item);
 
-    // const toLog = useSelector(state => state.closet.taggedClothing)
-    // console.log('toLog:')
-    // console.log(toLog)
     
     //this prevents screens that are in the navigation stack from updating, even when blurred
     //without this, visiting multiple outfits / clothing pieces consecutively though their

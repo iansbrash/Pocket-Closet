@@ -241,7 +241,6 @@ const ClothingIcon = React.memo(({clothingObject}) => {
                             width: 'auto',
                             height: 'auto'
                         }}>
-                            {/* <Image style={{width: '100%', aspectRatio: 1, borderRadius: 5}}/> */}
                             <View style={[{
                                 width: '100%', 
                                 aspectRatio: 1, 
@@ -257,9 +256,9 @@ const ClothingIcon = React.memo(({clothingObject}) => {
                             <Text 
                             numberOfLines={1}
                             style={[{fontWeight: 'bold'}, GlobalStyles.h7]}>
-                                {`Deleted Clothing`}
+                                {`????????????`}
                                 </Text>
-                            <Text style={GlobalStyles.h7}>{`This piece no longer exists :(`}</Text>
+                            <Text style={GlobalStyles.h7}>{`Clothing deleted :(`}</Text>
                         </View>
                     </View>
                 </TouchableOpacity>
@@ -709,7 +708,7 @@ export const ViewIndividualOutfit = ({ route }) => {
                 //stops our computationally heavy components from re-rendering when we're not looking
                 setIsFocused(false)
             };
-        }, [])
+        }, [closetObject])
     );
 
     //called when confirming deleting the outfit on the YesNoModal

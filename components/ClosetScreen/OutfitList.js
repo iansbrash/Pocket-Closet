@@ -15,7 +15,7 @@ import { useSelector,  } from 'react-redux'
 import store from '../../redux/store'
 import { useNavigation, useFocusEffect } from '@react-navigation/native'
 import GlobalStyles from '../GlobalComponents/GlobalStyles'
-import { HeartIcon, PlusIcon } from '../GlobalComponents/GlobalIcons'
+import { HeartIcon, PlusIcon, CancelIcon } from '../GlobalComponents/GlobalIcons'
 import { makeSmallImage, makeMediumImage } from '../GlobalFunctions/ImgurResize'
 import { ListEmptyComponent } from './ListEmptyComponent'
 
@@ -102,6 +102,10 @@ const RenderOutfit = React.memo(({item, closetObject, onClickFunc}) => {
                     //if we couldn't find the clothingObject
                     if (!tempClothingObject){
                         console.log(`Cannot find clothingObject with id: ${id}`)
+
+                        // we later check for undefined, and if it is undefined, we add the CancelIcon instead of an image
+                        imageArrayFromIds.push(undefined)
+
                     }
 
                     //if we find the clothingObject, but it has no images associated with it
@@ -355,6 +359,33 @@ const OutfitFitpic = React.memo(({item}) => {
 // mapped out in PieceView
 // imageArrayFromIdsHook 
 const IndividualClothingImage = React.memo(({index, imageArrayFromIdsHook, needsUpdate}) => {
+
+    if (!imageArrayFromIdsHook[index]){
+        return (
+            <View style={[{
+                width: '50%', 
+                aspectRatio: 1,
+            }]} > 
+                <View style={[{
+                    margin: 5,
+                    width: 'auto',
+                    height: 'auto',
+                    borderRadius: 10,
+                    backgroundColor: 'white',
+                }, GlobalStyles.shadowLight]}>
+                    <View style={{
+                        height: '100%',
+                        aspectRatio: 1,
+                        justifyContent: 'center',
+                        alignItems: 'center'
+                    }}>
+                        <CancelIcon size={45} style={{color: '#ededed'}}/>
+                    </View>
+                </View>
+            </View>
+        )
+    }
+
     return (
         <View style={[{
             width: '50%', 
