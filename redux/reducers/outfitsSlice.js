@@ -268,6 +268,32 @@ const outfitsSlice = createSlice({
                 }
             }
         },
+        removedOutfitTagged: {
+            reducer (state, action) {
+                const {_id, tagsArray} = action.payload;
+
+                console.log(`In removeTaggedOutfits`)
+
+                console.log(tagsArray)
+
+
+                tagsArray.forEach(tag => {
+                    console.log(state.taggedOutfits[tag])
+                    state.taggedOutfits[tag] = state.taggedOutfits[tag].filter(outfitId => outfitId !== _id);
+                    state.taggedOutfits[tag].length === 0 ? delete state.taggedOutfits[tag] : null;
+                })
+
+                // remove tag if no longer needed
+            },
+            prepare (_id, tagsArray) {
+                return {
+                    payload: {
+                        _id,
+                        tagsArray
+                    }
+                }
+            }
+        },
         pushClothingObjectsToOutfitInProgress: {
             reducer (state, action) {
                 // should we cleanse beforehand? might leave residual description / tags... nah
@@ -297,5 +323,6 @@ export const {
     outfitInProgressFitpicAdded,
     outfitInProgressAttributeAdded,
     createdOutfitTagged,
-    pushClothingObjectsToOutfitInProgress
+    pushClothingObjectsToOutfitInProgress,
+    removedOutfitTagged
 } = outfitsSlice.actions

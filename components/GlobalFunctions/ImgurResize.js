@@ -5,6 +5,11 @@ import {
     removeFromTypesOfClothingWorn
 } from '../../redux/reducers/closetSlice'
 import {batchActions} from 'redux-batched-actions'
+import {
+    removedOutfitTagged,
+    outfitDeletedFromOutfits
+} from '../../redux/reducers/outfitsSlice'
+
 //90 x 90
 export const makeSmallImage = (imgurUrl) => {
     if (imgurUrl){
@@ -72,5 +77,20 @@ export const deleteClothingFromCloset = (_id, clothingType, tagsArray, colorsArr
         removeAttributesFromAttributedClothing(_id, clothingType, 'brandedClothing', brandsArray),
         // below is to -- from typesOfClothingWorn
         removeFromTypesOfClothingWorn(clothingType, pieceType),
+    ]))
+}
+
+export const deleteOutfit = (_id, tags) => {
+    console.log(`_id of outfitObject: ${_id}`)
+    
+
+    //notice how we use the store to dispatch the actions instead of a useDispatch hook
+    //(as this is not a functional component. it is a function)
+    store.dispatch(batchActions([
+        outfitDeletedFromOutfits(_id),
+
+        // We also need to remove the tag from taggedOutfits
+        removedOutfitTagged(_id, tags)
+
     ]))
 }

@@ -34,7 +34,12 @@ import { outfitDeletedFromOutfits, outfitFavoriteToggled } from '../redux/reduce
 import { useNavigation, useFocusEffect } from '@react-navigation/native'
 import { YesNoModal, ImageScrollModal } from './GlobalComponents/GlobalModals'
 import { TogglableDrawer } from './GlobalComponents/GlobalDrawers'
-import { makeSmallImage, makeMediumImage, makeMediumSmallImage } from './GlobalFunctions/ImgurResize'
+import { 
+    makeSmallImage, 
+    makeMediumImage, 
+    makeMediumSmallImage,
+    deleteOutfit,
+} from './GlobalFunctions/ImgurResize'
 
 import * as Haptics from 'expo-haptics';
 
@@ -711,7 +716,8 @@ export const ViewIndividualOutfit = ({ route }) => {
     const ConfirmDelete = () => {
         console.log("Delete confirmed")
         setModalVisible(false)
-        dispatch(outfitDeletedFromOutfits(outfitObject._id))
+        // dispatch(outfitDeletedFromOutfits(outfitObject._id))
+        deleteOutfit(outfitObject._id, outfitObject.tags)
         navigation.navigate('CLOSETSCREEN')
     }
 
