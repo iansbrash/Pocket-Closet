@@ -12,6 +12,12 @@ import { ScreenHeader, MiniScreenHeader } from './GlobalComponents/ScreenHeader'
 import { Entypo } from '@expo/vector-icons';
 import GlobalStyles from './GlobalComponents/GlobalStyles'
 import { MediumButton } from './GlobalComponents/GlobalButtons'
+import * as ImagePicker from 'expo-image-picker';
+
+
+import { useDispatch, useSelector } from 'react-redux'
+
+import { updateHomeUserName, updateHomeUserIcon } from '../redux/reducers/settingsSlice'
 
 
 
@@ -74,13 +80,89 @@ const WelcomeBackHeader = ({username}) => {
 
     let src = { uri: 'https://randomuser.me/api/portraits/men/1.jpg' };
 
+    const dispatch = useDispatch();
+
     const [editingName, setEditingName] = useState(false);
-    const [nameInput, setNameInput] = useState('redux')
+
+    const nameInput = useSelector(state => state.settings.settingsObject.homeSettings.userName);
+    const userIcon = useSelector(state => state.settings.settingsObject.homeSettings.userIcon)
+
+    
+
+    const setNameInput = (newName) => {
+        dispatch(updateHomeUserName(newName));
+    }
+
+    // // const [nameInput, setNameInput] = useState('redux');
 
     // dispatch action to change new name once TextInput is blurred
     useEffect(() => {
-
+        nameInput === '' ? dispatch(updateHomeUserName('User')) : null;
     }, [editingName])
+
+    // useEffect(() => {
+    //     (async () => {
+    //         if (Platform.OS !== 'web') {
+    //             const { status } = await ImagePicker.requestCameraPermissionsAsync();
+
+    //             if (status !== 'granted') {
+    //                 alert('Sorry, we need camera roll permissions to make this work!');
+    //             }
+    //         }
+    //     })();
+    // }, []);
+
+
+    const pickImage = async (type) => {
+        // let result = await ImagePicker.launchImageLibraryAsync({
+
+        
+        
+        (async () => {
+            if (Platform.OS !== 'web') {
+                const { status } = await ImagePicker.requestCameraPermissionsAsync();
+
+                if (status !== 'granted') {
+                    alert('Sorry, we need camera roll permissions to make this work!');
+                }
+
+                return 'value';
+            }
+        })().then(
+            //value => console.log(value)
+            () =>
+            (async () => {
+                let result;
+                if (type === 'camera'){
+                    result = await ImagePicker.launchCameraAsync({
+                        mediaTypes: ImagePicker.MediaTypeOptions.All,
+                        allowsEditing: false,
+                        aspect: [4, 3],
+                        quality: 1,
+                        base64: true
+                    });
+                } else if (type === 'library'){
+                    result = await ImagePicker.launchImageLibraryAsync({
+                        mediaTypes: ImagePicker.MediaTypeOptions.All,
+                        allowsEditing: true, //why do i do this lmao
+                        aspect: [4, 3],
+                        quality: 1,
+                        base64: true
+                    });
+                }
+                
+            
+                console.log(result);
+            
+                if (!result.cancelled) {
+                setFileUri([...fileUri, result.uri]);
+                setFileData([...fileData, result.base64])
+                }
+            })()
+        )
+
+        
+    };
 
     return (
         <View style={{
@@ -150,13 +232,13 @@ const WelcomeBackHeader = ({username}) => {
                                         color: 'blue'
                                     }, GlobalStyles.h1]}
                                     // ref={searchInputRef}
-                                    placeholder={`Search clothing!`}
+                                    placeholder={`User`}
                                     // onFocus={() => onFocus()}
                                     onBlur={() => setEditingName(false)}
                                     // inlineImageLeft='search40x40'
                                     //inlineImagePadding={5} // might have to be in curly braces?
                                     selectTextOnFocus={true}
-                                    placeholderTextColor="blue"  //random ass color
+                                    placeholderTextColor="powderblue"  //random ass color
                                     onChangeText={text => setNameInput(text)}
                                     value={nameInput}
                                     numberOfLines={2}
@@ -184,11 +266,13 @@ const WelcomeBackHeader = ({username}) => {
                                 GlobalStyles.shadowLight]}>
                                 <TouchableOpacity
                                 activeOpacity={0.7}
+                                onPress={() => pickImage('library')}
                                 >
                                     <Image style={{
                                         width: 110, 
                                         height: 110,
-                                        borderRadius: 55}} source={src} />
+                                        borderRadius: 55}} 
+                                    source={userIcon === '' ? src : {uri: userIcon}} />
                                 </TouchableOpacity>
                             </View>
                         </View>

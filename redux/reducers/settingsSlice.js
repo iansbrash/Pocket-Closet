@@ -5,23 +5,36 @@ const settingsSlice = createSlice({
     name: 'settings',
     initialState: {
         settingsObject: {
-            test: 1
+            homeSettings: {
+                userName: 'User',
+                userIcon: ''
+            }
         }
     },
     reducers: {
-        updateStatObjectFromIndividualStat: {
+        updateHomeUserName: {
             reducer (state, action) {
-                console.log(`in updateStatObjectFromIndividualStat`)
-                const { statCategory, statName, stat } = action.payload;
-
-                state.statsObject[statCategory][statName] = stat;
+                const { newName } = action.payload;
+                state.settingsObject.homeSettings.userName = newName;
             },
-            prepare (statCategory, statName, stat) {
+            prepare (newName) {
                 return {
                     payload: {
-                        statCategory,
-                        statName,
-                        stat
+                        newName
+                    }
+                }
+            }
+        },
+        updateHomeUserIcon: {
+            reducer (state, action) {
+                const { uri } = action.payload;
+
+                state.settingsObject.homeSettings.userIcon = uri;
+            },
+            prepare(uri) {
+                return {
+                    payload: {
+                        uri
                     }
                 }
             }
@@ -32,7 +45,6 @@ const settingsSlice = createSlice({
 
 export default settingsSlice.reducer;
 export const {
-    // updateStatObjectFromIndividualStat,
-    // updateStatObjectFromStatArray,
-    // updateVariableStats
+    updateHomeUserName,
+    updateHomeUserIcon
 } = settingsSlice.actions

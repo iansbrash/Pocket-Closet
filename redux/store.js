@@ -2,6 +2,7 @@ import { configureStore, getDefaultMiddleware } from '@reduxjs/toolkit'
 import closetReducer from './reducers/closetSlice'
 import outfitsReducer from './reducers/outfitsSlice'
 import statsReducer from './reducers/statsSlice'
+import settingsReducer from './reducers/settingsSlice'
 import { combineReducers } from 'redux';
 import { createStore, applyMiddleware } from 'redux'
 import {
@@ -24,7 +25,8 @@ const persistConfig = {
 const rootReducer = combineReducers({
     closet: closetReducer,
     outfits: outfitsReducer,
-    stats: statsReducer
+    stats: statsReducer,
+    settings: settingsReducer
 })
 
 const persistedReducer = persistReducer(persistConfig, rootReducer)

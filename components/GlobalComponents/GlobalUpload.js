@@ -122,7 +122,9 @@ export const GlobalUpload = (
     const [dropdownPosition] = useState(new Animated.Value(0))
     const [descriptionModal, setDescriptionModal] = useState(false)
 
-
+    const navigation = useNavigation();
+    const dispatch = useDispatch();
+    
     const toggleDropDown = () => {
         uploadTypeDropdown ? pullUp() : dropDown()
     }
@@ -145,8 +147,7 @@ export const GlobalUpload = (
         }).start();
     }
 
-    const navigation = useNavigation();
-    const dispatch = useDispatch();
+    
 
     useEffect(() => {
         (async () => {
@@ -190,29 +191,12 @@ export const GlobalUpload = (
           setFileUri([...fileUri, result.uri]);
           setFileData([...fileData, result.base64])
         }
-      };
+    };
 
-    // const pushImages = () => {
-    //     console.log('pushImages called...')
-    //     console.log(imgurUrl)
-    //     dispatch(clothingInProgressAttributeAdded(
-    //         {
-    //             images: 
-    //             fileUri.length !== 0 ? (
-    //                 checked ? {
-    //                     images: imgurUrl,
-    //                     type: 'imgur'
-    //                 } : {
-    //                     images: fileUri,
-    //                     type: 'local'
-    //                 })
-    //             : {
-    //                 images: imgurUrl,
-    //                 type: ''
-    //             }
-    //         }
-    //     )) //{images: imgurUrl}
-    // }
+    const launchAndPull = (type) => {
+        pullUp();
+        pickImage(type);
+    }
 
 
     const sendRequestAndWait = async () => {
@@ -222,10 +206,7 @@ export const GlobalUpload = (
         setUploadSuccess(true)
     }
 
-    const launchAndPull = (type) => {
-        pullUp();
-        pickImage(type);
-    }
+    
 
     return (
         <View style={{
