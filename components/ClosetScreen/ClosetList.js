@@ -108,7 +108,7 @@ export const RenderSingleLineClosetItem = React.memo(({item, debugId}) => {
                             }}>
                                 {item.color.slice(0, 4).map((col, index) => (
                                     <View style={{
-                                        backgroundColor: col.toLowerCase(),
+                                        backgroundColor: col.toLowerCase().split(' ').join(''),
                                         height: 10,
                                         aspectRatio: 1,
                                         borderColor: 'white',

@@ -313,7 +313,7 @@ export const FromRandom = () => {
         Object.keys(selectablesObject).forEach(key => {
             selectablesObject[key].forEach(pType => {
                 let toFetch = closetObject[`${key}Array`].filter(clothingObj =>
-                    clothingObj.pieceType === pType)
+                    clothingObj.pieceType === pType && !clothingObj.archive)
 
                 // If we find a possible clothingObject, push, otherwise, null
                 // Accounts for selecting a pieceType that has no associated clothingObjects

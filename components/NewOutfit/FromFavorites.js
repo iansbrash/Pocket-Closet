@@ -83,7 +83,8 @@ export const FromFavorites = () => {
             </View>
             <OutfitList 
                 customFilter={filterFavorites} 
-                onClickFunc={onClickFunc}/>
+                onClickFunc={onClickFunc}
+                customListEmptyComponentText={'Favorite an outfit!'}/>
         </View>
     )
 }

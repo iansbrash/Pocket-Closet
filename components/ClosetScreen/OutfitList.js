@@ -499,7 +499,7 @@ const PiecePreview = React.memo(({
  *  that contains 4 arrays
  *  topsArray, bottomsArray, footwearArray, otherArray */
 // onClickFunc looks like:   function (outfitObject) { ... }
-export const OutfitList = ({customFilter, onClickFunc, customData}, props) => {
+export const OutfitList = ({customFilter, onClickFunc, customData, customListEmptyComponentText}, props) => {
     console.log('OutfitList being re-rendered')
 
     const navigation = useNavigation()
@@ -528,7 +528,11 @@ export const OutfitList = ({customFilter, onClickFunc, customData}, props) => {
                 showsVerticalScrollIndicator={false}
 
                 ListEmptyComponent={
-                    <ListEmptyComponent text={'Create an outfit!'}/>
+                    <ListEmptyComponent 
+                        text={customListEmptyComponentText ? 
+                                customListEmptyComponentText : 
+                                'Create an outfit!'}
+                    />
                 }
 
 

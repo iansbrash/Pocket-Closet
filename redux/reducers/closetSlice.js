@@ -391,7 +391,7 @@ const closetSlice = createSlice({
         itemArchiveToggled: {
             reducer (state, action) {
 
-                let { _id, clothingType } = action.payload
+                let { _id, clothingType } = action.payload;
 
                 console.log(`${_id} and ${clothingType}`)
                 console.log(`${clothingType.toLowerCase()}Array`)
@@ -404,6 +404,17 @@ const closetSlice = createSlice({
                 console.log(toToggle)
 
                 toToggle.archive = !toToggle.archive;
+
+                // // if we archive, we must increment/decrement closet.typesOfClothingWorn[selectedType][type.type]
+                // // if it is now archived
+                // if (toToggle.archive){
+
+                // }
+                // // if it is now unarchived, must increment
+                // else {
+
+                // }
+
 
             },
             prepare (_id, clothingType) {
@@ -478,6 +489,7 @@ const closetSlice = createSlice({
         removeFromTypesOfClothingWorn: {
             reducer (state, action) {
                 const { clothingType, pieceType } = action.payload;
+
 
                 if (!state.typesOfClothingWorn[clothingType][pieceType]){
                     console.log(`Could not find ${pieceType} in ${clothingType}.`)

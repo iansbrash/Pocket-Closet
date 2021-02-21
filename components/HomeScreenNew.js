@@ -86,6 +86,7 @@ const WelcomeBackHeader = ({username}) => {
 
     const nameInput = useSelector(state => state.settings.settingsObject.homeSettings.userName);
     const userIcon = useSelector(state => state.settings.settingsObject.homeSettings.userIcon)
+    const [fileUri, setFileUri] = useState();
 
     
 
@@ -151,12 +152,8 @@ const WelcomeBackHeader = ({username}) => {
                     });
                 }
                 
-            
-                console.log(result);
-            
                 if (!result.cancelled) {
-                setFileUri([...fileUri, result.uri]);
-                setFileData([...fileData, result.base64])
+                    dispatch(updateHomeUserIcon(result.uri));
                 }
             })()
         )

@@ -57,7 +57,7 @@ export const makeHugeImage = (imgurUrl) => {
 
 //we export this instead of clothingDeletedFromCloset because it lets us
 //abstract the deletion process (as we have to delete many things)
-export const deleteClothingFromCloset = (_id, clothingType, tagsArray, colorsArray, brandsArray, pieceType) => {
+export const deleteClothingFromCloset = (_id, clothingType, tagsArray, colorsArray, brandsArray, pieceType, archive) => {
     console.log(`_id: ${_id}`)
     console.log(`clothingType: ${clothingType}`)
     console.log(`tagsArray: ${tagsArray}`)
@@ -76,7 +76,8 @@ export const deleteClothingFromCloset = (_id, clothingType, tagsArray, colorsArr
         // uncomment the below when uninstalling expo (not in initialstate)
         removeAttributesFromAttributedClothing(_id, clothingType, 'brandedClothing', brandsArray),
         // below is to -- from typesOfClothingWorn
-        removeFromTypesOfClothingWorn(clothingType, pieceType),
+        // must check if it is archived before we do this
+        archive ? null : removeFromTypesOfClothingWorn(clothingType, pieceType),
     ]))
 }
 

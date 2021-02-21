@@ -454,17 +454,32 @@ export const FinalizeClothing = () => {
     const saveItem = async () => {
         //send item to redux store
         let _id = await nanoid();
-        dispatch(batchActions([
-            clothingAddedToCloset({
-                ...clothingPieceInProgress,
-                _id: _id
-            }),
-            pushAttributesToAttributedClothing(_id, clothingPieceInProgress.clothingType, 'taggedClothing', tags),
-            pushAttributesToAttributedClothing(_id, clothingPieceInProgress.clothingType, 'coloredClothing', colors),
-            pushAttributesToAttributedClothing(_id, clothingPieceInProgress.clothingType, 'brandedClothing', brands),
-            //need to push to typesOfClothingWorn
-            pushToTypesOfClothingWorn(clothingPieceInProgress.clothingType.toLowerCase(), clothingPieceInProgress.pieceType)
-        ]))
+        if (archive){
+            dispatch(batchActions([
+                clothingAddedToCloset({
+                    ...clothingPieceInProgress,
+                    _id: _id
+                }),
+                pushAttributesToAttributedClothing(_id, clothingPieceInProgress.clothingType, 'taggedClothing', tags),
+                pushAttributesToAttributedClothing(_id, clothingPieceInProgress.clothingType, 'coloredClothing', colors),
+                pushAttributesToAttributedClothing(_id, clothingPieceInProgress.clothingType, 'brandedClothing', brands),
+                //need to push to typesOfClothingWorn
+                // pushToTypesOfClothingWorn(clothingPieceInProgress.clothingType.toLowerCase(), clothingPieceInProgress.pieceType)
+            ]))
+        } else {
+            dispatch(batchActions([
+                clothingAddedToCloset({
+                    ...clothingPieceInProgress,
+                    _id: _id
+                }),
+                pushAttributesToAttributedClothing(_id, clothingPieceInProgress.clothingType, 'taggedClothing', tags),
+                pushAttributesToAttributedClothing(_id, clothingPieceInProgress.clothingType, 'coloredClothing', colors),
+                pushAttributesToAttributedClothing(_id, clothingPieceInProgress.clothingType, 'brandedClothing', brands),
+                //need to push to typesOfClothingWorn
+                pushToTypesOfClothingWorn(clothingPieceInProgress.clothingType.toLowerCase(), clothingPieceInProgress.pieceType)
+            ]))
+        }
+        
         
         
         navigation.navigate('CLOSETSCREEN');

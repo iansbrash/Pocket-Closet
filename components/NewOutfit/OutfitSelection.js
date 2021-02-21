@@ -20,11 +20,12 @@ import { TopNavScreenHeader } from '../GlobalComponents/TopNav'
 import { ScreenHeader } from '../GlobalComponents/ScreenHeader'
 import { PlusButton } from './PlusButton'
 import GlobalStyles from '../GlobalComponents/GlobalStyles'
-import { PlusIcon, XIcon } from '../GlobalComponents/GlobalIcons'
+import { PlusIcon, XIcon, CheckIcon } from '../GlobalComponents/GlobalIcons'
 import { outfitInProgressCleansed } from '../../redux/reducers/outfitsSlice'
 
 import { ClosetSearch } from '../ClosetScreen/NewClosetScreen'
 import { RenderSingleLineClosetItem } from '../ClosetScreen/ClosetList'
+import { ListEmptyComponent } from '../ClosetScreen/ListEmptyComponent'
 
 const ClothingAddedIcon = (props) => {
 
@@ -331,34 +332,35 @@ export const OutfitSelection = ({ route, navigation }) => {
                             style={[
                                 {fontWeight: 'bold', 
                                 marginLeft: 15,
-                                maxWidth: 290}, GlobalStyles.h4]}>{item.clothingName}</Text>
-                            
-                                {/* <Icon  width='30' height='30' fill='black' name={'plus'}/> */}
-                                <PlusIcon size={30} style={GlobalStyles.colorMain} style={{marginRight: 10}}/>
-                            
+                                maxWidth: 290}, GlobalStyles.h4]}>{item.clothingName}
+                            </Text>
+                            {
+                                OutfitArray.includes(item) ?
+                                    <CheckIcon size={30} style={GlobalStyles.colorMain} style={{marginRight: 10}}/> : 
+                                    <PlusIcon size={30} style={GlobalStyles.colorMain} style={{marginRight: 10}}/>
+                            }
                         </View>
                     </View>
                 </View>
                 </TouchableOpacity>
-                
             </View>
         )
     }
     return (
         <View 
-        style={{flex: 1, 
-            backgroundColor: 'white'}}>
+        style={{
+            flex: 1, 
+            backgroundColor: 'white'
+        }}>
             <TopNavScreenHeader title={topNavTitle} 
             exitDestination={'HOMESCREEN'} 
             extraFunc={() => dispatch(outfitInProgressCleansed())}/>
             <View style={{position: 'relative'}}>
-                {/* <ScreenHeader title={topNavTitle}/> */}
                 <DropDownViewTest 
                 style={{
                     width: '100%', 
                     height: 'auto', 
                     position: 'absolute', 
-                    
                     zIndex: 0,
                 }} 
                 hookValue={modalVisible}>
@@ -368,11 +370,15 @@ export const OutfitSelection = ({ route, navigation }) => {
                 style={{
                     width: '100%', 
                     marginTop: 55
-                    }} hookValue={modalVisible}>
+                }} 
+                hookValue={modalVisible}>
                     <FlatList 
                         data={ClosetArray.filter(item => !item.archive).filter(item => item.clothingName.toLowerCase().includes(searchInput.toLowerCase()))}
                         keyExtractor={item => item._id.toString()}
                         renderItem={renderItem}
+                        ListEmptyComponent={
+                            <ListEmptyComponent text={`No ${topNavTitle}`}/>
+                        }
                     />
                 </FadeInViewTestTwo>
             </View>
@@ -404,93 +410,6 @@ export const OutfitSelection = ({ route, navigation }) => {
         </View>
     )
 }
-
-const TestSearchInput = ({searchInput, setSearchInput}) => {
-    
-    const [inputLength] = useState(new Animated.Value(1))
-    const searchInputRef = useRef(null);
-
-    const onBlur = () => {
-        Animated.timing(inputLength, {
-            toValue: 1,
-            duration: 250,
-            useNativeDriver: false
-        }).start();
-    }
-
-    const onFocus = () => {
-        Animated.timing(inputLength, {
-            toValue: 0,
-            duration: 250,
-            useNativeDriver: false
-        }).start();
-    }
-    
-    return (
-        <View style={{
-            marginLeft: 10,
-            marginRight: 10,
-            marginTop: 5
-        }}>
-            <Animated.View 
-            style={{
-                width: inputLength.interpolate({
-                    inputRange: [0, 1],
-                    outputRange: ['84%', '100%']
-                }),
-                flexDirection: 'row',
-                alignItems: 'center'}}>
-                <TextInput 
-                    style={{ 
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        height: 40, 
-                        width: '100%',
-                        borderRadius: 5,
-                        //fontWeight: 'bold',
-                        fontSize: 15,
-                        paddingLeft: 25,
-                        backgroundColor: '#f2f2f2',
-                        elevation: 10,
-                        zIndex: 2
-                    }}
-                    ref={searchInputRef}
-                    placeholder={`Search clothing!`}
-                    onFocus={() => onFocus()}
-                    onBlur={() => onBlur()}
-                    // inlineImageLeft='search40x40'
-                    //inlineImagePadding={5} // might have to be in curly braces?
-                    selectTextOnFocus={true}
-                    placeholderTextColor="#9e9e9e"  //random ass color
-                    onChangeText={text => setSearchInput(text)}
-                    value={searchInput}
-                />
-                    <Animated.View 
-                    style={{
-                        opacity: inputLength.interpolate({
-                            inputRange: [0, 1],
-                            outputRange: [1, 0]
-                        }),
-                        zIndex: 1,
-                        margin: 10,
-                        
-                    }}>
-                        <TouchableOpacity style={{
-                            height: 'auto',
-                            width: 'auto',
-                            alignItems: 'center'
-                        }}
-                        onPress={() => searchInputRef.current.blur()}>
-                            
-                            <Text style={{ fontWeight: 'bold'}}>Cancel</Text>
-                        </TouchableOpacity>
-                </Animated.View>
-            </Animated.View>
-        </View>
-        
-    )
-}
-
 
 const styles = StyleSheet.create({
     barActive: {

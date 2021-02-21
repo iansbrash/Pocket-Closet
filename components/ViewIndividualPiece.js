@@ -24,7 +24,9 @@ import {
 import { 
     itemFavoriteToggled, 
     clothingDeletedFromCloset,//we used this action to delete previously. now trying the below function which bundles actions
-    itemArchiveToggled
+    itemArchiveToggled,
+    pushToTypesOfClothingWorn,
+    removeFromTypesOfClothingWorn
 } from '../redux/reducers/closetSlice'
 import { useNavigation, useFocusEffect } from '@react-navigation/native'
 import { YesNoModal, ImageScrollModal } from './GlobalComponents/GlobalModals'
@@ -36,6 +38,8 @@ import {
 } from './GlobalFunctions/ImgurResize'
 import { useEffect } from 'react/cjs/react.development';
 import * as Haptics from 'expo-haptics';
+
+import { batchActions } from 'redux-batched-actions'
 
 import * as ImageManipulator from 'expo-image-manipulator';
 
@@ -72,7 +76,11 @@ const TopButtonsStyleTwo = ({item, setModalVisible}) => {
     
     const ToggleArchive = () => {
         //this is structured differently than itemFavoriteToggled lol
-        dispatch(itemArchiveToggled(item._id, item.clothingType))
+        dispatch(batchActions([
+            isArchived ? pushToTypesOfClothingWorn(item.clothingType.toLowerCase(), item.pieceType) : removeFromTypesOfClothingWorn(item.clothingType.toLowerCase(), item.pieceType),
+            itemArchiveToggled(item._id, item.clothingType),
+        ]));
+        // dispatch(itemArchiveToggled(item._id, item.clothingType))
         setIsArchived(!isArchived)
     }
 
@@ -337,7 +345,7 @@ const ColorTags = React.memo(({colorArray}) => {
                         justifyContent: 'center',
                         alignItems:'center',
                         borderRadius: 5,
-                    }, GlobalStyles.shadowLight,{backgroundColor: title.toLowerCase()}]}>
+                    }, GlobalStyles.shadowLight,{backgroundColor: title.toLowerCase().split(' ').join('')}]}>
                         <Text style={[
                             {fontWeight: 'bold'}, 
                             GlobalStyles.h6, 
@@ -689,7 +697,7 @@ export const ViewIndividualPiece = ({ route }) => {
         setModalVisible(false)
         // dispatch(clothingDeletedFromCloset(_id))
 
-        deleteClothingFromCloset(item._id, item.clothingType, item.tags, item.color, item.brandName, item.pieceType)
+        deleteClothingFromCloset(item._id, item.clothingType, item.tags, item.color, item.brandName, item.pieceType, item.archive)
         navigation.navigate('CLOSETSCREEN')
     }
     

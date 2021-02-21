@@ -17,7 +17,8 @@ export const ListEmptyComponent = ({text}) => {
             flexDirection: 'row',
             borderRadius: 10,
             backgroundColor: '#fafafa',
-            padding: 5
+            padding: 5,
+            width: 'auto'
         }, GlobalStyles.shadowLightest]}>
             <Text style={[{
                 fontWeight: 'normal',

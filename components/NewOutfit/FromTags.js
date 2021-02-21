@@ -11,6 +11,7 @@ import GlobalStyles from '../GlobalComponents/GlobalStyles'
 import { useNavigation } from '@react-navigation/native'
 import { ClosetSearch } from '../ClosetScreen/NewClosetScreen'
 import { TieIcon } from '../GlobalComponents/GlobalIcons'
+import { ListEmptyComponent } from '../ClosetScreen/ListEmptyComponent'
 const RenderTag = ({item, length}) => {
 
     const navigation = useNavigation()
@@ -140,6 +141,7 @@ export const FromTags = () => {
                 data={Object.keys(taggedOutfits).filter(tag => tag.toLowerCase().includes(searchInput.toLowerCase()))}
                 renderItem={item => <RenderTag {...item} length={taggedOutfits[item.item].length}/>}
                 keyExtractor={key => key}
+                ListEmptyComponent={<ListEmptyComponent text={'Tag an outfit!'}/>}
             />
             {/* <View style={{
                 justifyContent: 'flex-start',
